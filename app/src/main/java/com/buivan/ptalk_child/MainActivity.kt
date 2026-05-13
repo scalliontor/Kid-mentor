@@ -105,6 +105,11 @@ class MainActivity : AppCompatActivity() {
         runHttpHealthDiagnostic()
     }
 
+    override fun onResume() {
+        super.onResume()
+        streamingVoiceClient.preconnect()
+    }
+
     private fun runHttpHealthDiagnostic() {
         lifecycleScope.launch {
             val healthy = apiService.isServerHealthy()
@@ -290,7 +295,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (ServerConfig.TRANSPORT_MODE == TransportMode.STREAMING_ONLY) {
-            viewModel.onError("WebSocket V2 chưa sẵn sàng, không dùng HTTP dự phòng.")
+            if (wsReachability == WsReachability.CONNECTING) {
+                viewModel.statusText.value = "Đang kết nối tới máy chủ, vui lòng chờ 1-2 giây rồi bấm lại..."
+            } else {
+                val currentStatus = viewModel.statusText.value ?: "Unknown"
+                viewModel.onError("Lỗi máy chủ ($wsReachability): $currentStatus")
+                streamingVoiceClient.preconnect() // Force retry
+            }
             return false
         }
 
@@ -476,7 +487,7 @@ class MainActivity : AppCompatActivity() {
         if (viewModel.state.value == AppState.IDLE || viewModel.state.value == AppState.ERROR) {
             viewModel.statusText.value = when (type) {
                 StreamingFailure.CodecUnavailable -> "Streaming V2 chưa tương thích codec, dùng HTTP dự phòng"
-                StreamingFailure.WebSocketUnavailable -> "WebSocket V2 chưa sẵn sàng, dùng HTTP dự phòng"
+                StreamingFailure.WebSocketUnavailable -> message // Hiển thị nguyên văn lỗi (Timeout, Refused...)
                 StreamingFailure.ProtocolError,
                 StreamingFailure.NetworkLost,
                 StreamingFailure.ServerError -> message
@@ -701,12 +712,12 @@ class MainActivity : AppCompatActivity() {
     private companion object {
         private const val TAG = "MainActivity"
 
-        private const val START_ACK_TIMEOUT_MS = 3_000L
-        private const val PROCESSING_TIMEOUT_MS = 6_000L
-        private const val FIRST_AUDIO_TIMEOUT_MS = 6_000L
-        private const val PLAYBACK_GAP_TIMEOUT_MS = 12_000L
-        private const val IDLE_FINAL_TIMEOUT_MS = 20_000L
+        private const val START_ACK_TIMEOUT_MS = 5_000L
+        private const val PROCESSING_TIMEOUT_MS = 10_000L
+        private const val FIRST_AUDIO_TIMEOUT_MS = 10_000L
+        private const val PLAYBACK_GAP_TIMEOUT_MS = 15_000L
+        private const val IDLE_FINAL_TIMEOUT_MS = 30_000L
 
-        private const val HTTP_SOFT_TIMEOUT_MS = 15_000L
+        private const val HTTP_SOFT_TIMEOUT_MS = 90_000L
     }
 }

@@ -1,6 +1,7 @@
 package com.buivan.ptalk_child
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
@@ -14,6 +15,7 @@ import okhttp3.WebSocketListener
 import okio.ByteString
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.ConcurrentLinkedQueue
 
 class StreamingVoiceClient(
     private val listener: Listener,
@@ -30,8 +32,8 @@ class StreamingVoiceClient(
     private val okHttpClient = OkHttpClient.Builder()
         .connectTimeout(5, TimeUnit.SECONDS)
         .readTimeout(0, TimeUnit.SECONDS)
-        .writeTimeout(10, TimeUnit.SECONDS)
-        .pingInterval(15, TimeUnit.SECONDS)
+        .writeTimeout(30, TimeUnit.SECONDS)
+        .pingInterval(40, TimeUnit.SECONDS)
         .build()
 
     private var webSocket: WebSocket? = null
@@ -46,6 +48,9 @@ class StreamingVoiceClient(
     private var reachability: WsReachability = WsReachability.OFFLINE
     private var unavailableUntilMs = 0L
     private var isShuttingDown = false
+
+    private val outgoingQueue = ConcurrentLinkedQueue<ByteArray>()
+    private val isServerListening = AtomicBoolean(false)
 
     fun preconnect() {
         if (ServerConfig.TRANSPORT_MODE == TransportMode.LEGACY_HTTP_ONLY) return
@@ -64,14 +69,16 @@ class StreamingVoiceClient(
         }
         return ServerConfig.TRANSPORT_MODE != TransportMode.LEGACY_HTTP_ONLY &&
                 !isTemporarilyUnavailable() &&
-                resolvedEngineMode != null &&
-                isConnected.get() &&
-                webSocket != null
+                resolvedEngineMode != null
     }
 
     @RequiresPermission(Manifest.permission.RECORD_AUDIO)
     fun startSession(): Boolean {
         if (!canStartStreaming()) return false
+
+        outgoingQueue.clear()
+        isServerListening.set(false)
+        connectIfNeeded()
 
         return try {
             val activeEngine = createSessionEngine() ?: return false
@@ -79,17 +86,28 @@ class StreamingVoiceClient(
             opusEngine = activeEngine
             audioPlayer = activePlayer
 
-            val socket = webSocket ?: return false
-            if (!socket.send("START")) {
-                cleanupSession()
-                notifyTransportFailure(StreamingFailure.WebSocketUnavailable, "Không gửi được START tới server.")
-                return false
+            isSessionActive.set(true)
+            
+            if (isConnected.get() && webSocket != null) {
+                val cmd = if (activeEngine.isPcmEncoding) "START_PCM" else "START"
+                webSocket?.send(cmd)
             }
 
-            isSessionActive.set(true)
             micStreamer = PcmMicStreamer(
                 opusEngine = activeEngine,
-                onOpusPacket = { packet -> socket.send(ByteString.of(*packet)) },
+                onOpusPacket = { packet ->
+                    val encoded = AudioFrameProtocol.packFrame(packet)
+                    if (isServerListening.get() && isConnected.get() && webSocket != null) {
+                        webSocket?.send(ByteString.of(*encoded)) ?: false
+                    } else {
+                        // Limit pre-buffering to ~2 seconds (100 packets)
+                        if (outgoingQueue.size > 100) {
+                            outgoingQueue.poll()
+                        }
+                        outgoingQueue.offer(encoded)
+                        true
+                    }
+                },
                 onError = { t ->
                     stopSession(sendEnd = false)
                     setReachability(WsReachability.DEGRADED, "Mic stream interrupted")
@@ -146,13 +164,30 @@ class StreamingVoiceClient(
         webSocket = okHttpClient.newWebSocket(request, object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
                 Log.d("StreamingVoiceClient", "WebSocket connected: ${response.code}")
+                webSocket.send("""{"device_id":"android_app","firmware_version":"2.0.0"}""")
                 isConnected.set(true)
                 unavailableUntilMs = 0L
                 setReachability(WsReachability.ONLINE, "WebSocket connected")
+                
+                if (isSessionActive.get()) {
+                    val activeEngine = opusEngine
+                    val cmd = if (activeEngine?.isPcmEncoding == true) "START_PCM" else "START"
+                    webSocket.send(cmd)
+                }
             }
 
             override fun onMessage(webSocket: WebSocket, text: String) {
                 val event = StreamingEventParser.parse(text)
+                if (event == StreamingEvent.Listening) {
+                    isServerListening.set(true)
+                    while (true) {
+                        val packet = outgoingQueue.poll() ?: break
+                        webSocket.send(ByteString.of(*packet))
+                    }
+                }
+                if (event == StreamingEvent.Speaking) {
+                    audioPlayer?.start()
+                }
                 if (event == StreamingEvent.Idle) {
                     cleanupSession()
                 }
@@ -191,10 +226,12 @@ class StreamingVoiceClient(
                 unavailableUntilMs = SystemClock.elapsedRealtime() + RETRY_COOLDOWN_MS
                 cleanupSession()
                 setReachability(WsReachability.OFFLINE, "WebSocket failure: ${t.message ?: "unknown"}")
-                notifyTransportFailure(StreamingFailure.WebSocketUnavailable, "WebSocket V2 chưa sẵn sàng, dùng HTTP dự phòng.")
+                notifyTransportFailure(StreamingFailure.WebSocketUnavailable, "Lỗi kết nối WS: ${t.message ?: "Mất mạng"}")
             }
         })
     }
+
+
 
     private fun isTemporarilyUnavailable(): Boolean {
         return SystemClock.elapsedRealtime() < unavailableUntilMs
@@ -208,6 +245,8 @@ class StreamingVoiceClient(
         opusEngine?.release()
         opusEngine = null
         isSessionActive.set(false)
+        isServerListening.set(false)
+        outgoingQueue.clear()
     }
 
     private fun resolveEngineMode(): Boolean {
@@ -261,6 +300,6 @@ class StreamingVoiceClient(
     }
 
     private companion object {
-        const val RETRY_COOLDOWN_MS = 10_000L
+        const val RETRY_COOLDOWN_MS = 1_000L
     }
 }

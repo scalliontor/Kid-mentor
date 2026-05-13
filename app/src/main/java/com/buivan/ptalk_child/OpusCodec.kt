@@ -24,6 +24,7 @@ enum class OpusEngineMode {
 
 interface OpusEngine {
     val name: String
+    val isPcmEncoding: Boolean
     fun isSupported(): Boolean
     fun start()
     fun encodeFrame(pcmFrame: ByteArray): ByteArray?
@@ -122,6 +123,7 @@ object OpusEngineFactory {
 
 class MediaCodecOpusEngine : OpusEngine {
     override val name: String = "MediaCodecOpusEngine"
+    override var isPcmEncoding: Boolean = false
 
     private var encoder: MediaCodec? = null
     private var decoder: MediaCodec? = null
@@ -130,7 +132,6 @@ class MediaCodecOpusEngine : OpusEngine {
 
     override fun isSupported(): Boolean {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
-                findCodec(isEncoder = true) != null &&
                 findCodec(isEncoder = false) != null
     }
 
@@ -139,13 +140,19 @@ class MediaCodecOpusEngine : OpusEngine {
             throw IllegalStateException("MediaCodec Opus is not available on this device")
         }
 
-        encoder = MediaCodec.createByCodecName(findCodec(isEncoder = true)!!).apply {
-            val format = MediaFormat.createAudioFormat(MIME_TYPE, OpusAudioFormat.SAMPLE_RATE, OpusAudioFormat.CHANNEL_COUNT).apply {
-                setInteger(MediaFormat.KEY_BIT_RATE, BIT_RATE)
-                setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, OpusAudioFormat.PCM_FRAME_BYTES)
+        val encoderName = findCodec(isEncoder = true)
+        if (encoderName != null) {
+            encoder = MediaCodec.createByCodecName(encoderName).apply {
+                val format = MediaFormat.createAudioFormat(MIME_TYPE, OpusAudioFormat.SAMPLE_RATE, OpusAudioFormat.CHANNEL_COUNT).apply {
+                    setInteger(MediaFormat.KEY_BIT_RATE, BIT_RATE)
+                    setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, OpusAudioFormat.PCM_FRAME_BYTES)
+                }
+                configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
+                start()
             }
-            configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
-            start()
+        } else {
+            Log.w(TAG, "No Opus encoder found, falling back to raw PCM encoding!")
+            isPcmEncoding = true
         }
 
         decoder = MediaCodec.createByCodecName(findCodec(isEncoder = false)!!).apply {
@@ -158,16 +165,23 @@ class MediaCodecOpusEngine : OpusEngine {
     }
 
     override fun encodeFrame(pcmFrame: ByteArray): ByteArray? {
-        val codec = encoder ?: return null
-        val inputIndex = codec.dequeueInputBuffer(DEQUEUE_TIMEOUT_US)
-        if (inputIndex < 0) return null
-
-        codec.getInputBuffer(inputIndex)?.let { input ->
-            input.clear()
-            input.put(pcmFrame, 0, minOf(pcmFrame.size, input.capacity()))
+        if (isPcmEncoding) {
+            return pcmFrame
         }
-        codec.queueInputBuffer(inputIndex, 0, pcmFrame.size, 0, 0)
+        val codec = encoder ?: return null
+        
+        val inputIndex = codec.dequeueInputBuffer(50_000L)
+        if (inputIndex >= 0) {
+            codec.getInputBuffer(inputIndex)?.let { input ->
+                input.clear()
+                input.put(pcmFrame, 0, minOf(pcmFrame.size, input.capacity()))
+            }
+            codec.queueInputBuffer(inputIndex, 0, pcmFrame.size, 0, 0)
+        } else {
+            Log.e(TAG, "Encoder input buffer full, dropping PCM frame!")
+        }
 
+        var encodedData = ByteArray(0)
         while (true) {
             val outputIndex = codec.dequeueOutputBuffer(encoderInfo, DEQUEUE_TIMEOUT_US)
             when {
@@ -179,27 +193,40 @@ class MediaCodecOpusEngine : OpusEngine {
                     if (encoderInfo.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG != 0 || data.isEmpty()) {
                         continue
                     }
-                    return data
+                    if (encodedData.isEmpty()) {
+                        encodedData = data
+                    } else {
+                        val combined = ByteArray(encodedData.size + data.size)
+                        System.arraycopy(encodedData, 0, combined, 0, encodedData.size)
+                        System.arraycopy(data, 0, combined, encodedData.size, data.size)
+                        encodedData = combined
+                    }
                 }
                 outputIndex == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {
                     Log.d(TAG, "Encoder format changed: ${codec.outputFormat}")
                 }
-                else -> return null
+                else -> {
+                    return if (encodedData.isNotEmpty()) encodedData else null
+                }
             }
         }
     }
 
     override fun decodeFrame(opusFrame: ByteArray): ByteArray? {
         val codec = decoder ?: return null
-        val inputIndex = codec.dequeueInputBuffer(DEQUEUE_TIMEOUT_US)
-        if (inputIndex < 0) return null
-
-        codec.getInputBuffer(inputIndex)?.let { input ->
-            input.clear()
-            input.put(opusFrame)
+        
+        val inputIndex = codec.dequeueInputBuffer(50_000L)
+        if (inputIndex >= 0) {
+            codec.getInputBuffer(inputIndex)?.let { input ->
+                input.clear()
+                input.put(opusFrame)
+            }
+            codec.queueInputBuffer(inputIndex, 0, opusFrame.size, 0, 0)
+        } else {
+            Log.e(TAG, "Decoder input buffer full, dropping Opus frame!")
         }
-        codec.queueInputBuffer(inputIndex, 0, opusFrame.size, 0, 0)
 
+        var decodedData = ByteArray(0)
         while (true) {
             val outputIndex = codec.dequeueOutputBuffer(decoderInfo, DEQUEUE_TIMEOUT_US)
             when {
@@ -211,12 +238,21 @@ class MediaCodecOpusEngine : OpusEngine {
                     if (decoderInfo.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG != 0 || data.isEmpty()) {
                         continue
                     }
-                    return data
+                    if (decodedData.isEmpty()) {
+                        decodedData = data
+                    } else {
+                        val combined = ByteArray(decodedData.size + data.size)
+                        System.arraycopy(decodedData, 0, combined, 0, decodedData.size)
+                        System.arraycopy(data, 0, combined, decodedData.size, data.size)
+                        decodedData = combined
+                    }
                 }
                 outputIndex == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {
                     Log.d(TAG, "Decoder format changed: ${codec.outputFormat}")
                 }
-                else -> return null
+                else -> {
+                    return if (decodedData.isNotEmpty()) decodedData else null
+                }
             }
         }
     }
@@ -276,6 +312,7 @@ class MediaCodecOpusEngine : OpusEngine {
 
 class JniOpusEngine : OpusEngine {
     override val name: String = "JniOpusEngine"
+    override val isPcmEncoding: Boolean = false
 
     override fun isSupported(): Boolean {
         return false

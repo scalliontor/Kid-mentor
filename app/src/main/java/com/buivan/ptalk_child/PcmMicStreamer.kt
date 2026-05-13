@@ -84,7 +84,7 @@ class PcmMicStreamer(
                 if (offset == pcmFrame.size) {
                     val opusFrame = opusEngine.encodeFrame(pcmFrame.copyOf())
                     if (opusFrame != null && opusFrame.isNotEmpty()) {
-                        val sent = onOpusPacket(AudioFrameProtocol.packFrame(opusFrame))
+                        val sent = onOpusPacket(opusFrame)
                         if (!sent) throw IllegalStateException("WebSocket rejected audio frame")
                     }
                     offset = 0

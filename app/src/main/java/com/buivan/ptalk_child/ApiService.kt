@@ -39,12 +39,12 @@ data class ProfileRequest(
 interface PTalkKidsApi {
 
     @Multipart
-    @POST("voice/process")
+    @POST("process")
     suspend fun processVoice(
         @Part file: MultipartBody.Part
     ): Response<ResponseBody>
 
-    @GET("voice/health")
+    @GET("health")
     suspend fun healthCheck(): Response<HealthResponse>
 
     @POST("api/profile/")
@@ -61,7 +61,7 @@ class ApiService(private val context: Context) {
 
     private val okHttpClient = OkHttpClient.Builder()
         .connectTimeout(5, TimeUnit.SECONDS)
-        .readTimeout(15, TimeUnit.SECONDS)
+        .readTimeout(90, TimeUnit.SECONDS)
         .writeTimeout(10, TimeUnit.SECONDS)
         .build()
 
@@ -84,7 +84,7 @@ class ApiService(private val context: Context) {
         try {
             Log.d(
                 TAG,
-                "Legacy HTTP send to ${ServerConfig.HTTP_BASE_URL}voice/process: ${audioFile.name}, ${audioFile.length()} bytes"
+                "Legacy HTTP send to ${ServerConfig.HTTP_BASE_URL}process: ${audioFile.name}, ${audioFile.length()} bytes"
             )
 
             val requestFile = audioFile.asRequestBody("audio/mp4".toMediaTypeOrNull())
@@ -129,9 +129,9 @@ class ApiService(private val context: Context) {
     // ── 2. Health check trước khi cho ghi âm ─────────────────────────────
     suspend fun isServerHealthy(): Boolean {
         return try {
-            Log.d(TAG, "Health check: ${ServerConfig.HTTP_BASE_URL}voice/health")
+            Log.d(TAG, "Health check: ${ServerConfig.HTTP_BASE_URL}health")
             val response = withContext(Dispatchers.IO) { api.healthCheck() }
-            val healthy = response.isSuccessful && response.body()?.status == "healthy"
+            val healthy = response.isSuccessful && response.body()?.status == "ok"
             Log.d(TAG, "Health check: ${if (healthy) "OK ✅" else "FAIL ❌"}")
             healthy
         } catch (e: Exception) {
