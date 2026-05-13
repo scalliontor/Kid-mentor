@@ -48,7 +48,9 @@ object OpusEngineFactory {
             OpusEngineMode.FORCE_JNI -> JniOpusEngine()
             OpusEngineMode.AUTO -> error("AUTO cannot be instantiated directly")
         }
-        return candidate.takeIf { it.isSupported() }
+        val supported = candidate.isSupported()
+        Log.w(TAG, "instantiate($mode): supported=$supported, engine=${candidate.name}")
+        return candidate.takeIf { supported }
     }
 
     fun resolveCandidate(mode: OpusEngineMode): OpusEngineSelection {
@@ -83,7 +85,6 @@ object OpusEngineFactory {
             engine.start()
             val pcm = ByteArray(OpusAudioFormat.PCM_FRAME_BYTES)
             var encodedCount = 0
-            var decodedCount = 0
             var consecutiveEncodeMisses = 0
 
             repeat(frames) {
@@ -97,23 +98,16 @@ object OpusEngineFactory {
                 }
                 consecutiveEncodeMisses = 0
                 encodedCount++
-
-                val decoded = engine.decodeFrame(encoded)
-                if (decoded != null && decoded.isNotEmpty()) {
-                    decodedCount++
-                }
             }
 
-            val enoughEncoded = encodedCount >= (frames * 0.90).toInt()
-            val enoughDecoded = decodedCount >= (frames * 0.60).toInt()
-            val passed = enoughEncoded && enoughDecoded
-            Log.d(
+            val passed = encodedCount >= (frames * 0.90).toInt()
+            Log.w(
                 TAG,
-                "Probe ${engine.name}: encoded=$encodedCount/$frames decoded=$decodedCount/$frames pass=$passed"
+                "Probe ${engine.name}: encoded=$encodedCount/$frames isPcmEncoding=${engine.isPcmEncoding} pass=$passed"
             )
             passed
         } catch (t: Throwable) {
-            Log.e(TAG, "Probe failed for ${engine.name}: ${t.message}")
+            Log.e(TAG, "Probe failed for ${engine.name}: ${t.message}", t)
             false
         } finally {
             engine.release()
@@ -126,13 +120,17 @@ class MediaCodecOpusEngine : OpusEngine {
     override var isPcmEncoding: Boolean = false
 
     private var encoder: MediaCodec? = null
-    private var decoder: MediaCodec? = null
+    @Volatile private var decoder: MediaCodec? = null
+    private var decoderInitialized = false
     private val encoderInfo = MediaCodec.BufferInfo()
     private val decoderInfo = MediaCodec.BufferInfo()
 
     override fun isSupported(): Boolean {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
-                findCodec(isEncoder = false) != null
+        val sdkOk = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+        val decoderName = findCodec(isEncoder = false)
+        val encoderName = findCodec(isEncoder = true)
+        Log.w(TAG, "isSupported: SDK=${Build.VERSION.SDK_INT} (need>=${Build.VERSION_CODES.Q}), sdkOk=$sdkOk, decoder=$decoderName, encoder=$encoderName")
+        return sdkOk && decoderName != null
     }
 
     override fun start() {
@@ -142,6 +140,7 @@ class MediaCodecOpusEngine : OpusEngine {
 
         val encoderName = findCodec(isEncoder = true)
         if (encoderName != null) {
+            Log.w(TAG, "Starting with Opus encoder: $encoderName")
             encoder = MediaCodec.createByCodecName(encoderName).apply {
                 val format = MediaFormat.createAudioFormat(MIME_TYPE, OpusAudioFormat.SAMPLE_RATE, OpusAudioFormat.CHANNEL_COUNT).apply {
                     setInteger(MediaFormat.KEY_BIT_RATE, BIT_RATE)
@@ -151,17 +150,12 @@ class MediaCodecOpusEngine : OpusEngine {
                 start()
             }
         } else {
-            Log.w(TAG, "No Opus encoder found, falling back to raw PCM encoding!")
+            Log.w(TAG, "No Opus encoder found, falling back to raw PCM encoding! isPcmEncoding=true")
             isPcmEncoding = true
         }
-
-        decoder = MediaCodec.createByCodecName(findCodec(isEncoder = false)!!).apply {
-            val format = MediaFormat.createAudioFormat(MIME_TYPE, OpusAudioFormat.SAMPLE_RATE, OpusAudioFormat.CHANNEL_COUNT).apply {
-                setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 4096)
-            }
-            configure(format, null, null, 0)
-            start()
-        }
+        // Decoder is created lazily on first decodeFrame() call to avoid
+        // Android MediaCodec bug where creating encoder + decoder simultaneously
+        // causes the decoder to auto-release on some devices.
     }
 
     override fun encodeFrame(pcmFrame: ByteArray): ByteArray? {
@@ -212,47 +206,83 @@ class MediaCodecOpusEngine : OpusEngine {
         }
     }
 
-    override fun decodeFrame(opusFrame: ByteArray): ByteArray? {
-        val codec = decoder ?: return null
-        
-        val inputIndex = codec.dequeueInputBuffer(50_000L)
-        if (inputIndex >= 0) {
-            codec.getInputBuffer(inputIndex)?.let { input ->
-                input.clear()
-                input.put(opusFrame)
+    @Synchronized
+    private fun ensureDecoder(): MediaCodec? {
+        if (decoder != null) return decoder
+        if (decoderInitialized) return null // already tried and failed
+        decoderInitialized = true
+        return try {
+            val decoderName = findCodec(isEncoder = false)
+            if (decoderName == null) {
+                Log.e(TAG, "No Opus decoder found for lazy init")
+                null
+            } else {
+                Log.w(TAG, "Lazy-creating Opus decoder: $decoderName")
+                MediaCodec.createByCodecName(decoderName).apply {
+                    val format = MediaFormat.createAudioFormat(MIME_TYPE, OpusAudioFormat.SAMPLE_RATE, OpusAudioFormat.CHANNEL_COUNT).apply {
+                        setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 4096)
+                    }
+                    configure(format, null, null, 0)
+                    start()
+                }.also { decoder = it }
             }
-            codec.queueInputBuffer(inputIndex, 0, opusFrame.size, 0, 0)
-        } else {
-            Log.e(TAG, "Decoder input buffer full, dropping Opus frame!")
+        } catch (t: Throwable) {
+            Log.e(TAG, "Failed to lazy-create decoder: ${t.message}", t)
+            null
+        }
+    }
+
+    override fun decodeFrame(opusFrame: ByteArray): ByteArray? {
+        val codec = decoder ?: ensureDecoder() ?: return null
+
+        try {
+            val inputIndex = codec.dequeueInputBuffer(50_000L)
+            if (inputIndex >= 0) {
+                codec.getInputBuffer(inputIndex)?.let { input ->
+                    input.clear()
+                    input.put(opusFrame)
+                }
+                codec.queueInputBuffer(inputIndex, 0, opusFrame.size, 0, 0)
+            } else {
+                Log.e(TAG, "Decoder input buffer full, dropping Opus frame!")
+            }
+        } catch (e: IllegalStateException) {
+            Log.w(TAG, "Decoder input rejected: ${e.message}")
+            return null
         }
 
         var decodedData = ByteArray(0)
         while (true) {
-            val outputIndex = codec.dequeueOutputBuffer(decoderInfo, DEQUEUE_TIMEOUT_US)
-            when {
-                outputIndex >= 0 -> {
-                    val output = codec.getOutputBuffer(outputIndex)
-                    val data = output?.readBytes(decoderInfo) ?: ByteArray(0)
-                    codec.releaseOutputBuffer(outputIndex, false)
+            try {
+                val outputIndex = codec.dequeueOutputBuffer(decoderInfo, DEQUEUE_TIMEOUT_US)
+                when {
+                    outputIndex >= 0 -> {
+                        val output = codec.getOutputBuffer(outputIndex)
+                        val data = output?.readBytes(decoderInfo) ?: ByteArray(0)
+                        codec.releaseOutputBuffer(outputIndex, false)
 
-                    if (decoderInfo.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG != 0 || data.isEmpty()) {
-                        continue
+                        if (decoderInfo.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG != 0 || data.isEmpty()) {
+                            continue
+                        }
+                        if (decodedData.isEmpty()) {
+                            decodedData = data
+                        } else {
+                            val combined = ByteArray(decodedData.size + data.size)
+                            System.arraycopy(decodedData, 0, combined, 0, decodedData.size)
+                            System.arraycopy(data, 0, combined, decodedData.size, data.size)
+                            decodedData = combined
+                        }
                     }
-                    if (decodedData.isEmpty()) {
-                        decodedData = data
-                    } else {
-                        val combined = ByteArray(decodedData.size + data.size)
-                        System.arraycopy(decodedData, 0, combined, 0, decodedData.size)
-                        System.arraycopy(data, 0, combined, decodedData.size, data.size)
-                        decodedData = combined
+                    outputIndex == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {
+                        Log.d(TAG, "Decoder format changed: ${codec.outputFormat}")
+                    }
+                    else -> {
+                        return if (decodedData.isNotEmpty()) decodedData else null
                     }
                 }
-                outputIndex == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {
-                    Log.d(TAG, "Decoder format changed: ${codec.outputFormat}")
-                }
-                else -> {
-                    return if (decodedData.isNotEmpty()) decodedData else null
-                }
+            } catch (e: IllegalStateException) {
+                Log.w(TAG, "Decoder output error: ${e.message}")
+                return if (decodedData.isNotEmpty()) decodedData else null
             }
         }
     }
@@ -273,6 +303,7 @@ class MediaCodecOpusEngine : OpusEngine {
         decoder?.safeRelease()
         encoder = null
         decoder = null
+        decoderInitialized = false
     }
 
     private fun ByteBuffer.readBytes(info: MediaCodec.BufferInfo): ByteArray {

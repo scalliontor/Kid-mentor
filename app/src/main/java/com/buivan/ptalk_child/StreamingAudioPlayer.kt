@@ -7,12 +7,16 @@ import android.util.Log
 import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.concurrent.thread
 
-class StreamingAudioPlayer(private val opusEngine: OpusEngine) {
+class StreamingAudioPlayer(
+    private val opusEngine: OpusEngine,
+    private val pcmMode: Boolean = false
+) {
     private var audioTrack: AudioTrack? = null
     private val lock = Any()
-    
+
     private val pcmQueue = ConcurrentLinkedQueue<ByteArray>()
     @Volatile private var isPlaying = false
+    @Volatile private var isDraining = false
     private var playbackThread: Thread? = null
 
     fun start() {
@@ -24,9 +28,9 @@ class StreamingAudioPlayer(private val opusEngine: OpusEngine) {
                 AudioFormat.CHANNEL_OUT_MONO,
                 AudioFormat.ENCODING_PCM_16BIT
             )
-            
-            // Set buffer size to at least 2 seconds to hold a massive jitter buffer
-            val trackBufferSize = minBufferSize.coerceAtLeast(OpusAudioFormat.SAMPLE_RATE * 2 * 2)
+
+            // 4-second buffer
+            val trackBufferSize = minBufferSize.coerceAtLeast(OpusAudioFormat.SAMPLE_RATE * 4 * 2)
 
             val track = AudioTrack.Builder()
                 .setAudioAttributes(
@@ -46,21 +50,27 @@ class StreamingAudioPlayer(private val opusEngine: OpusEngine) {
                 .setBufferSizeInBytes(trackBufferSize)
                 .build()
 
-            // Removed 100ms silence pre-fill to eliminate initial latency/clipping
-
             track.play()
             audioTrack = track
-            
+            Log.w("StreamingAudioPlayer", "AudioTrack started, pcmMode=$pcmMode")
+
             isPlaying = true
+            isDraining = false
             playbackThread = thread(start = true, name = "AudioPlaybackThread") {
-                while (isPlaying) {
+                while (isPlaying || isDraining) {
                     val pcm = pcmQueue.poll()
                     if (pcm != null) {
                         try {
+                            // Check isPlaying before write to avoid writing after stop()
+                            if (!isPlaying && !isDraining) break
                             track.write(pcm, 0, pcm.size)
                         } catch (e: Exception) {
                             Log.e("StreamingAudioPlayer", "AudioTrack write failed", e)
+                            break
                         }
+                    } else if (isDraining) {
+                        // Queue empty during drain — all audio written to AudioTrack
+                        break
                     } else {
                         try {
                             Thread.sleep(1)
@@ -69,6 +79,7 @@ class StreamingAudioPlayer(private val opusEngine: OpusEngine) {
                         }
                     }
                 }
+                Log.d("StreamingAudioPlayer", "Playback thread exited")
             }
         }
     }
@@ -78,11 +89,15 @@ class StreamingAudioPlayer(private val opusEngine: OpusEngine) {
         synchronized(lock) {
             if (!isPlaying) return
             frames.forEach { frame ->
-                val pcm = opusEngine.decodeFrame(frame)
-                if (pcm != null && pcm.isNotEmpty()) {
-                    pcmQueue.add(pcm)
+                if (pcmMode) {
+                    pcmQueue.add(frame)
                 } else {
-                    Log.w("StreamingAudioPlayer", "Dropped undecodable Opus frame")
+                    val pcm = opusEngine.decodeFrame(frame)
+                    if (pcm != null && pcm.isNotEmpty()) {
+                        pcmQueue.add(pcm)
+                    } else {
+                        Log.w("StreamingAudioPlayer", "Dropped undecodable Opus frame")
+                    }
                 }
             }
         }
@@ -90,9 +105,15 @@ class StreamingAudioPlayer(private val opusEngine: OpusEngine) {
 
     fun stop() {
         isPlaying = false
-        playbackThread?.interrupt()
+        isDraining = false
+        // Wait for playback thread to exit before releasing AudioTrack
+        val t = playbackThread
         playbackThread = null
-        
+        if (t != null && t.isAlive) {
+            t.interrupt()
+            try { t.join(3000) } catch (_: InterruptedException) {}
+        }
+
         synchronized(lock) {
             pcmQueue.clear()
             audioTrack?.let {
@@ -108,5 +129,33 @@ class StreamingAudioPlayer(private val opusEngine: OpusEngine) {
             }
             audioTrack = null
         }
+    }
+
+    /** Drain the PCM queue, then stop. Call from a background thread. */
+    fun drainAndStop() {
+        // Signal: no more packets will arrive, drain remaining queue
+        isDraining = true
+
+        // Wait for playback thread to finish writing all queued audio
+        val deadline = System.currentTimeMillis() + 60_000
+        val t = playbackThread
+        while (t != null && t.isAlive && System.currentTimeMillis() < deadline) {
+            try { t.join(500) } catch (_: InterruptedException) { break }
+        }
+
+        // Playback thread has exited — safe to stop and release AudioTrack
+        isPlaying = false
+        isDraining = false
+        playbackThread = null
+
+        synchronized(lock) {
+            pcmQueue.clear()
+            audioTrack?.let {
+                try { it.stop() } catch (_: Exception) {}
+                try { it.release() } catch (_: Exception) {}
+            }
+            audioTrack = null
+        }
+        Log.d("StreamingAudioPlayer", "drainAndStop complete")
     }
 }

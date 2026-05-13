@@ -53,23 +53,33 @@ class StreamingVoiceClient(
     private val isServerListening = AtomicBoolean(false)
 
     fun preconnect() {
-        if (ServerConfig.TRANSPORT_MODE == TransportMode.LEGACY_HTTP_ONLY) return
+        if (ServerConfig.TRANSPORT_MODE == TransportMode.LEGACY_HTTP_ONLY) {
+            Log.w("StreamingVoiceClient", "Preconnect skipped: LEGACY_HTTP_ONLY mode")
+            return
+        }
         if (!resolveEngineMode()) {
+            Log.e("StreamingVoiceClient", "Preconnect skipped: engine mode resolution failed")
             unavailableUntilMs = Long.MAX_VALUE
             return
         }
-        Log.d("StreamingVoiceClient", "Preconnect WebSocket: $wsUrl")
+        Log.w("StreamingVoiceClient", "Preconnect WebSocket: $wsUrl")
         connectIfNeeded()
     }
 
     fun canStartStreaming(): Boolean {
-        if (!resolveEngineMode()) return false
+        val engineOk = resolveEngineMode()
+        if (!engineOk) {
+            Log.e("StreamingVoiceClient", "canStartStreaming=false: engine resolution failed")
+            return false
+        }
         if (webSocket == null && !isTemporarilyUnavailable()) {
             connectIfNeeded()
         }
-        return ServerConfig.TRANSPORT_MODE != TransportMode.LEGACY_HTTP_ONLY &&
+        val result = ServerConfig.TRANSPORT_MODE != TransportMode.LEGACY_HTTP_ONLY &&
                 !isTemporarilyUnavailable() &&
                 resolvedEngineMode != null
+        Log.w("StreamingVoiceClient", "canStartStreaming=$result (transport=${ServerConfig.TRANSPORT_MODE}, unavailable=${isTemporarilyUnavailable()}, engine=$resolvedEngineMode)")
+        return result
     }
 
     @RequiresPermission(Manifest.permission.RECORD_AUDIO)
@@ -82,14 +92,17 @@ class StreamingVoiceClient(
 
         return try {
             val activeEngine = createSessionEngine() ?: return false
-            val activePlayer = StreamingAudioPlayer(activeEngine)
+            // Server sends PCM instead of Opus (START_PCM_OUT mode)
+            val activePlayer = StreamingAudioPlayer(activeEngine, pcmMode = true)
             opusEngine = activeEngine
             audioPlayer = activePlayer
 
             isSessionActive.set(true)
             
             if (isConnected.get() && webSocket != null) {
-                val cmd = if (activeEngine.isPcmEncoding) "START_PCM" else "START"
+                // START_PCM_OUT: server sends raw PCM instead of Opus
+                // (avoids Opus decoder crash on Android 15+ devices)
+                val cmd = if (activeEngine.isPcmEncoding) "START_PCM" else "START_PCM_OUT"
                 webSocket?.send(cmd)
             }
 
@@ -145,6 +158,25 @@ class StreamingVoiceClient(
         }
     }
 
+    /** Drain remaining audio before resetting. Call from a background thread. */
+    fun drainPlaybackAndReset(notifyIdle: Boolean = true) {
+        stopSession(sendEnd = false)
+        // Stop mic, but drain audio player instead of abrupt stop
+        micStreamer?.stop()
+        micStreamer = null
+        opusEngine?.release()
+        opusEngine = null
+        isSessionActive.set(false)
+        isServerListening.set(false)
+        outgoingQueue.clear()
+        val player = audioPlayer
+        audioPlayer = null
+        player?.drainAndStop()
+        if (notifyIdle) {
+            mainHandler.post { listener.onProtocolEvent(StreamingEvent.Idle) }
+        }
+    }
+
     fun shutdown() {
         isShuttingDown = true
         stopSession(sendEnd = false)
@@ -171,7 +203,7 @@ class StreamingVoiceClient(
                 
                 if (isSessionActive.get()) {
                     val activeEngine = opusEngine
-                    val cmd = if (activeEngine?.isPcmEncoding == true) "START_PCM" else "START"
+                    val cmd = if (activeEngine?.isPcmEncoding == true) "START_PCM" else "START_PCM_OUT"
                     webSocket.send(cmd)
                 }
             }
@@ -189,9 +221,24 @@ class StreamingVoiceClient(
                     audioPlayer?.start()
                 }
                 if (event == StreamingEvent.Idle) {
-                    cleanupSession()
+                    // Don't stop audio player immediately — let it drain buffered audio
+                    micStreamer?.stop()
+                    micStreamer = null
+                    opusEngine?.release()
+                    opusEngine = null
+                    isSessionActive.set(false)
+                    isServerListening.set(false)
+                    outgoingQueue.clear()
+                    // Drain audio player in background, then notify Idle
+                    val player = audioPlayer
+                    audioPlayer = null
+                    Thread {
+                        player?.drainAndStop()
+                        mainHandler.post { listener.onProtocolEvent(StreamingEvent.Idle) }
+                    }.start()
+                } else {
+                    mainHandler.post { listener.onProtocolEvent(event) }
                 }
-                mainHandler.post { listener.onProtocolEvent(event) }
             }
 
             override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
@@ -260,15 +307,22 @@ class StreamingVoiceClient(
         }
 
         for (candidateMode in candidateModes) {
-            val engine = OpusEngineFactory.instantiate(candidateMode) ?: continue
+            Log.w("StreamingVoiceClient", "Trying engine mode: $candidateMode")
+            val engine = OpusEngineFactory.instantiate(candidateMode)
+            if (engine == null) {
+                Log.w("StreamingVoiceClient", "Engine $candidateMode not supported on this device, skipping")
+                continue
+            }
             val probePassed = OpusEngineFactory.runLocalProbe(engine)
+            Log.w("StreamingVoiceClient", "Engine $candidateMode probe result: $probePassed")
             if (probePassed) {
                 resolvedEngineMode = candidateMode
                 hasNotifiedCodecFailure = false
-                Log.d("StreamingVoiceClient", "Using Opus engine mode: $resolvedEngineMode")
+                Log.w("StreamingVoiceClient", "Using Opus engine mode: $resolvedEngineMode")
                 return true
             }
         }
+        Log.e("StreamingVoiceClient", "ALL engine modes failed — WebSocket streaming unavailable")
 
         if (!hasNotifiedCodecFailure) {
             hasNotifiedCodecFailure = true

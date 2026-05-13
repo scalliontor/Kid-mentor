@@ -4,6 +4,7 @@ sealed class StreamingEvent {
     data object Listening : StreamingEvent()
     data object Processing : StreamingEvent()
     data object Speaking : StreamingEvent()
+    data object StreamDone : StreamingEvent()
     data object Idle : StreamingEvent()
     data class Emotion(val code: String) : StreamingEvent()
     data class UnknownText(val text: String) : StreamingEvent()
@@ -23,6 +24,7 @@ object StreamingEventParser {
             "LISTENING" -> StreamingEvent.Listening
             "PROCESSING" -> StreamingEvent.Processing
             "SPEAKING" -> StreamingEvent.Speaking
+            "STREAM_DONE" -> StreamingEvent.StreamDone
             "IDLE" -> StreamingEvent.Idle
             else -> {
                 if (text.length == 2 && text.all { it.isDigit() }) {

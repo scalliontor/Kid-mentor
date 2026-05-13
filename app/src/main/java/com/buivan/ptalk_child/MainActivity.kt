@@ -441,6 +441,12 @@ class MainActivity : AppCompatActivity() {
                 armIdleFinalTimeout()
             }
 
+            StreamingEvent.StreamDone -> {
+                // Server finished sending audio, clear playback gap timeout
+                // but keep idle final timeout (waiting for IDLE)
+                clearPlaybackGapTimeout()
+            }
+
             StreamingEvent.Idle -> {
                 clearAllStreamingTimeouts()
                 waitingForFirstStreamingChunk = false
@@ -506,6 +512,9 @@ class MainActivity : AppCompatActivity() {
             clearFirstAudioTimeout()
             viewModel.onStartPlaying()
         }
+
+        // Reset idle final timeout — count from last chunk, not session start
+        armIdleFinalTimeout()
 
         armStreamingPlaybackGapTimeout()
         armIdleFinalTimeout()
@@ -647,8 +656,13 @@ class MainActivity : AppCompatActivity() {
         isMicGestureActive = false
         isMicTapFallbackActive = false
 
-        streamingVoiceClient.cancelPlaybackAndReset(notifyIdle = false)
-        viewModel.onError(message)
+        // Drain remaining audio before resetting — don't abruptly stop playback
+        Thread {
+            streamingVoiceClient.drainPlaybackAndReset(notifyIdle = false)
+            runOnUiThread {
+                viewModel.onFinishPlaying()
+            }
+        }.start()
     }
 
     private fun clearStartAckTimeout() {
@@ -716,7 +730,7 @@ class MainActivity : AppCompatActivity() {
         private const val PROCESSING_TIMEOUT_MS = 10_000L
         private const val FIRST_AUDIO_TIMEOUT_MS = 10_000L
         private const val PLAYBACK_GAP_TIMEOUT_MS = 15_000L
-        private const val IDLE_FINAL_TIMEOUT_MS = 30_000L
+        private const val IDLE_FINAL_TIMEOUT_MS = 120_000L
 
         private const val HTTP_SOFT_TIMEOUT_MS = 90_000L
     }
