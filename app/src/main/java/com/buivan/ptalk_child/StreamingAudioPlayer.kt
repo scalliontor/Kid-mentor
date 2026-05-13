@@ -7,7 +7,10 @@ import android.util.Log
 import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.concurrent.thread
 
-class StreamingAudioPlayer(private val opusEngine: OpusEngine) {
+class StreamingAudioPlayer(
+    private val opusEngine: OpusEngine,
+    private val isReceivingPcm: Boolean = false
+) {
     private var audioTrack: AudioTrack? = null
     private val lock = Any()
     
@@ -78,11 +81,19 @@ class StreamingAudioPlayer(private val opusEngine: OpusEngine) {
         synchronized(lock) {
             if (!isPlaying) return
             frames.forEach { frame ->
-                val pcm = opusEngine.decodeFrame(frame)
-                if (pcm != null && pcm.isNotEmpty()) {
-                    pcmQueue.add(pcm)
-                } else {
-                    Log.w("StreamingAudioPlayer", "Dropped undecodable Opus frame")
+                if (isReceivingPcm) {
+                    pcmQueue.add(frame)
+                    return@forEach
+                }
+                try {
+                    val pcm = opusEngine.decodeFrame(frame)
+                    if (pcm != null && pcm.isNotEmpty()) {
+                        pcmQueue.add(pcm)
+                    } else {
+                        Log.w("StreamingAudioPlayer", "Dropped undecodable Opus frame")
+                    }
+                } catch (e: IllegalStateException) {
+                    Log.w("StreamingAudioPlayer", "Codec already released, ignoring frame")
                 }
             }
         }

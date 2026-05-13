@@ -82,14 +82,15 @@ class StreamingVoiceClient(
 
         return try {
             val activeEngine = createSessionEngine() ?: return false
-            val activePlayer = StreamingAudioPlayer(activeEngine)
+            val isReceivingPcm = !activeEngine.isPcmEncoding
+            val activePlayer = StreamingAudioPlayer(activeEngine, isReceivingPcm)
             opusEngine = activeEngine
             audioPlayer = activePlayer
 
             isSessionActive.set(true)
             
             if (isConnected.get() && webSocket != null) {
-                val cmd = if (activeEngine.isPcmEncoding) "START_PCM" else "START"
+                val cmd = if (activeEngine.isPcmEncoding) "START_PCM" else "START_PCM_OUT"
                 webSocket?.send(cmd)
             }
 
@@ -171,7 +172,7 @@ class StreamingVoiceClient(
                 
                 if (isSessionActive.get()) {
                     val activeEngine = opusEngine
-                    val cmd = if (activeEngine?.isPcmEncoding == true) "START_PCM" else "START"
+                    val cmd = if (activeEngine?.isPcmEncoding == true) "START_PCM" else "START_PCM_OUT"
                     webSocket.send(cmd)
                 }
             }
@@ -196,6 +197,7 @@ class StreamingVoiceClient(
 
             override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
                 try {
+                    if (!isSessionActive.get()) return
                     audioPlayer?.start()
                     audioPlayer?.playPacket(bytes.toByteArray())
                     mainHandler.post { listener.onAudioChunkReceived() }
