@@ -431,12 +431,19 @@ class MainActivity : AppCompatActivity() {
                 armIdleFinalTimeout()
             }
 
+            StreamingEvent.Thinking -> {
+                // Server is still processing (8s+ elapsed) — reset the first-audio timer
+                viewModel.statusText.value = "Đang suy nghĩ..."
+                armFirstAudioTimeout()
+            }
+
             StreamingEvent.Speaking -> {
                 clearStartAckTimeout()
                 clearProcessingTimeout()
                 wsSessionPhase = WsSessionPhase.WAIT_AUDIO
                 waitingForFirstStreamingChunk = true
-                viewModel.statusText.value = "Đang trả lời..."
+                viewModel.onStartPlaying()  // Disable button immediately
+                viewModel.statusText.value = "Đang nói..."
                 armFirstAudioTimeout()
                 armIdleFinalTimeout()
             }
@@ -728,8 +735,8 @@ class MainActivity : AppCompatActivity() {
 
         private const val START_ACK_TIMEOUT_MS = 5_000L
         private const val PROCESSING_TIMEOUT_MS = 10_000L
-        private const val FIRST_AUDIO_TIMEOUT_MS = 10_000L
-        private const val PLAYBACK_GAP_TIMEOUT_MS = 15_000L
+        private const val FIRST_AUDIO_TIMEOUT_MS = 30_000L
+        private const val PLAYBACK_GAP_TIMEOUT_MS = 30_000L
         private const val IDLE_FINAL_TIMEOUT_MS = 120_000L
 
         private const val HTTP_SOFT_TIMEOUT_MS = 90_000L

@@ -220,7 +220,11 @@ class StreamingVoiceClient(
                 if (event == StreamingEvent.Speaking) {
                     audioPlayer?.start()
                 }
-                if (event == StreamingEvent.Idle) {
+                if (event == StreamingEvent.StreamDone) {
+                    // Server finished generating — audio chunks may still be in-flight
+                    // Don't stop yet — wait for IDLE
+                    mainHandler.post { listener.onProtocolEvent(event) }
+                } else if (event == StreamingEvent.Idle) {
                     // Don't stop audio player immediately — let it drain buffered audio
                     micStreamer?.stop()
                     micStreamer = null
@@ -229,11 +233,12 @@ class StreamingVoiceClient(
                     isSessionActive.set(false)
                     isServerListening.set(false)
                     outgoingQueue.clear()
-                    // Drain audio player in background, then notify Idle
-                    val player = audioPlayer
-                    audioPlayer = null
+                    // Keep audioPlayer alive so late-arriving binary chunks can still be queued
                     Thread {
-                        player?.drainAndStop()
+                        // Wait for any in-flight audio chunks to arrive
+                        try { Thread.sleep(2000) } catch (_: InterruptedException) {}
+                        audioPlayer?.drainAndStop()
+                        audioPlayer = null
                         mainHandler.post { listener.onProtocolEvent(StreamingEvent.Idle) }
                     }.start()
                 } else {

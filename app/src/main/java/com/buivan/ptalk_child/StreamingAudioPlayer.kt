@@ -18,6 +18,9 @@ class StreamingAudioPlayer(
     @Volatile private var isPlaying = false
     @Volatile private var isDraining = false
     private var playbackThread: Thread? = null
+    private var totalBytesQueued = 0L
+    private var totalBytesWritten = 0L
+    private var chunkCount = 0
 
     fun start() {
         synchronized(lock) {
@@ -56,6 +59,9 @@ class StreamingAudioPlayer(
 
             isPlaying = true
             isDraining = false
+            totalBytesQueued = 0
+            totalBytesWritten = 0
+            chunkCount = 0
             playbackThread = thread(start = true, name = "AudioPlaybackThread") {
                 while (isPlaying || isDraining) {
                     val pcm = pcmQueue.poll()
@@ -63,14 +69,21 @@ class StreamingAudioPlayer(
                         try {
                             // Check isPlaying before write to avoid writing after stop()
                             if (!isPlaying && !isDraining) break
-                            track.write(pcm, 0, pcm.size)
+                            val written = track.write(pcm, 0, pcm.size)
+                            totalBytesWritten += written
                         } catch (e: Exception) {
                             Log.e("StreamingAudioPlayer", "AudioTrack write failed", e)
                             break
                         }
                     } else if (isDraining) {
-                        // Queue empty during drain — all audio written to AudioTrack
-                        break
+                        // Queue empty during drain — wait briefly for late-arriving chunks
+                        var waited = 0
+                        while (waited < 1500 && isDraining) {
+                            Thread.sleep(100)
+                            waited += 100
+                            if (pcmQueue.peek() != null) break
+                        }
+                        if (pcmQueue.peek() == null) break // truly done
                     } else {
                         try {
                             Thread.sleep(1)
@@ -79,7 +92,7 @@ class StreamingAudioPlayer(
                         }
                     }
                 }
-                Log.d("StreamingAudioPlayer", "Playback thread exited")
+                Log.w("StreamingAudioPlayer", "Playback thread exited: totalWritten=$totalBytesWritten/$totalBytesQueued bytes, queueRemaining=${pcmQueue.size}")
             }
         }
     }
@@ -91,10 +104,14 @@ class StreamingAudioPlayer(
             frames.forEach { frame ->
                 if (pcmMode) {
                     pcmQueue.add(frame)
+                    totalBytesQueued += frame.size
+                    chunkCount++
                 } else {
                     val pcm = opusEngine.decodeFrame(frame)
                     if (pcm != null && pcm.isNotEmpty()) {
                         pcmQueue.add(pcm)
+                        totalBytesQueued += pcm.size
+                        chunkCount++
                     } else {
                         Log.w("StreamingAudioPlayer", "Dropped undecodable Opus frame")
                     }
@@ -133,6 +150,10 @@ class StreamingAudioPlayer(
 
     /** Drain the PCM queue, then stop. Call from a background thread. */
     fun drainAndStop() {
+        val queueSize = pcmQueue.size
+        val queueBytes = pcmQueue.sumOf { it.size }
+        Log.w("StreamingAudioPlayer", "drainAndStop: queue=$queueSize chunks ($queueBytes bytes), " +
+                "totalQueued=$totalBytesQueued, totalWritten=$totalBytesWritten, chunks=$chunkCount")
         // Signal: no more packets will arrive, drain remaining queue
         isDraining = true
 
