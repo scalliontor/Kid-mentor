@@ -75,27 +75,102 @@ def _num_to_vi(n: int) -> str:
         return "mười " + _NUM_VI.get(n - 10, str(n - 10))
     return str(n)
 
-def _read_chem(m):
-    """Read chemical formula: H2O -> H hai O, Fe2O3 -> Fe hai O ba, CaCO3 -> Ca C O ba."""
-    s = m.group(0)
-    result = []
-    elem = ""
-    for ch in s:
-        if ch.isupper():
-            if elem:
-                result.append(elem)
-                elem = ""
-            elem = ch
-        elif ch.islower():
-            elem += ch
-        elif ch.isdigit():
-            if elem:
-                result.append(elem)
-                elem = ""
-            result.append(_num_to_vi(int(ch)))
-    if elem:
-        result.append(elem)
-    return " ".join(result)
+# Vietnamese TTS-friendly element pronunciation
+_ELEM_READ = {
+    "H": "hát", "O": "ô", "C": "xê", "N": "nít", "S": "sờ",
+    "Fe": "ép-e", "Ca": "can-xi", "Na": "na-tri", "Cl": "clo",
+    "K": "ka-li", "Mg": "magiê", "Al": "a-li", "Zn": "kẽm",
+    "Cu": "đồng", "Ag": "bạc", "Au": "vàng", "Pb": "chì",
+    "Mn": "man-gan", "Si": "si-li", "P": "phốt", "Br": "brôm",
+    "I": "i-ốt", "F": "flo", "Li": "li-ti", "Ba": "ba-ri",
+    "Ti": "ti-tan", "Cr": "crom", "Ni": "ni-ken", "Sn": "thiếc",
+    "Pt": "pla-tin", "He": "hê-li", "Ne": "nê-on", "Ar": "ac-gon",
+}
+
+# English chemistry/physics term → Vietnamese phonetic pronunciation
+# Used by _replace_english_terms() for TTS readability
+_ENG_TERM_MAP = {
+    # ── Elements & particles ──
+    "hydrogen": "hi-drô-gen", "oxygen": "óc-si-gen", "nitrogen": "ni-tơ-gen",
+    "carbon": "các-bon", "sulfur": "sul-fua", "sulphur": "sul-fua",
+    "iron": "sắt", "copper": "đồng", "zinc": "kẽm", "aluminum": "a-lu-mi-num",
+    "silicon": "si-li-còn", "calcium": "can-xi", "sodium": "na-tri",
+    "potassium": "ka-li", "magnesium": "ma-giê", "titanium": "ti-ta-ni",
+    "chromium": "crom", "manganese": "man-gan", "nickel": "ni-ken",
+    "platinum": "pla-tin", "silver": "bạc", "gold": "vàng", "lead": "chì",
+    "tin": "thiếc", "mercury": "thuỷ ngân", "phosphorus": "phốt-pho",
+    "fluorine": "flo", "chlorine": "clo", "bromine": "brôm",
+    "helium": "hê-li", "neon": "nê-on", "argon": "ac-gon",
+    "electron": "e-léc-tron", "proton": "prô-ton", "neutron": "nơ-tron",
+    "photon": "phô-ton", "ion": "ai-on", "cation": "cat-ion",
+    "anion": "an-ion", "isotope": "i-zô-tốp",
+    # ── Chemical concepts ──
+    "atom": "a-tom", "molecule": "mô-lê-cun", "compound": "côm-pao-nờ",
+    "mixture": "hỗn hợp", "solution": "dung dịch", "solvent": "dung môi",
+    "solute": "chất tan", "concentration": "nồng độ",
+    "reaction": "phản ứng", "reagent": "phản ứng thử",
+    "catalyst": "chất xúc tác", "enzyme": "en-zim",
+    "acid": "a-xit", "base": "bazơ", "alkali": "an-ca-li",
+    "salt": "muối", "oxide": "ô-xít", "hydroxide": "hi-drô-ô-xít",
+    "sulfate": "sun-fat", "sulfide": "sun-fua", "sulfite": "sun-fit",
+    "nitrate": "ni-trat", "nitrite": "ni-trit",
+    "carbonate": "các-bon-nat", "bicarbonate": "bai-các-bon-nat",
+    "chloride": "clo-rùa", "chlorate": "clo-rat",
+    "phosphate": "phốt-phat", "acetate": "a-xe-tat",
+    "permanganate": "pem-man-ga-nat",
+    "anode": "a-nốt", "cathode": "ca-tốt",
+    "electrode": "e-léc-trốt", "electrolyte": "e-léc-tơ-lít",
+    "electrolysis": "e-léc-tơ-lai-sít",
+    "oxidation": "ốc-si-hoá", "reduction": "rê-duc-sion",
+    "corrosion": "ăn mòn", "precipitate": "kết tủa", "filtrate": "dịch lọc",
+    "titration": "ti-trơ", "indicator": "chỉ thị",
+    "valence": "hoá trị", "bond": "liên kết", "covalent": "cô-valent",
+    "ionic": "ai-on-nic",
+    "exothermic": "thoát nhiệt", "endothermic": "thu nhiệt",
+    "combustion": "đốt cháy", "synthesis": "tổng hợp",
+    "decomposition": "phân huỷ", "displacement": "thế",
+    "solubility": "độ tan", "pH": "pi-ách",
+    # ── Physics concepts ──
+    "velocity": "véc-tô", "acceleration": "gia tốc",
+    "force": "lực", "momentum": "động lượng",
+    "energy": "năng lượng", "kinetic": "động năng",
+    "potential": "thế năng", "power": "công suất",
+    "frequency": "tần số", "amplitude": "biên độ", "wavelength": "bước sóng",
+    "friction": "ma sát", "gravity": "trọng lực", "inertia": "quán tính",
+    "mass": "khối lượng", "weight": "trọng lượng", "density": "mật độ",
+    "pressure": "áp suất", "temperature": "nhiệt độ",
+    "heat": "nhiệt", "work": "công", "torque": "mô-men",
+    "joule": "jun", "watt": "oát", "newton": "niu-tơn",
+    "pascal": "pát-can", "hertz": "héc",
+    "volt": "vôn", "ampere": "am-pe", "ohm": "ôm",
+    "circuit": "mạch", "resistor": "điện trở", "capacitor": "tụ điện",
+    "inductor": "cuộn cảm", "conductor": "chất dẫn",
+    "semiconductor": "bán dẫn", "insulator": "chất cách điện",
+    "magnetic": "từ", "electric": "điện", "current": "dòng điện",
+    "voltage": "điện áp", "resistance": "điện trở",
+    "refraction": "khúc xạ", "reflection": "phản xạ",
+    "diffraction": "nhiễu xạ", "interference": "giao thoa",
+    "radiation": "bức xạ", "spectrum": "quang phổ",
+    "nuclear": "hạt nhân", "fission": "phân hạch", "fusion": "nhiệt hạch",
+    "radioactivity": "phóng xạ", "half-life": "thời gian bán huỷ",
+    "entropy": "en-trô-pi", "thermodynamics": "nhiệt động học",
+    "pendulum": "con lắc", "spring": "lò xo",
+    # ── Common English words in Vietnamese education ──
+    "experiment": "thí nghiệm", "theory": "lý thuyết",
+    "formula": "công thức", "equation": "phương trình",
+    "coefficient": "hệ số", "variable": "biến",
+    "graph": "đồ thị", "table": "bảng",
+    "example": "ví dụ", "exercise": "bài tập",
+    "chapter": "chương", "section": "mục",
+    "figure": "hình", "diagram": "sơ đồ",
+}
+
+def _replace_english_terms(text: str) -> str:
+    """Replace English chemistry/physics terms with Vietnamese phonetic pronunciation."""
+    for eng, vi in _ENG_TERM_MAP.items():
+        # Case-insensitive replacement, preserve surrounding context
+        text = re.sub(rf"\b{re.escape(eng)}\b", vi, text, flags=re.IGNORECASE)
+    return text
 
 # Roman numeral conversion (ordinal context)
 _ROMAN_MAP = {
@@ -124,14 +199,16 @@ _UNIT_MAP = {
     "°C": "độ xê",
 }
 
-# Chemical formula regex: one or more element symbols with optional digits.
-# (?<![A-Za-z]) prevents matching inside a larger word (e.g. O3 inside CaCO3).
-# Digit check happens inside _read_chem — formulas without digits stay unchanged.
+# Chemical formula regex: multi-element formulas with digits.
+# Matches: H2O, CO2, CaCO3, Fe2O3, 2H2O, etc.
+# (?<![A-Za-z]) prevents matching inside a larger word.
 _CHEM_RE = re.compile(r"(?<![A-Za-z])([A-Z][a-z]?\d*(?:[A-Z][a-z]?\d*)+)")
+# Single element + digit: H2, O2, N2 (not matched by _CHEM_RE)
+_CHEM_SINGLE = re.compile(r"(?<![A-Za-z])([A-Z][a-z]?)(\d+)(?![a-zA-Z\d])")
 
 
 def _read_chem(m):
-    """Read chemical formula: H2O -> H hai O, Fe2O3 -> Fe hai O ba, CaCO3 -> CaCO ba."""
+    """Read chemical formula with Vietnamese pronunciation: H2O -> hát hai ô, Fe2O3 -> ép-e hai ô ba."""
     s = m.group(0)
     if not any(c.isdigit() for c in s):
         return s  # no digits → not a formula (e.g. NaOH), leave unchanged
@@ -140,18 +217,18 @@ def _read_chem(m):
     for ch in s:
         if ch.isupper():
             if elem:
-                result.append(elem)
+                result.append(_ELEM_READ.get(elem, elem))
                 elem = ""
             elem = ch
         elif ch.islower():
             elem += ch
         elif ch.isdigit():
             if elem:
-                result.append(elem)
+                result.append(_ELEM_READ.get(elem, elem))
                 elem = ""
             result.append(_num_to_vi(int(ch)))
     if elem:
-        result.append(elem)
+        result.append(_ELEM_READ.get(elem, elem))
     return " ".join(result)
 
 
@@ -212,8 +289,13 @@ def _sanitize_for_tts(text: str) -> str:
 
     # ── 5. Chemical formulas: read BEFORE number-letter split ──
     text = _CHEM_RE.sub(_read_chem, text)
+    # Single element + digit: H2 -> hát hai, O2 -> ô hai
+    text = _CHEM_SINGLE.sub(lambda m: _ELEM_READ.get(m.group(1), m.group(1)) + " " + _num_to_vi(int(m.group(2))), text)
 
-    # ── 5b. Roman numerals in ordinal context: "Định luật III" -> "Định luật 3" ──
+    # ── 5b. English chemistry/physics terms → Vietnamese phonetic ──
+    text = _replace_english_terms(text)
+
+    # ── 5c. Roman numerals in ordinal context: "Định luật III" -> "Định luật 3" ──
     text = re.sub(
         rf"({_ORDINAL_WORDS})\s+(III|II|IV|IX|VIII|VII|VI|X|V|I)\b",
         _convert_roman, text, flags=re.IGNORECASE,
@@ -228,16 +310,13 @@ def _sanitize_for_tts(text: str) -> str:
     text = re.sub(r"(\d)\s+-\s+(\d)", r"\1 trừ \2", text)
     # Variable math: "x - 3" -> "x trừ 3" (single letter - digit)
     text = re.sub(r"([a-zA-Z])\s+-\s+(\d)", r"\1 trừ \2", text)
-    # Natural text range: "tháng 8 - tháng 10" -> "tháng 8 đến tháng 10"
-    text = re.sub(r"(?<=[\w\d])\s+-\s+(?=[\w\d])", " đến ", text)
 
     # ── 8. Unit notation (before "/" -> "chia") ──
     for unit, reading in _UNIT_MAP.items():
         text = text.replace(unit, reading)
-    # Generic unit: word/word (2+ ASCII chars each) -> word trên word
-    text = re.sub(r"(?<![a-zA-Z])([a-zA-Z]{2,})/([a-zA-Z]{2,})(?![a-zA-Z])", r"\1 trên \2", text)
+    # Number/number fraction: "1/2" -> "1 phần 2", "3/4" -> "3 phần 4"
+    text = re.sub(r"(\d+)\s*/\s*(\d+)", r"\1 phần \2", text)
     # Vietnamese text slash: "luận/Lời" -> "luận hoặc Lời" (before catch-all "chia")
-    # Requires 2+ chars on each side to avoid matching single-letter math vars like s/t
     _VI_WORD = r"[a-zA-ZÀ-ỹ]{2,}"
     text = re.sub(rf"({_VI_WORD})/({_VI_WORD})", r"\1 hoặc \2", text)
 
