@@ -1,8 +1,8 @@
 package com.buivan.ptalk_child
 
 object ServerConfig {
-    const val HTTP_BASE_URL = "http://171.226.10.121:8000/voice/"
-    const val WS_URL = "ws://171.226.10.121:8000/voice/ws"
+    const val HTTP_BASE_URL = "http://171.226.10.121:8000/v2/"
+    const val WS_URL = "ws://171.226.10.121:8000/v2/ws"
     
     // Cho phép fallback xuống HTTP nếu WebSocket hoặc Opus Codec lỗi
     val TRANSPORT_MODE = TransportMode.AUTO 
