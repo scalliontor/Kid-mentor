@@ -44,7 +44,7 @@
     <dimen name="login_ptit_logo_size">88dp</dimen>
     <dimen name="login_header_separator_height">36dp</dimen>
     <dimen name="login_header_separator_margin">12dp</dimen>
-    <dimen name="login_hero_size">160dp</dimen>
+    <dimen name="login_hero_size">240dp</dimen>
     <dimen name="text_login_headline">34sp</dimen>
     <dimen name="text_login_subheadline">13sp</dimen>
     <dimen name="text_login_header_title">15sp</dimen>
