@@ -21,7 +21,7 @@
         android:id="@+id/topBarText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="PTALK KIDS — AI MENTOR FOR CHILDREN"
+        android:text="KID MENTOR"
         android:textSize="@dimen/text_splash_topbar"
         android:textColor="#FFFFFF"
         android:letterSpacing="0.12"
@@ -50,7 +50,7 @@
         android:id="@+id/tvSplashTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="PTALK KIDS"
+        android:text="KID MENTOR"
         android:textSize="@dimen/text_splash_title"
         android:textColor="#111111"
         android:fontFamily="sans-serif-medium"
@@ -62,16 +62,28 @@
         android:layout_marginTop="@dimen/space_l" />
 
     <TextView
-        android:id="@+id/tvSplashSubtitle"
+        android:id="@+id/tvMadeBy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="AI Mentor · Voice Chat · For Kids"
+        android:text="Made by"
         android:textSize="@dimen/text_splash_subtitle"
         android:textColor="#707072"
         android:fontFamily="sans-serif"
         android:letterSpacing="0.04"
         android:alpha="0"
         app:layout_constraintTop_toBottomOf="@id/tvSplashTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/space_xs" />
+
+    <ImageView
+        android:id="@+id/ivSplashLogoCts"
+        android:layout_width="@dimen/splash_cts_logo_width"
+        android:layout_height="@dimen/splash_cts_logo_height"
+        android:src="@drawable/logo_cts_flashscreen"
+        android:scaleType="fitCenter"
+        android:alpha="0"
+        app:layout_constraintTop_toBottomOf="@id/tvMadeBy"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="@dimen/space_xs" />

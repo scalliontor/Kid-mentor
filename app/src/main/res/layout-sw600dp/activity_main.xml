@@ -9,34 +9,31 @@
     android:background="@drawable/bg_gradient"
     tools:context=".MainActivity">
 
-    <View
-        android:id="@+id/brandAccentLine"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/brand_accent_height"
-        android:background="#D30005"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+    <!-- Removed brandAccentLine to use glassy header with margins -->
     <View
         android:id="@+id/brandBarBg"
         android:layout_width="0dp"
         android:layout_height="@dimen/brand_bar_height"
-        android:background="#F5F5F5"
+        android:layout_marginStart="@dimen/space_xl"
+        android:layout_marginEnd="@dimen/space_xl"
+        android:layout_marginTop="@dimen/space_l"
+        android:background="@drawable/bg_glass_header"
+        android:elevation="6dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/brandAccentLine" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/ivBrandCts"
-        android:layout_width="@dimen/brand_cts_width"
-        android:layout_height="@dimen/brand_cts_height"
+        android:id="@+id/ivBrandPtitLeft"
+        android:layout_width="@dimen/brand_ptit_size"
+        android:layout_height="@dimen/brand_ptit_size"
         android:layout_marginStart="@dimen/brand_side_margin"
-        android:contentDescription="CTS"
+        android:contentDescription="PTIT"
         android:scaleType="fitCenter"
-        android:src="@drawable/logo_cts"
+        android:src="@drawable/logo_ptit"
+        android:elevation="7dp"
         app:layout_constraintBottom_toBottomOf="@id/brandBarBg"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/brandBarBg"
         app:layout_constraintTop_toTopOf="@id/brandBarBg" />
 
     <View
@@ -45,19 +42,21 @@
         android:layout_height="@dimen/brand_separator_height"
         android:layout_marginStart="@dimen/brand_separator_margin_start"
         android:background="#CACACB"
+        android:elevation="7dp"
         app:layout_constraintBottom_toBottomOf="@id/brandBarBg"
-        app:layout_constraintStart_toEndOf="@id/ivBrandCts"
+        app:layout_constraintStart_toEndOf="@id/ivBrandPtitLeft"
         app:layout_constraintTop_toTopOf="@id/brandBarBg" />
 
     <LinearLayout
         android:id="@+id/brandTextBlock"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/brand_text_margin_start"
         android:orientation="vertical"
+        android:gravity="center"
+        android:elevation="7dp"
         app:layout_constraintBottom_toBottomOf="@id/brandBarBg"
-        app:layout_constraintEnd_toStartOf="@id/ivBrandPtit"
-        app:layout_constraintStart_toEndOf="@id/brandSeparator"
+        app:layout_constraintStart_toStartOf="@id/brandBarBg"
+        app:layout_constraintEnd_toEndOf="@id/brandBarBg"
         app:layout_constraintTop_toTopOf="@id/brandBarBg">
 
         <TextView
@@ -65,41 +64,25 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
             android:letterSpacing="0.06"
-            android:text="PTALK KIDS"
+            android:text="KID MENTOR"
             android:textColor="#111111"
             android:textSize="@dimen/text_brand_title" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_xs"
-            android:fontFamily="sans-serif"
-            android:text="Lab CTS · PTIT"
-            android:textColor="#707072"
-            android:textSize="@dimen/text_brand_subtitle" />
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/ivBrandPtit"
-        android:layout_width="@dimen/brand_ptit_size"
-        android:layout_height="@dimen/brand_ptit_size"
+        android:id="@+id/ivBrandCtsRight"
+        android:layout_width="@dimen/brand_cts_width"
+        android:layout_height="@dimen/brand_cts_height"
         android:layout_marginEnd="@dimen/brand_side_margin"
-        android:contentDescription="PTIT"
+        android:contentDescription="CTS"
         android:scaleType="fitCenter"
-        android:src="@drawable/logo_ptit"
+        android:src="@drawable/logo_cts_main"
+        android:elevation="7dp"
         app:layout_constraintBottom_toBottomOf="@id/brandBarBg"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/brandBarBg"
         app:layout_constraintTop_toTopOf="@id/brandBarBg" />
 
-    <View
-        android:id="@+id/brandBarBottomLine"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="#E5E5E5"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/brandBarBg" />
-
+    <!-- Removed brandBarBottomLine for cleaner glassy look -->
     <TextView
         android:id="@+id/tvGreeting"
         android:layout_width="wrap_content"
@@ -110,7 +93,7 @@
         android:textSize="@dimen/text_greeting"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/brandBarBottomLine" />
+        app:layout_constraintTop_toBottomOf="@id/brandBarBg" />
 
     <TextView
         android:id="@+id/tvSubGreeting"
