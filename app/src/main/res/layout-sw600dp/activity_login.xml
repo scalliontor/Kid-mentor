@@ -10,6 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="32dp"
         android:minHeight="@dimen/login_min_height">
 
         <androidx.constraintlayout.widget.Guideline
@@ -220,7 +221,8 @@
             android:textSize="@dimen/text_login_footer"
             app:layout_constraintEnd_toStartOf="@id/contentEndGuide"
             app:layout_constraintStart_toStartOf="@id/contentStartGuide"
-            app:layout_constraintTop_toBottomOf="@id/loginFormCard" />
+            app:layout_constraintTop_toBottomOf="@id/loginFormCard"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
