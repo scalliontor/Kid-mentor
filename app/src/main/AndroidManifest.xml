@@ -36,11 +36,15 @@
             android:noHistory="true"
             android:theme="@style/Theme.Ptalk_child" />
 
-        <!-- LoginActivity — màn hình đăng nhập giả -->
         <activity
             android:name=".LoginActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
+        <!-- HomeProfileActivity — màn hình quản lý -->
+        <activity
+            android:name=".HomeProfileActivity"
+            android:exported="false" />
 
         <!-- MainActivity là màn hình chính -->
         <activity

@@ -210,6 +210,7 @@ class StreamingVoiceClient(
             }
 
             override fun onMessage(webSocket: WebSocket, text: String) {
+                Log.w("StreamingVoiceClient", "Received JSON event from server: $text")
                 val event = StreamingEventParser.parse(text)
                 if (event == StreamingEvent.Listening) {
                     isServerListening.set(true)
@@ -248,6 +249,7 @@ class StreamingVoiceClient(
             }
 
             override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
+                Log.w("StreamingVoiceClient", "Received binary audio chunk from server, size: ${bytes.size} bytes")
                 try {
                     audioPlayer?.start()
                     audioPlayer?.playPacket(bytes.toByteArray())

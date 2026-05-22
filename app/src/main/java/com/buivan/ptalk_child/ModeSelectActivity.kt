@@ -33,6 +33,12 @@ class ModeSelectActivity : AppCompatActivity() {
         binding.cardElderCare.setOnClickListener {
             selectMode(AppMode.ELDER_CARE)
         }
+
+        // Tới màn hình quản lý User
+        binding.btnProfile.setOnClickListener {
+            val intent = Intent(this, HomeProfileActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun selectMode(mode: AppMode) {
@@ -52,15 +58,17 @@ class ModeSelectActivity : AppCompatActivity() {
                 selectedCard.animate()
                     .scaleX(1f).scaleY(1f)
                     .setDuration(100)
-                    .withEndAction { navigateToLogin(mode) }
+                    .withEndAction { navigateToMain(mode) }
                     .start()
             }
             .start()
     }
 
-    private fun navigateToLogin(mode: AppMode) {
-        val intent = Intent(this, LoginActivity::class.java).apply {
+    private fun navigateToMain(mode: AppMode) {
+        val isGuest = intent.getBooleanExtra("is_guest", false)
+        val intent = Intent(this, MainActivity::class.java).apply {
             putExtra(EXTRA_APP_MODE, mode.name)
+            putExtra("is_guest", isGuest)
         }
         startActivity(intent)
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)

@@ -12,7 +12,7 @@
     <dimen name="brand_bar_height">84dp</dimen>
     <dimen name="brand_cts_width">84dp</dimen>
     <dimen name="brand_cts_height">56dp</dimen>
-    <dimen name="brand_ptit_size">56dp</dimen>
+    <dimen name="brand_ptit_size">80dp</dimen>
     <dimen name="brand_side_margin">16dp</dimen>
     <dimen name="brand_separator_height">28dp</dimen>
     <dimen name="brand_separator_margin_start">8dp</dimen>
@@ -41,7 +41,7 @@
     <dimen name="login_header_padding_h">24dp</dimen>
     <dimen name="login_cts_logo_width">108dp</dimen>
     <dimen name="login_cts_logo_height">80dp</dimen>
-    <dimen name="login_ptit_logo_size">88dp</dimen>
+    <dimen name="login_ptit_logo_size">124dp</dimen>
     <dimen name="login_header_separator_height">36dp</dimen>
     <dimen name="login_header_separator_margin">12dp</dimen>
     <dimen name="login_hero_size">160dp</dimen>
@@ -61,7 +61,7 @@
     <dimen name="subheadline_padding_h">32dp</dimen>
 
     <dimen name="splash_top_bar_height">40dp</dimen>
-    <dimen name="splash_logo_size">220dp</dimen>
+    <dimen name="splash_logo_size">300dp</dimen>
     <dimen name="splash_cts_logo_width">160dp</dimen>
     <dimen name="splash_cts_logo_height">110dp</dimen>
     <dimen name="text_splash_topbar">11sp</dimen>

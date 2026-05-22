@@ -2,6 +2,7 @@ package com.buivan.ptalk_child
 
 import android.annotation.SuppressLint
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.SystemClock
@@ -120,6 +121,11 @@ class MainActivity : AppCompatActivity() {
         // Greeting texts
         binding.tvGreeting.text = appMode.greetingText
         binding.tvSubGreeting.text = appMode.subGreetingText
+        if (appMode.subGreetingText.isEmpty()) {
+            binding.tvSubGreeting.visibility = android.view.View.GONE
+        } else {
+            binding.tvSubGreeting.visibility = android.view.View.VISIBLE
+        }
 
         // Brand title (center text in brand bar)
         binding.tvBrandTitle.text = appMode.brandTitle
@@ -131,11 +137,48 @@ class MainActivity : AppCompatActivity() {
         if (appMode == AppMode.ELDER_CARE) {
             binding.main.setBackgroundResource(R.drawable.bg_gradient_eldercare)
             binding.tvGreeting.setTextColor(0xFFD35400.toInt())
+            binding.tvGreeting.textSize = 24f // Phóng to ra
+            binding.tvGreeting.setTypeface(null, android.graphics.Typeface.BOLD) // In đậm
             binding.tvSubGreeting.setTextColor(0xFFBF6516.toInt())
             binding.tvStatus.setTextColor(0xFFBF6516.toInt())
             binding.btnCancel.setBackgroundResource(R.drawable.bg_cancel_button_elder)
+            binding.tvSTT?.visibility = android.view.View.GONE
+            binding.btnSettings?.visibility = android.view.View.GONE
+            binding.btnCamera?.visibility = android.view.View.GONE
+            binding.btnHoldToTalk?.visibility = android.view.View.GONE
+            binding.bottomBar?.visibility = android.view.View.GONE
+            val micTouchContainer = findViewById<android.view.View>(R.id.micTouchContainer)
+            micTouchContainer?.visibility = android.view.View.GONE
+            
+            val containerElder = findViewById<android.view.View>(R.id.containerElderButtons)
+            containerElder?.visibility = android.view.View.VISIBLE
+
+            // Background effects
+            findViewById<android.view.View>(R.id.bgStarField)?.visibility = android.view.View.GONE
+            findViewById<android.view.View>(R.id.bgWaveEffect)?.visibility = android.view.View.VISIBLE
+        } else {
+            binding.tvSettingText?.text = "Cài đặt"
+            binding.tvGreeting.setTextColor(0xFF2E7D52.toInt())
+            binding.tvGreeting.textSize = 24f // Phóng to ra
+            binding.tvGreeting.setTypeface(null, android.graphics.Typeface.BOLD) // In đậm
+            binding.tvSTT?.visibility = android.view.View.GONE
+            binding.btnSettings?.visibility = android.view.View.GONE
+            binding.btnCamera?.visibility = android.view.View.GONE
+            binding.bottomBar?.visibility = android.view.View.GONE
+            binding.btnHoldToTalk?.visibility = android.view.View.VISIBLE
+            val micTouchContainer = findViewById<android.view.View>(R.id.micTouchContainer)
+            micTouchContainer?.visibility = android.view.View.VISIBLE
+            
+            val containerElder = findViewById<android.view.View>(R.id.containerElderButtons)
+            containerElder?.visibility = android.view.View.GONE
+
+            // Background effects
+            findViewById<android.view.View>(R.id.bgStarField)?.visibility = android.view.View.VISIBLE
+            findViewById<android.view.View>(R.id.bgWaveEffect)?.visibility = android.view.View.GONE
         }
     }
+
+
 
     override fun onResume() {
         super.onResume()
@@ -165,6 +208,8 @@ class MainActivity : AppCompatActivity() {
                 AppState.IDLE -> {
                     binding.btnHoldToTalk.isEnabled = true
                     binding.btnHoldToTalk.alpha = 1f
+                    findViewById<android.view.View>(R.id.btnHoldToTalkElder)?.isEnabled = true
+                    findViewById<android.view.View>(R.id.btnHoldToTalkElder)?.alpha = 1f
                     binding.btnCancel.visibility = View.GONE
                     isMicGestureActive = false
                     isMicTapFallbackActive = false
@@ -175,6 +220,8 @@ class MainActivity : AppCompatActivity() {
                 AppState.RECORDING -> {
                     binding.btnHoldToTalk.isEnabled = true
                     binding.btnHoldToTalk.alpha = 0.75f
+                    findViewById<android.view.View>(R.id.btnHoldToTalkElder)?.isEnabled = true
+                    findViewById<android.view.View>(R.id.btnHoldToTalkElder)?.alpha = 0.75f
                     binding.btnCancel.visibility = View.GONE
                     characterAnimator.playRecording()
                     waveformView.setStateRecording()
@@ -183,6 +230,8 @@ class MainActivity : AppCompatActivity() {
                 AppState.UPLOADING -> {
                     binding.btnHoldToTalk.isEnabled = false
                     binding.btnHoldToTalk.alpha = 0.5f
+                    findViewById<android.view.View>(R.id.btnHoldToTalkElder)?.isEnabled = false
+                    findViewById<android.view.View>(R.id.btnHoldToTalkElder)?.alpha = 0.5f
                     binding.btnCancel.visibility = View.GONE
                     isMicGestureActive = false
                     isMicTapFallbackActive = false
@@ -193,6 +242,8 @@ class MainActivity : AppCompatActivity() {
                 AppState.PLAYING -> {
                     binding.btnHoldToTalk.isEnabled = false
                     binding.btnHoldToTalk.alpha = 0.5f
+                    findViewById<android.view.View>(R.id.btnHoldToTalkElder)?.isEnabled = false
+                    findViewById<android.view.View>(R.id.btnHoldToTalkElder)?.alpha = 0.5f
                     binding.btnCancel.visibility = View.VISIBLE
                     isMicGestureActive = false
                     isMicTapFallbackActive = false
@@ -203,6 +254,8 @@ class MainActivity : AppCompatActivity() {
                 AppState.ERROR -> {
                     binding.btnHoldToTalk.isEnabled = true
                     binding.btnHoldToTalk.alpha = 1f
+                    findViewById<android.view.View>(R.id.btnHoldToTalkElder)?.isEnabled = true
+                    findViewById<android.view.View>(R.id.btnHoldToTalkElder)?.alpha = 1f
                     binding.btnCancel.visibility = View.GONE
                     isMicGestureActive = false
                     isMicTapFallbackActive = false
@@ -220,13 +273,76 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupButtons() {
-        binding.btnHoldToTalk.setOnTouchListener { view, event ->
+        binding.btnBackMode?.setOnClickListener {
+            val intent = Intent(this, ModeSelectActivity::class.java).apply {
+                val isGuest = this@MainActivity.intent.getBooleanExtra("is_guest", false)
+                putExtra("is_guest", isGuest)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+            startActivity(intent)
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        }
+
+        var initialTouchX = 0f
+        var initialTouchY = 0f
+        var isSwipingToCancel = false
+        val touchListener = android.view.View.OnTouchListener { view, event ->
+            val swipeThreshold = -150f // Vuốt sang trái 150 pixels cho Elder Care
+            val radiusThreshold = android.util.TypedValue.applyDimension(
+                android.util.TypedValue.COMPLEX_UNIT_DIP, 
+                if (isTabletDevice) 120f else 80f, 
+                resources.displayMetrics
+            )
+
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
+                    initialTouchX = event.rawX
+                    initialTouchY = event.rawY
+                    isSwipingToCancel = false
                     view.parent?.requestDisallowInterceptTouchEvent(true)
                     val started = startMicCapture(fromTouch = true)
                     if (started) {
                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                        if (appMode == AppMode.ELDER_CARE) {
+                            val btnCameraElder = findViewById<android.widget.ImageButton>(R.id.btnCameraElder)
+                            btnCameraElder?.setImageResource(android.R.drawable.ic_menu_close_clear_cancel)
+                            btnCameraElder?.setBackgroundResource(R.drawable.bg_cancel_button_elder)
+                            findViewById<android.view.View>(R.id.swipePathElder)?.visibility = android.view.View.VISIBLE
+                        } else if (appMode == AppMode.KID_MENTOR) {
+                            findViewById<android.view.View>(R.id.cancelZoneShadow)?.visibility = android.view.View.VISIBLE
+                        }
+                    }
+                    true
+                }
+
+                MotionEvent.ACTION_MOVE -> {
+                    if (isMicGestureActive) {
+                        val deltaX = event.rawX - initialTouchX
+                        val deltaY = event.rawY - initialTouchY
+                        val distance = Math.hypot(deltaX.toDouble(), deltaY.toDouble()).toFloat()
+
+                        if (appMode == AppMode.ELDER_CARE) {
+                            if (deltaX < swipeThreshold && !isSwipingToCancel) {
+                                isSwipingToCancel = true
+                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                viewModel.statusText.value = "Thả tay để huỷ"
+                            } else if (deltaX >= swipeThreshold && isSwipingToCancel) {
+                                isSwipingToCancel = false
+                                viewModel.statusText.value = "Đang nghe..."
+                            }
+                        } else {
+                            // Kid Mentor mode: omni-directional drag outside button area
+                            if (distance > radiusThreshold && !isSwipingToCancel) {
+                                isSwipingToCancel = true
+                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                viewModel.statusText.value = "Thả tay để huỷ"
+                                binding.btnHoldToTalk.alpha = 0.5f // Hiệu ứng mờ nút
+                            } else if (distance <= radiusThreshold && isSwipingToCancel) {
+                                isSwipingToCancel = false
+                                viewModel.statusText.value = "Đang nghe..."
+                                binding.btnHoldToTalk.alpha = 0.75f // Trở về như lúc thu âm
+                            }
+                        }
                     }
                     true
                 }
@@ -234,15 +350,31 @@ class MainActivity : AppCompatActivity() {
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     view.parent?.requestDisallowInterceptTouchEvent(false)
                     if (isMicGestureActive) {
-                        finishMicCaptureAndSend(wasCancelled = event.action == MotionEvent.ACTION_CANCEL)
+                        val wasCancelled = event.action == MotionEvent.ACTION_CANCEL || isSwipingToCancel
+                        finishMicCaptureAndSend(wasCancelled = wasCancelled)
                         suppressFallbackClickUntilMs = SystemClock.elapsedRealtime() + 350L
                     }
+                    
+                    if (appMode == AppMode.ELDER_CARE) {
+                        val btnCameraElder = findViewById<android.widget.ImageButton>(R.id.btnCameraElder)
+                        btnCameraElder?.setImageResource(android.R.drawable.ic_menu_camera)
+                        btnCameraElder?.setBackgroundResource(R.drawable.bg_circle_orange_pastel)
+                        findViewById<android.view.View>(R.id.swipePathElder)?.visibility = android.view.View.INVISIBLE
+                    } else if (appMode == AppMode.KID_MENTOR) {
+                        binding.btnHoldToTalk.alpha = 1f
+                        findViewById<android.view.View>(R.id.cancelZoneShadow)?.visibility = android.view.View.INVISIBLE
+                    }
+                    isSwipingToCancel = false
                     true
                 }
 
                 else -> false
             }
         }
+
+        binding.btnHoldToTalk.setOnTouchListener(touchListener)
+        val btnHoldToTalkElder = findViewById<android.view.View>(R.id.btnHoldToTalkElder)
+        btnHoldToTalkElder?.setOnTouchListener(touchListener)
 
         if (isTabletDevice) {
             binding.btnHoldToTalk.setOnClickListener { view ->
@@ -361,6 +493,19 @@ class MainActivity : AppCompatActivity() {
         val state = viewModel.state.value
         if (state != AppState.RECORDING) {
             isMicGestureActive = false
+            return
+        }
+
+        if (wasCancelled) {
+            if (activeTransport == ActiveVoiceTransport.STREAMING) {
+                clearStartAckTimeout()
+                streamingVoiceClient.cancelPlaybackAndReset(notifyIdle = true)
+            } else {
+                audioRecorder.stop()
+            }
+            isMicGestureActive = false
+            activeTransport = ActiveVoiceTransport.NONE
+            viewModel.onError("Đã huỷ ghi âm.")
             return
         }
 
