@@ -210,12 +210,40 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
 
+                MotionEvent.ACTION_MOVE -> {
+                    if (isMicGestureActive) {
+                        val centerX = view.width / 2f
+                        val centerY = view.height / 2f
+                        val distance = Math.hypot((event.x - centerX).toDouble(), (event.y - centerY).toDouble()).toFloat()
+
+                        val threshold = 100 * resources.displayMetrics.density
+                        val cancelZoneShadow = findViewById<android.view.View>(R.id.cancelZoneShadow)
+                        
+                        if (distance > threshold) {
+                            // Vuốt ra ngoài ngưỡng -> Huỷ
+                            view.parent?.requestDisallowInterceptTouchEvent(false)
+                            finishMicCaptureAndSend(wasCancelled = true)
+                            suppressFallbackClickUntilMs = SystemClock.elapsedRealtime() + 350L
+                            
+                            cancelZoneShadow?.animate()?.alpha(0f)?.setDuration(200)?.start()
+                        } else {
+                            // Cập nhật độ đậm của vùng bóng mờ khi kéo ra xa
+                            if (cancelZoneShadow?.visibility != android.view.View.VISIBLE) {
+                                cancelZoneShadow?.visibility = android.view.View.VISIBLE
+                            }
+                            cancelZoneShadow?.alpha = (distance / threshold).coerceIn(0f, 1f) * 0.8f
+                        }
+                    }
+                    true
+                }
+
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     view.parent?.requestDisallowInterceptTouchEvent(false)
                     if (isMicGestureActive) {
                         finishMicCaptureAndSend(wasCancelled = event.action == MotionEvent.ACTION_CANCEL)
                         suppressFallbackClickUntilMs = SystemClock.elapsedRealtime() + 350L
                     }
+                    findViewById<android.view.View>(R.id.cancelZoneShadow)?.animate()?.alpha(0f)?.setDuration(200)?.start()
                     true
                 }
 
@@ -343,6 +371,20 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
+        if (wasCancelled) {
+            clearStartAckTimeout()
+            if (activeTransport == ActiveVoiceTransport.STREAMING) {
+                streamingVoiceClient.cancelPlaybackAndReset(notifyIdle = false)
+            } else {
+                audioRecorder.stop()
+            }
+            wsSessionPhase = WsSessionPhase.IDLE
+            isMicGestureActive = false
+            activeTransport = ActiveVoiceTransport.NONE
+            viewModel.onError("Đã huỷ ghi âm.")
+            return
+        }
+
         if (activeTransport == ActiveVoiceTransport.STREAMING) {
             clearStartAckTimeout()
             streamingVoiceClient.stopSession(sendEnd = true)
@@ -364,11 +406,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        if (wasCancelled) {
-            viewModel.onError("Ghi âm bị gián đoạn, giữ nút và thử lại.")
-        } else {
-            viewModel.onError("Ghi âm thất bại, thử lại!")
-        }
+        viewModel.onError("Ghi âm thất bại, thử lại!")
     }
 
     private fun handleStreamingReachabilityChanged(reachability: WsReachability, reason: String?) {

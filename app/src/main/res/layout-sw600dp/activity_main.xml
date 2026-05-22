@@ -204,7 +204,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <ImageButton
+        <!-- Vùng tròn bóng mờ báo hiệu huỷ (mặc định ẩn) -->
+        <View
+            android:id="@+id/cancelZoneShadow"
+            android:layout_width="240dp"
+            android:layout_height="240dp"
+            android:layout_gravity="center"
+            android:alpha="0"
+            android:background="@drawable/bg_circle_orange_pastel"
+            android:visibility="gone" />
+
+    <ImageButton
             android:id="@+id/btnHoldToTalk"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
