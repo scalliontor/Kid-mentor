@@ -34,7 +34,8 @@ class SplashActivity : AppCompatActivity() {
     private fun startSplashAnimation() {
         val logo     = binding.ivSplashLogo
         val title    = binding.tvSplashTitle
-        val subtitle = binding.tvSplashSubtitle
+        val tvMadeBy = binding.tvMadeBy
+        val logoCts  = binding.ivSplashLogoCts
 
         // ── Phase 1: Fade in + scale up với overshoot ─────────────────────
         logo.scaleX = 0.3f
@@ -48,7 +49,7 @@ class SplashActivity : AppCompatActivity() {
             .setDuration(500)
             .setStartDelay(200)
             .setInterpolator(OvershootInterpolator(1.2f))
-            .withEndAction { startFlip3D(logo, title, subtitle) }
+            .withEndAction { startFlip3D(logo, title, tvMadeBy, logoCts) }
             .start()
     }
 
@@ -56,7 +57,8 @@ class SplashActivity : AppCompatActivity() {
     private fun startFlip3D(
         logo: View,
         title: View,
-        subtitle: View
+        tvMadeBy: View,
+        logoCts: View
     ) {
         // Hardware layer để GPU render mượt 3D flip
         logo.setLayerType(View.LAYER_TYPE_HARDWARE, null)
@@ -70,7 +72,7 @@ class SplashActivity : AppCompatActivity() {
             override fun onAnimationEnd(animation: android.animation.Animator) {
                 logo.setLayerType(View.LAYER_TYPE_NONE, null)
                 logo.rotationY = 0f
-                showTitles(logo, title, subtitle)
+                showTitles(logo, title, tvMadeBy, logoCts)
             }
         })
 
@@ -78,7 +80,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     // ── Phase 3: Tiêu đề fade in + slide up ──────────────────────────────
-    private fun showTitles(logo: View, title: View, subtitle: View) {
+    private fun showTitles(logo: View, title: View, tvMadeBy: View, logoCts: View) {
         title.translationY = 24f
         title.animate()
             .alpha(1f)
@@ -87,12 +89,21 @@ class SplashActivity : AppCompatActivity() {
             .setInterpolator(DecelerateInterpolator())
             .start()
 
-        subtitle.translationY = 16f
-        subtitle.animate()
+        tvMadeBy.translationY = 16f
+        tvMadeBy.animate()
             .alpha(1f)
             .translationY(0f)
             .setDuration(400)
             .setStartDelay(130)
+            .setInterpolator(DecelerateInterpolator())
+            .start()
+
+        logoCts.translationY = 16f
+        logoCts.animate()
+            .alpha(1f)
+            .translationY(0f)
+            .setDuration(400)
+            .setStartDelay(260)
             .setInterpolator(DecelerateInterpolator())
             .withEndAction {
                 // ── Phase 4: Chờ 800ms rồi navigate ───────────────────
@@ -102,7 +113,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun navigateToMain() {
-        val intent = Intent(this, LoginActivity::class.java)
+        val intent = Intent(this, ModeSelectActivity::class.java)
         startActivity(intent)
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         finish()

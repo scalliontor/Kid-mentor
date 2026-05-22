@@ -33,6 +33,8 @@ private enum class ActiveVoiceTransport {
 
 class MainActivity : AppCompatActivity() {
 
+    private var appMode: AppMode = AppMode.KID_MENTOR
+
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
 
@@ -87,12 +89,18 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // ── Nhận AppMode từ intent ─────────────────────────────────────
+        val modeName = intent.getStringExtra(ModeSelectActivity.EXTRA_APP_MODE)
+        appMode = modeName?.let { AppMode.valueOf(it) } ?: AppMode.KID_MENTOR
+        ServerConfig.activeMode = appMode
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
+        applyModeUI()
         requestMicPermission()
         observeState()
         setupButtons()
@@ -103,6 +111,30 @@ class MainActivity : AppCompatActivity() {
 
         streamingVoiceClient.preconnect()
         runHttpHealthDiagnostic()
+    }
+
+    /**
+     * Thay đổi giao diện (text, màu sắc, background) dựa theo AppMode.
+     */
+    private fun applyModeUI() {
+        // Greeting texts
+        binding.tvGreeting.text = appMode.greetingText
+        binding.tvSubGreeting.text = appMode.subGreetingText
+
+        // Brand title (center text in brand bar)
+        binding.tvBrandTitle.text = appMode.brandTitle
+
+        // Status idle text
+        viewModel.statusText.value = appMode.statusIdleText
+
+        // Background gradient
+        if (appMode == AppMode.ELDER_CARE) {
+            binding.main.setBackgroundResource(R.drawable.bg_gradient_eldercare)
+            binding.tvGreeting.setTextColor(0xFFD35400.toInt())
+            binding.tvSubGreeting.setTextColor(0xFFBF6516.toInt())
+            binding.tvStatus.setTextColor(0xFFBF6516.toInt())
+            binding.btnCancel.setBackgroundResource(R.drawable.bg_cancel_button_elder)
+        }
     }
 
     override fun onResume() {

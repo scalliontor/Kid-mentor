@@ -29,6 +29,13 @@
             </intent-filter>
         </activity>
 
+        <!-- ModeSelectActivity — chọn Kid Mentor / Elder Care -->
+        <activity
+            android:name=".ModeSelectActivity"
+            android:exported="false"
+            android:noHistory="true"
+            android:theme="@style/Theme.Ptalk_child" />
+
         <!-- LoginActivity — màn hình đăng nhập giả -->
         <activity
             android:name=".LoginActivity"

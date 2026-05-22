@@ -13,14 +13,7 @@
         android:minHeight="@dimen/login_min_height">
 
         <!-- ══ TOP RED ACCENT LINE ═════════════════════════════════════════ -->
-        <View
-            android:id="@+id/loginAccentLine"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/login_accent_height"
-            android:background="#D30005"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+        <!-- Removed loginAccentLine for cleaner glassy look -->
 
         <!-- ══ BRAND HEADER ════════════════════════════════════════════════ -->
         <LinearLayout
@@ -31,18 +24,22 @@
             android:gravity="center_vertical"
             android:paddingStart="@dimen/login_header_padding_h"
             android:paddingEnd="@dimen/login_header_padding_h"
-            android:background="#FAFAFA"
-            app:layout_constraintTop_toBottomOf="@id/loginAccentLine"
+            android:layout_marginStart="@dimen/space_l"
+            android:layout_marginEnd="@dimen/space_l"
+            android:layout_marginTop="@dimen/space_l"
+            android:background="@drawable/bg_glass_header"
+            android:elevation="4dp"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <!-- CTS Logo left -->
+            <!-- PTIT Logo left -->
             <ImageView
-                android:layout_width="@dimen/login_cts_logo_width"
+                android:layout_width="@dimen/login_ptit_logo_size"
                 android:layout_height="@dimen/login_cts_logo_height"
-                android:src="@drawable/logo_cts"
+                android:src="@drawable/logo_ptit"
                 android:scaleType="fitCenter"
-                android:contentDescription="CTS" />
+                android:contentDescription="PTIT" />
 
             <!-- Separator -->
             <View
@@ -62,40 +59,24 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="PTALK KIDS"
+                    android:text="PTALK"
                     android:textSize="@dimen/text_login_header_title"
                     android:textColor="#111111"
                     android:fontFamily="sans-serif-medium"
                     android:letterSpacing="0.06" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="AI Mentor · Lab CTS · PTIT"
-                    android:textSize="@dimen/text_login_header_subtitle"
-                    android:textColor="#707072"
-                    android:fontFamily="sans-serif"
-                    android:layout_marginTop="@dimen/space_xs" />
             </LinearLayout>
 
-            <!-- PTIT Logo right -->
+            <!-- CTS Logo right -->
             <ImageView
-                android:layout_width="@dimen/login_ptit_logo_size"
+                android:layout_width="@dimen/login_cts_logo_width"
                 android:layout_height="@dimen/login_cts_logo_height"
-                android:src="@drawable/logo_ptit"
+                android:src="@drawable/logo_cts_main"
                 android:scaleType="fitCenter"
-                android:contentDescription="PTIT" />
+                android:contentDescription="CTS" />
         </LinearLayout>
 
         <!-- Divider under header -->
-        <View
-            android:id="@+id/loginHeaderDivider"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:background="#E5E5E5"
-            app:layout_constraintTop_toBottomOf="@id/loginBrandHeader"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+        <!-- Removed loginHeaderDivider -->
 
         <!-- ══ HERO SECTION ════════════════════════════════════════════════ -->
         <!-- PTIT Logo big - editorial hero -->
@@ -106,7 +87,7 @@
             android:src="@drawable/logo_ptit"
             android:scaleType="fitCenter"
             android:layout_marginTop="@dimen/space_hero_top"
-            app:layout_constraintTop_toBottomOf="@id/loginHeaderDivider"
+            app:layout_constraintTop_toBottomOf="@id/loginBrandHeader"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -131,7 +112,7 @@
             android:id="@+id/tvLoginSubheadline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Đăng nhập để tiếp tục học cùng AI Mentor"
+            android:text="Đăng nhập để tiếp tục sử dụng PTalk"
             android:textSize="@dimen/text_login_subheadline"
             android:textColor="#707072"
             android:fontFamily="sans-serif"

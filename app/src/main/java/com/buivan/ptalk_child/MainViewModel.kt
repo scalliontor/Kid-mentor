@@ -7,7 +7,7 @@ class MainViewModel : ViewModel() {
     val state = MutableLiveData<AppState>(AppState.IDLE)
 
     // Text trạng thái hiển thị cho user
-    val statusText = MutableLiveData<String>("Giữ nút để nói chuyện")
+    val statusText = MutableLiveData<String>(ServerConfig.activeMode.statusIdleText)
 
     fun onStartRecording() {
         state.value = AppState.RECORDING
@@ -26,12 +26,12 @@ class MainViewModel : ViewModel() {
 
     fun onFinishPlaying() {
         state.value = AppState.IDLE
-        statusText.value = "Giữ nút để nói chuyện"
+        statusText.value = ServerConfig.activeMode.statusIdleText
     }
 
     fun onCancelPlayback() {
         state.value = AppState.IDLE
-        statusText.value = "Giữ nút để nói chuyện"
+        statusText.value = ServerConfig.activeMode.statusIdleText
     }
 
     fun onError(message: String = "Có lỗi xảy ra, thử lại nhé!") {

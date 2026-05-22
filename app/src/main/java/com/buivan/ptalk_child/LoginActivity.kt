@@ -12,6 +12,7 @@ import com.buivan.ptalk_child.databinding.ActivityLoginBinding
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
+    private var appMode: AppMode = AppMode.KID_MENTOR
 
     // ── Tài khoản giả (demo) ─────────────────────────────────────────────
     companion object {
@@ -24,7 +25,44 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Nhận AppMode từ ModeSelectActivity
+        val modeName = intent.getStringExtra(ModeSelectActivity.EXTRA_APP_MODE)
+        appMode = modeName?.let { AppMode.valueOf(it) } ?: AppMode.KID_MENTOR
+
+        applyModeUI()
         setupUI()
+    }
+
+    /** Cập nhật giao diện Login theo chế độ đã chọn */
+    private fun applyModeUI() {
+        // Brand title trong header
+        val brandTitle = binding.loginBrandHeader.findViewWithTag<android.widget.TextView>("brandTitle")
+        // Nếu không dùng tag thì sửa trực tiếp text ở XML, hoặc tìm theo thứ tự con
+        // Ở đây ta sẽ duyệt header tìm TextView đầu tiên có text "PTALK"
+        findTextViewWithText(binding.loginBrandHeader, "PTALK")?.text = appMode.brandTitle
+
+        // Headline & subheadline
+        binding.tvLoginHeadline.text = appMode.loginHeadline
+        binding.tvLoginSubheadline.text = appMode.loginSubheadline
+
+        // Login button color theo mode
+        if (appMode == AppMode.ELDER_CARE) {
+            binding.btnLogin.setBackgroundResource(R.drawable.bg_login_button_elder)
+        }
+    }
+
+    /** Tìm TextView chứa text cụ thể trong ViewGroup (depth-first) */
+    private fun findTextViewWithText(parent: android.view.ViewGroup, targetText: String): android.widget.TextView? {
+        for (i in 0 until parent.childCount) {
+            val child = parent.getChildAt(i)
+            if (child is android.widget.TextView && child.text.toString() == targetText) {
+                return child
+            }
+            if (child is android.view.ViewGroup) {
+                findTextViewWithText(child, targetText)?.let { return it }
+            }
+        }
+        return null
     }
 
     private fun setupUI() {
@@ -108,6 +146,7 @@ class LoginActivity : AppCompatActivity() {
     private fun goToMain(isGuest: Boolean) {
         val intent = Intent(this, MainActivity::class.java).apply {
             putExtra("is_guest", isGuest)
+            putExtra(ModeSelectActivity.EXTRA_APP_MODE, appMode.name)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         startActivity(intent)

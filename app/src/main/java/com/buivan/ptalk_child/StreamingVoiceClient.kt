@@ -18,9 +18,10 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.ConcurrentLinkedQueue
 
 class StreamingVoiceClient(
-    private val listener: Listener,
-    private val wsUrl: String = ServerConfig.WS_URL
+    private val listener: Listener
 ) {
+    /** Always reads the current ServerConfig.WS_URL (which depends on activeMode) */
+    private val wsUrl: String get() = ServerConfig.WS_URL
     interface Listener {
         fun onProtocolEvent(event: StreamingEvent)
         fun onAudioChunkReceived()
