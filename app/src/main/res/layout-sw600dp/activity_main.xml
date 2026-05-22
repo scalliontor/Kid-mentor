@@ -9,6 +9,16 @@
     android:background="@drawable/bg_gradient"
     tools:context=".MainActivity">
 
+    <!-- Subtle animated star background -->
+    <com.buivan.ptalk_child.StarFieldView
+        android:id="@+id/starFieldView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <!-- Removed brandAccentLine to use glassy header with margins -->
     <View
         android:id="@+id/brandBarBg"
