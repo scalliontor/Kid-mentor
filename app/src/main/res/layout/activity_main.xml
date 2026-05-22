@@ -52,18 +52,7 @@
         app:layout_constraintBottom_toBottomOf="@id/brandBarBg"
         app:layout_constraintStart_toStartOf="@id/brandBarBg" />
 
-    <!-- Vertical separator -->
-    <View
-        android:id="@+id/brandSeparator"
-        android:layout_width="1dp"
-        android:layout_height="@dimen/brand_separator_height"
-        android:background="#CACACB"
-        android:layout_marginStart="@dimen/brand_separator_margin_start"
-        android:elevation="5dp"
-        app:layout_constraintTop_toTopOf="@id/brandBarBg"
-        app:layout_constraintBottom_toBottomOf="@id/brandBarBg"
-        app:layout_constraintStart_toEndOf="@id/ivBrandPtitLeft" />
-
+    <!-- Vertical separator removed -->
     <!-- App name & institution -->
     <LinearLayout
         android:id="@+id/brandTextBlock"

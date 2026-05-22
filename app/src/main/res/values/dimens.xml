@@ -12,7 +12,7 @@
     <dimen name="brand_bar_height">84dp</dimen>
     <dimen name="brand_cts_width">84dp</dimen>
     <dimen name="brand_cts_height">56dp</dimen>
-    <dimen name="brand_ptit_size">56dp</dimen>
+    <dimen name="brand_ptit_size">80dp</dimen>
     <dimen name="brand_side_margin">16dp</dimen>
     <dimen name="brand_separator_height">28dp</dimen>
     <dimen name="brand_separator_margin_start">8dp</dimen>

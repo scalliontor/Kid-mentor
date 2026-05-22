@@ -46,16 +46,7 @@
         app:layout_constraintStart_toStartOf="@id/brandBarBg"
         app:layout_constraintTop_toTopOf="@id/brandBarBg" />
 
-    <View
-        android:id="@+id/brandSeparator"
-        android:layout_width="1dp"
-        android:layout_height="@dimen/brand_separator_height"
-        android:layout_marginStart="@dimen/brand_separator_margin_start"
-        android:background="#CACACB"
-        android:elevation="7dp"
-        app:layout_constraintBottom_toBottomOf="@id/brandBarBg"
-        app:layout_constraintStart_toEndOf="@id/ivBrandPtitLeft"
-        app:layout_constraintTop_toTopOf="@id/brandBarBg" />
+    <!-- Vertical separator removed -->
 
     <LinearLayout
         android:id="@+id/brandTextBlock"
