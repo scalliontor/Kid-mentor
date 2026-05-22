@@ -35,9 +35,12 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-        <!-- MainActivity là màn hình chính -->
         <activity
             android:name=".MainActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".HomeProfileActivity"
             android:exported="false" />
 
     </application>

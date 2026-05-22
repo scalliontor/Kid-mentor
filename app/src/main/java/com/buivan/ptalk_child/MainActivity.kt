@@ -188,6 +188,17 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupButtons() {
+        // Back button - go back to login/previous screen
+        findViewById<android.widget.ImageView>(R.id.btnBackMode)?.setOnClickListener {
+            finish()
+        }
+
+        // Hamburger menu - open profile/settings
+        findViewById<android.widget.ImageView>(R.id.btnHamburger)?.setOnClickListener {
+            val intent = android.content.Intent(this, HomeProfileActivity::class.java)
+            startActivity(intent)
+        }
+
         binding.btnHoldToTalk.setOnTouchListener { view, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
