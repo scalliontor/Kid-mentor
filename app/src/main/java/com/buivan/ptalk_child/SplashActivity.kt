@@ -72,45 +72,96 @@ class SplashActivity : AppCompatActivity() {
             override fun onAnimationEnd(animation: android.animation.Animator) {
                 logo.setLayerType(View.LAYER_TYPE_NONE, null)
                 logo.rotationY = 0f
-                showTitles(logo, title, tvMadeBy, logoCts)
+                showTitles(logo, binding.tvSplashTitle, binding.tvMadeBy, binding.ivSplashLogoCts)
             }
         })
 
         flipAnim.start()
     }
 
-    // ── Phase 3: Tiêu đề fade in + slide up ──────────────────────────────
-    private fun showTitles(logo: View, title: View, tvMadeBy: View, logoCts: View) {
+    // ── Phase 3: Tiêu đề fade in + slide up + lắc lắc + NỔ SAO PHÁO HOA ──
+    private fun showTitles(logo: View, title: android.widget.TextView, tvMadeBy: View, logoCts: View) {
+        // Áp dụng gradient màu pastel dịu dàng cho chữ KID MENTOR
+        title.post {
+            val paint = title.paint
+            val width = paint.measureText(title.text.toString())
+            val textShader = android.graphics.LinearGradient(
+                0f, 0f, width, 0f,
+                intArrayOf(
+                    android.graphics.Color.parseColor("#6BAF8A"), // Xanh sage pastel
+                    android.graphics.Color.parseColor("#F5A672"), // Cam đào pastel
+                    android.graphics.Color.parseColor("#E88B8B")  // Hồng coral pastel
+                ),
+                null,
+                android.graphics.Shader.TileMode.CLAMP
+            )
+            title.paint.shader = textShader
+            title.invalidate()
+        }
+
         title.translationY = 24f
         title.animate()
             .alpha(1f)
             .translationY(0f)
             .setDuration(400)
             .setInterpolator(DecelerateInterpolator())
-            .start()
-
-        tvMadeBy.translationY = 16f
-        tvMadeBy.animate()
-            .alpha(1f)
-            .translationY(0f)
-            .setDuration(400)
-            .setStartDelay(130)
-            .setInterpolator(DecelerateInterpolator())
-            .start()
-
-        logoCts.translationY = 16f
-        logoCts.animate()
-            .alpha(1f)
-            .translationY(0f)
-            .setDuration(400)
-            .setStartDelay(260)
-            .setInterpolator(DecelerateInterpolator())
             .withEndAction {
-                // ── Phase 4: Chờ 800ms rồi navigate ───────────────────
-                logo.postDelayed({ navigateToMain() }, 800)
+                // Sau khi chữ hiện lên → chạy hiệu ứng "lắc lắc" ngộ nghĩnh kiểu hoạt họa
+                title.animate()
+                    .translationX(-16f).setDuration(80)
+                    .withEndAction {
+                        title.animate().translationX(16f).setDuration(80)
+                            .withEndAction {
+                                title.animate().translationX(-12f).setDuration(70)
+                                    .withEndAction {
+                                        title.animate().translationX(12f).setDuration(70)
+                                            .withEndAction {
+                                                title.animate().translationX(0f).setDuration(60)
+                                                    .start()
+                                            }.start()
+                                    }.start()
+                            }.start()
+                    }.start()
+
+                // ★★★ Cùng lúc lắc chữ → BẮN PHÁO HOA NGÔI SAO từ tâm chữ ★★★
+                val starBurst = binding.starBurstView
+                // Tính toạ độ tâm chữ KID MENTOR trong hệ toạ độ của StarBurstView
+                val titleLocation = IntArray(2)
+                val burstLocation = IntArray(2)
+                title.getLocationInWindow(titleLocation)
+                starBurst.getLocationInWindow(burstLocation)
+
+                val centerX = (titleLocation[0] - burstLocation[0]) + title.width / 2f
+                val centerY = (titleLocation[1] - burstLocation[1]) + title.height / 2f
+
+                starBurst.burst(centerX, centerY)
+
+                // Đợi hiệu ứng lắc và nổ sao hoàn thành (khoảng 550ms) rồi mới hiện logo CTS
+                title.postDelayed({
+                    tvMadeBy.translationY = 16f
+                    tvMadeBy.animate()
+                        .alpha(1f)
+                        .translationY(0f)
+                        .setDuration(400)
+                        .setInterpolator(DecelerateInterpolator())
+                        .start()
+
+                    logoCts.translationY = 16f
+                    logoCts.animate()
+                        .alpha(1f)
+                        .translationY(0f)
+                        .setDuration(400)
+                        .setInterpolator(DecelerateInterpolator())
+                        .withEndAction {
+                            // Chờ 1.2s nữa để bé kịp thấy logo rồi mới chuyển màn hình
+                            logo.postDelayed({ navigateToMain() }, 1200)
+                        }
+                        .start()
+                }, 550)
             }
             .start()
     }
+
 
     private fun navigateToMain() {
         val intent = Intent(this, LoginActivity::class.java)

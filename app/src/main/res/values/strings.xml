@@ -1,3 +1,71 @@
 <resources>
     <string name="app_name">Kid Mentor</string>
+    <string name="yes">Có</string>
+    <string name="no">Không</string>
+    <string name="ok">Đồng ý</string>
+
+    <!-- Login Screen -->
+    <string name="login_headline">CHÀO MỪNG\nBẠN TRỞ LẠI</string>
+    <string name="login_subheadline">Đăng nhập để tiếp tục học cùng AI Mentor</string>
+    <string name="login_username_label">TÊN ĐĂNG NHẬP</string>
+    <string name="login_username_hint">Nhập tên đăng nhập...</string>
+    <string name="login_password_label">MẬT KHẨU</string>
+    <string name="login_password_hint">Nhập mật khẩu...</string>
+    <string name="login_btn_text">ĐĂNG NHẬP</string>
+    <string name="login_or">  hoặc  </string>
+    <string name="login_guest_btn_text">VÀO XEM THỬ</string>
+    <string name="login_footer">© 2025 Lab CTS · Học viện Bưu chính Viễn thông PTIT\nMọi quyền được bảo lưu.</string>
+    <string name="login_err_empty">Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.</string>
+    <string name="login_err_wrong">Tên đăng nhập hoặc mật khẩu không đúng.</string>
+
+    <!-- Main Screen -->
+    <string name="main_greeting">Xin chào!</string>
+    <string name="main_sub_greeting">Hôm nay, tớ có thể giúp gì cho cậu?</string>
+    <string name="status_idle">Chạm để ghi âm</string>
+    <string name="status_idle_tablet">Giữ nút để nói chuyện</string>
+    <string name="status_listening">Đang nghe...</string>
+    <string name="status_listening_press_again">Đang nghe... (nhấn lại để gửi)</string>
+    <string name="status_processing">Đang xử lý...</string>
+    <string name="status_thinking">Đang suy nghĩ...</string>
+    <string name="status_cancel">Huỷ</string>
+    <string name="err_mic_permission">Cần cấp quyền micro để ghi âm</string>
+    <string name="err_mic_permission_toast">Vui lòng cấp quyền micro để tiếp tục.</string>
+    <string name="err_mic_permission_activity">App cần quyền micro để hoạt động!</string>
+    <string name="err_ws_connection">Không kết nối được server. Kiểm tra server demo hoặc mạng.</string>
+    <string name="err_ws_interrupted">Luồng trả lời bị gián đoạn, bé thử lại nhé</string>
+    <string name="err_ws_not_listening">Server chưa xác nhận nghe (LISTENING), bé thử lại nhé</string>
+    <string name="err_ws_not_processing">Server chưa phản hồi PROCESSING, bé thử lại nhé</string>
+    <string name="err_ws_not_audio">Server chưa trả audio, bé thử lại nhé</string>
+    <string name="err_ws_not_idle">Server chưa kết thúc phiên trả lời (IDLE), bé thử lại nhé</string>
+    <string name="status_ws_connecting">Đang kết nối WebSocket...</string>
+    <string name="status_ws_unstable">WebSocket không ổn định, app sẽ thử đường dự phòng</string>
+    <string name="status_ws_not_ready">WebSocket V2 chưa sẵn sàng</string>
+    <string name="status_ws_not_ready_backup">WebSocket V2 chưa sẵn sàng, dùng HTTP dự phòng</string>
+    <string name="status_ws_connecting_wait">Đang kết nối tới máy chủ, vui lòng chờ 1-2 giây rồi bấm lại...</string>
+    <string name="status_ws_error">Lỗi máy chủ (%1$s): %2$s</string>
+    <string name="err_recording_start">Không thể bắt đầu ghi âm, thử lại!</string>
+    <string name="err_recording_cancel">Đã huỷ ghi âm.</string>
+    <string name="err_recording_fail">Ghi âm thất bại, thử lại!</string>
+    <string name="err_generic">Có lỗi xảy ra</string>
+
+    <!-- Profile Screen -->
+    <string name="profile_header">QUẢN LÝ TÀI KHOẢN</string>
+    <string name="profile_free_member">Thành viên miễn phí</string>
+    <string name="profile_subscription_title">GÓI ĐĂNG KÝ</string>
+    <string name="profile_plan_basic">Gói Cơ Bản</string>
+    <string name="profile_plan_basic_desc">Giới hạn 20 câu/ngày</string>
+    <string name="profile_plan_active">Đang dùng</string>
+    <string name="profile_plan_pro">Gói Pro</string>
+    <string name="profile_plan_pro_desc">Giới hạn 500 câu/ngày</string>
+    <string name="profile_plan_pro_price">800.000đ/năm</string>
+    <string name="profile_plan_ultra">Gói Ultra</string>
+    <string name="profile_plan_ultra_desc">Unlimited - Không giới hạn</string>
+    <string name="profile_plan_ultra_price">1.500.000đ/năm</string>
+    <string name="profile_btn_upgrade">Nâng cấp</string>
+    <string name="profile_btn_logout">Đăng xuất</string>
+    <string name="profile_physical_title">SẢN PHẨM VẬT LÝ</string>
+    <string name="profile_physical_name">Bộ Thiết Bị KidMentor</string>
+    <string name="profile_physical_desc">Loa &amp; Robot thông minh hỗ trợ giao tiếp cho bé</string>
+    <string name="profile_physical_price">4.800.000đ</string>
+    <string name="profile_physical_btn_buy">Đặt mua</string>
 </resources>

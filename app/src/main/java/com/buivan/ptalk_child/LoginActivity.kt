@@ -7,6 +7,8 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import com.buivan.ptalk_child.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
@@ -25,6 +27,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupUI()
+        setupLanguageToggle()
     }
 
     private fun setupUI() {
@@ -49,6 +52,36 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupLanguageToggle() {
+        val currentLocale = AppCompatDelegate.getApplicationLocales()
+        val isEnglish = currentLocale.toLanguageTags().startsWith("en")
+        updateLanguageToggleUI(isEnglish)
+
+        binding.btnLanguageToggle.setOnClickListener {
+            val isCurrentEng = AppCompatDelegate.getApplicationLocales().toLanguageTags().startsWith("en")
+            val newLang = if (isCurrentEng) "vi" else "en"
+            
+            // Đặt ngôn ngữ động. AppCompat tự động recreate activity và lưu trạng thái.
+            AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(newLang))
+        }
+    }
+
+    private fun updateLanguageToggleUI(isEnglish: Boolean) {
+        if (isEnglish) {
+            binding.tvLangVIE.setBackgroundResource(0)
+            binding.tvLangVIE.setTextColor(android.graphics.Color.parseColor("#707072"))
+            
+            binding.tvLangENG.setBackgroundResource(R.drawable.bg_lang_selected)
+            binding.tvLangENG.setTextColor(android.graphics.Color.parseColor("#FFFFFF"))
+        } else {
+            binding.tvLangVIE.setBackgroundResource(R.drawable.bg_lang_selected)
+            binding.tvLangVIE.setTextColor(android.graphics.Color.parseColor("#FFFFFF"))
+            
+            binding.tvLangENG.setBackgroundResource(0)
+            binding.tvLangENG.setTextColor(android.graphics.Color.parseColor("#707072"))
+        }
+    }
+
     // ── Xử lý đăng nhập ─────────────────────────────────────────────────
     private fun attemptLogin() {
         val username = binding.etUsername.text.toString().trim()
@@ -56,7 +89,7 @@ class LoginActivity : AppCompatActivity() {
 
         // Validate không để trống
         if (username.isEmpty() || password.isEmpty()) {
-            showError("Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.")
+            showError(getString(R.string.login_err_empty))
             shakeButton(binding.btnLogin)
             return
         }
@@ -66,7 +99,7 @@ class LoginActivity : AppCompatActivity() {
             hideError()
             animateSuccess()
         } else {
-            showError("Tên đăng nhập hoặc mật khẩu không đúng.")
+            showError(getString(R.string.login_err_wrong))
             shakeButton(binding.btnLogin)
         }
     }

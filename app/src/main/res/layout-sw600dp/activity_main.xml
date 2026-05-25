@@ -33,15 +33,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivBrandPtitLeft"
         android:layout_width="@dimen/brand_ptit_size"
         android:layout_height="@dimen/brand_ptit_size"
         android:layout_marginStart="@dimen/brand_side_margin"
         android:contentDescription="PTIT"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         android:src="@drawable/logo_ptit"
         android:elevation="7dp"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Circle"
         app:layout_constraintBottom_toBottomOf="@id/brandBarBg"
         app:layout_constraintStart_toStartOf="@id/brandBarBg"
         app:layout_constraintTop_toTopOf="@id/brandBarBg" />
@@ -66,7 +67,7 @@
             android:fontFamily="sans-serif-medium"
             android:letterSpacing="0.06"
             android:text="KID MENTOR"
-            android:textColor="#111111"
+            android:textColor="@color/color_text_brand"
             android:textSize="@dimen/text_brand_title" />
     </LinearLayout>
 
@@ -83,30 +84,16 @@
         app:layout_constraintEnd_toEndOf="@id/brandBarBg"
         app:layout_constraintTop_toTopOf="@id/brandBarBg" />
 
-    <!-- ══ NAVIGATION BUTTONS (below brand bar) ══════════════════════ -->
-    <ImageView
-        android:id="@+id/btnBackMode"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:src="@android:drawable/ic_menu_revert"
-        android:scaleType="centerInside"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="12dp"
-        android:tint="#222222"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/brandBarBg"
-        app:layout_constraintStart_toStartOf="parent" />
-
+    <!-- ══ NAVIGATION BUTTON (below brand bar) ══════════════════════ -->
     <ImageView
         android:id="@+id/btnHamburger"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:src="@drawable/ic_menu_hamburger"
         android:scaleType="centerInside"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="12dp"
-        android:tint="#222222"
+        android:padding="14dp"
+        android:tint="@color/color_hamburger_tint"
         android:layout_marginEnd="32dp"
         android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@id/brandBarBg"
@@ -117,12 +104,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Xin chào!"
-        android:textColor="#6BAF8A"
+        android:text="@string/main_greeting"
+        android:textColor="@color/color_text_greeting"
         android:textSize="@dimen/text_greeting"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnBackMode" />
+        app:layout_constraintTop_toBottomOf="@id/btnHamburger" />
 
     <TextView
         android:id="@+id/tvSubGreeting"
@@ -132,8 +119,8 @@
         android:layout_marginStart="@dimen/tablet_main_sub_greeting_side_margin"
         android:layout_marginEnd="@dimen/tablet_main_sub_greeting_side_margin"
         android:gravity="center"
-        android:text="Hôm nay, tớ có thể giúp gì cho cậu?"
-        android:textColor="#2E7D52"
+        android:text="@string/main_sub_greeting"
+        android:textColor="@color/color_text_sub_greeting"
         android:textSize="@dimen/text_sub_greeting"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -185,25 +172,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/space_s"
-        android:text="Giữ nút để nói chuyện"
-        android:textColor="#8BAF9A"
+        android:text="@string/status_idle_tablet"
+        android:textColor="@color/color_text_status"
         android:textSize="@dimen/text_status"
-        app:layout_constraintBottom_toTopOf="@id/btnCancel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnCancel"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/btn_cancel_height"
-        android:layout_marginBottom="@dimen/space_s"
-        android:background="@drawable/bg_cancel_button"
-        android:paddingStart="@dimen/space_xl"
-        android:paddingEnd="@dimen/space_xl"
-        android:text="⏹  Dừng lại"
-        android:textColor="#FFFFFF"
-        android:textSize="@dimen/text_btn_cancel"
-        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/micTouchContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -226,8 +197,8 @@
         <!-- Vùng tròn bóng mờ báo hiệu huỷ (mặc định ẩn) -->
         <View
             android:id="@+id/cancelZoneShadow"
-            android:layout_width="240dp"
-            android:layout_height="240dp"
+            android:layout_width="380dp"
+            android:layout_height="380dp"
             android:layout_gravity="center"
             android:alpha="0"
             android:background="@drawable/bg_circle_orange_pastel"

@@ -43,6 +43,16 @@
             android:name=".HomeProfileActivity"
             android:exported="false" />
 
+        <!-- Tự động lưu và khôi phục ngôn ngữ đã chọn qua AndroidX AppCompat -->
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data
+                android:name="autoStoreLocales"
+                android:value="true" />
+        </service>
+
     </application>
 
 </manifest>

@@ -93,6 +93,12 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        // StarFieldView chỉ hiện ở Dark mode (sao lấp lánh trên nền tối)
+        val isDarkMode = (resources.configuration.uiMode and
+                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+        binding.starFieldView.visibility = if (isDarkMode) View.VISIBLE else View.GONE
+
         requestMicPermission()
         observeState()
         setupButtons()
@@ -105,7 +111,7 @@ class MainActivity : AppCompatActivity() {
         runHttpHealthDiagnostic()
     }
 
-    override fun onResume() {
+    override fun onResume() {0
         super.onResume()
         streamingVoiceClient.preconnect()
     }
@@ -117,7 +123,7 @@ class MainActivity : AppCompatActivity() {
 
             if (!healthy && (viewModel.state.value == AppState.IDLE || viewModel.state.value == AppState.ERROR)) {
                 if (wsReachability != WsReachability.ONLINE) {
-                    viewModel.statusText.value = "WebSocket V2 là đường chính, health HTTP đang lỗi"
+                    viewModel.statusText.value = getString(R.string.status_ws_unstable)
                 }
             }
         }
@@ -133,45 +139,72 @@ class MainActivity : AppCompatActivity() {
                 AppState.IDLE -> {
                     binding.btnHoldToTalk.isEnabled = true
                     binding.btnHoldToTalk.alpha = 1f
-                    binding.btnCancel.visibility = View.GONE
+                    binding.btnHoldToTalk.setImageResource(R.drawable.ic_mic_custom)
+                    binding.btnHoldToTalk.setBackgroundResource(
+                        if (isTabletDevice) R.drawable.bg_hold_button_tablet else R.drawable.bg_hold_button
+                    )
                     isMicGestureActive = false
                     isMicTapFallbackActive = false
                     characterAnimator.playIdle()
                     waveformView.setStateIdle()
+
+                    // Khôi phục trạng thái text dựa trên reachability
+                    if (wsReachability != WsReachability.ONLINE) {
+                        updateWsReachability(wsReachability, null)
+                    } else {
+                        viewModel.statusText.value = getString(if (isTabletDevice) R.string.status_idle_tablet else R.string.status_idle)
+                    }
                 }
 
                 AppState.RECORDING -> {
                     binding.btnHoldToTalk.isEnabled = true
                     binding.btnHoldToTalk.alpha = 0.75f
-                    binding.btnCancel.visibility = View.GONE
+                    binding.btnHoldToTalk.setImageResource(R.drawable.ic_mic_custom)
+                    binding.btnHoldToTalk.setBackgroundResource(
+                        if (isTabletDevice) R.drawable.bg_hold_button_tablet else R.drawable.bg_hold_button
+                    )
                     characterAnimator.playRecording()
                     waveformView.setStateRecording()
+                    viewModel.statusText.value = getString(
+                        if (isMicTapFallbackActive) R.string.status_listening_press_again else R.string.status_listening
+                    )
                 }
 
                 AppState.UPLOADING -> {
                     binding.btnHoldToTalk.isEnabled = false
                     binding.btnHoldToTalk.alpha = 0.5f
-                    binding.btnCancel.visibility = View.GONE
+                    binding.btnHoldToTalk.setImageResource(R.drawable.ic_mic_custom)
+                    binding.btnHoldToTalk.setBackgroundResource(
+                        if (isTabletDevice) R.drawable.bg_hold_button_tablet else R.drawable.bg_hold_button
+                    )
                     isMicGestureActive = false
                     isMicTapFallbackActive = false
                     characterAnimator.playUploading()
                     waveformView.setStateUploading()
+                    viewModel.statusText.value = getString(R.string.status_processing)
                 }
 
                 AppState.PLAYING -> {
-                    binding.btnHoldToTalk.isEnabled = false
-                    binding.btnHoldToTalk.alpha = 0.5f
-                    binding.btnCancel.visibility = View.VISIBLE
+                    binding.btnHoldToTalk.isEnabled = true
+                    binding.btnHoldToTalk.alpha = 1f
+                    binding.btnHoldToTalk.setImageResource(R.drawable.ic_close)
+                    binding.btnHoldToTalk.setBackgroundResource(
+                        if (isTabletDevice) R.drawable.bg_hold_button_tablet_cancel else R.drawable.bg_hold_button_cancel
+                    )
                     isMicGestureActive = false
                     isMicTapFallbackActive = false
                     characterAnimator.playPlaying()
                     waveformView.setStatePlaying()
+                    viewModel.statusText.value = getString(R.string.status_cancel)
                 }
 
                 AppState.ERROR -> {
                     binding.btnHoldToTalk.isEnabled = true
                     binding.btnHoldToTalk.alpha = 1f
-                    binding.btnCancel.visibility = View.GONE
+                    binding.btnHoldToTalk.setImageResource(R.drawable.ic_mic_custom)
+                    binding.btnHoldToTalk.setBackgroundResource(
+                        if (isTabletDevice) R.drawable.bg_hold_button_tablet else R.drawable.bg_hold_button
+                    )
                     isMicGestureActive = false
                     isMicTapFallbackActive = false
                     characterAnimator.playError()
@@ -188,11 +221,6 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupButtons() {
-        // Back button - go back to login/previous screen
-        findViewById<android.widget.ImageView>(R.id.btnBackMode)?.setOnClickListener {
-            finish()
-        }
-
         // Hamburger menu - open profile/settings
         findViewById<android.widget.ImageView>(R.id.btnHamburger)?.setOnClickListener {
             val intent = android.content.Intent(this, HomeProfileActivity::class.java)
@@ -202,6 +230,12 @@ class MainActivity : AppCompatActivity() {
         binding.btnHoldToTalk.setOnTouchListener { view, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
+                    // If currently playing, tap the X button to cancel
+                    if (viewModel.state.value == AppState.PLAYING) {
+                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                        cancelCurrentPlayback()
+                        return@setOnTouchListener true
+                    }
                     view.parent?.requestDisallowInterceptTouchEvent(true)
                     val started = startMicCapture(fromTouch = true)
                     if (started) {
@@ -259,6 +293,10 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 when (viewModel.state.value) {
+                    AppState.PLAYING -> {
+                        cancelCurrentPlayback()
+                    }
+
                     AppState.RECORDING -> {
                         if (isMicTapFallbackActive) {
                             finishMicCaptureAndSend(wasCancelled = false)
@@ -271,7 +309,7 @@ class MainActivity : AppCompatActivity() {
                         if (started) {
                             isMicTapFallbackActive = true
                             view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                            viewModel.statusText.value = "Đang nghe... (nhấn lại để gửi)"
+                            viewModel.statusText.value = getString(R.string.status_listening_press_again)
                         }
                     }
 
@@ -279,21 +317,21 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
 
-        binding.btnCancel.setOnClickListener {
-            clearAllStreamingTimeouts()
-            waitingForFirstStreamingChunk = false
-            if (activeTransport == ActiveVoiceTransport.STREAMING) {
-                streamingVoiceClient.cancelPlaybackAndReset(notifyIdle = false)
-            } else {
-                audioPlayer.stop()
-            }
-            wsSessionPhase = WsSessionPhase.IDLE
-            viewModel.onCancelPlayback()
-            isMicGestureActive = false
-            isMicTapFallbackActive = false
-            activeTransport = ActiveVoiceTransport.NONE
+    private fun cancelCurrentPlayback() {
+        clearAllStreamingTimeouts()
+        waitingForFirstStreamingChunk = false
+        if (activeTransport == ActiveVoiceTransport.STREAMING) {
+            streamingVoiceClient.cancelPlaybackAndReset(notifyIdle = false)
+        } else {
+            audioPlayer.stop()
         }
+        wsSessionPhase = WsSessionPhase.IDLE
+        viewModel.onCancelPlayback()
+        isMicGestureActive = false
+        isMicTapFallbackActive = false
+        activeTransport = ActiveVoiceTransport.NONE
     }
 
     private fun hasMicPermission(): Boolean {
@@ -307,8 +345,8 @@ class MainActivity : AppCompatActivity() {
 
         if (!hasMicPermission()) {
             requestMicPermission()
-            viewModel.statusText.value = "Cần cấp quyền micro để ghi âm"
-            Toast.makeText(this, "Vui lòng cấp quyền micro để tiếp tục.", Toast.LENGTH_SHORT).show()
+            viewModel.statusText.value = getString(R.string.err_mic_permission)
+            Toast.makeText(this, getString(R.string.err_mic_permission_toast), Toast.LENGTH_SHORT).show()
             return false
         }
 
@@ -328,17 +366,17 @@ class MainActivity : AppCompatActivity() {
             }
             activeTransport = ActiveVoiceTransport.NONE
             if (ServerConfig.TRANSPORT_MODE == TransportMode.STREAMING_ONLY) {
-                viewModel.onError("Không thể mở WebSocket streaming, thử lại sau.")
+                viewModel.onError(getString(R.string.err_recording_start))
                 return false
             }
         }
 
         if (ServerConfig.TRANSPORT_MODE == TransportMode.STREAMING_ONLY) {
             if (wsReachability == WsReachability.CONNECTING) {
-                viewModel.statusText.value = "Đang kết nối tới máy chủ, vui lòng chờ 1-2 giây rồi bấm lại..."
+                viewModel.statusText.value = getString(R.string.status_ws_connecting_wait)
             } else {
                 val currentStatus = viewModel.statusText.value ?: "Unknown"
-                viewModel.onError("Lỗi máy chủ ($wsReachability): $currentStatus")
+                viewModel.onError(getString(R.string.status_ws_error, wsReachability.name, currentStatus))
                 streamingVoiceClient.preconnect() // Force retry
             }
             return false
@@ -359,7 +397,7 @@ class MainActivity : AppCompatActivity() {
             isMicGestureActive = false
             isMicTapFallbackActive = false
             activeTransport = ActiveVoiceTransport.NONE
-            viewModel.onError("Không thể bắt đầu ghi âm, thử lại!")
+            viewModel.onError(getString(R.string.err_recording_start))
             false
         }
     }
@@ -381,7 +419,7 @@ class MainActivity : AppCompatActivity() {
             wsSessionPhase = WsSessionPhase.IDLE
             isMicGestureActive = false
             activeTransport = ActiveVoiceTransport.NONE
-            viewModel.onError("Đã huỷ ghi âm.")
+            viewModel.onError(getString(R.string.err_recording_cancel))
             return
         }
 
@@ -406,7 +444,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        viewModel.onError("Ghi âm thất bại, thử lại!")
+        viewModel.onError(getString(R.string.err_recording_fail))
     }
 
     private fun handleStreamingReachabilityChanged(reachability: WsReachability, reason: String?) {
@@ -431,24 +469,24 @@ class MainActivity : AppCompatActivity() {
         when (reachability) {
             WsReachability.ONLINE -> {
                 if (viewModel.state.value == AppState.IDLE) {
-                    viewModel.statusText.value = "Giữ nút để nói chuyện"
+                    viewModel.statusText.value = getString(if (isTabletDevice) R.string.status_idle_tablet else R.string.status_idle)
                 }
             }
 
             WsReachability.CONNECTING -> {
-                viewModel.statusText.value = "Đang kết nối WebSocket..."
+                viewModel.statusText.value = getString(R.string.status_ws_connecting)
             }
 
             WsReachability.DEGRADED -> {
-                viewModel.statusText.value = "WebSocket không ổn định, app sẽ thử đường dự phòng"
+                viewModel.statusText.value = getString(R.string.status_ws_unstable)
             }
 
             WsReachability.OFFLINE -> {
                 viewModel.statusText.value =
                     if (ServerConfig.TRANSPORT_MODE == TransportMode.STREAMING_ONLY) {
-                        "WebSocket V2 chưa sẵn sàng"
+                        getString(R.string.status_ws_not_ready)
                     } else {
-                        "WebSocket V2 chưa sẵn sàng, dùng HTTP dự phòng"
+                        getString(R.string.status_ws_not_ready_backup)
                     }
             }
         }
@@ -474,7 +512,7 @@ class MainActivity : AppCompatActivity() {
                 if (viewModel.state.value == AppState.RECORDING) {
                     viewModel.onStopRecording()
                 } else {
-                    viewModel.statusText.value = "Đang xử lý..."
+                    viewModel.statusText.value = getString(R.string.status_processing)
                 }
                 armFirstAudioTimeout()
                 armIdleFinalTimeout()
@@ -482,7 +520,7 @@ class MainActivity : AppCompatActivity() {
 
             StreamingEvent.Thinking -> {
                 // Server is still processing (8s+ elapsed) — reset the first-audio timer
-                viewModel.statusText.value = "Đang suy nghĩ..."
+                viewModel.statusText.value = getString(R.string.status_thinking)
                 armFirstAudioTimeout()
             }
 
@@ -491,8 +529,7 @@ class MainActivity : AppCompatActivity() {
                 clearProcessingTimeout()
                 wsSessionPhase = WsSessionPhase.WAIT_AUDIO
                 waitingForFirstStreamingChunk = true
-                viewModel.onStartPlaying()  // Disable button immediately
-                viewModel.statusText.value = "Đang nói..."
+                viewModel.onStartPlaying()  // Switch to X button with "Huỷ" label
                 armFirstAudioTimeout()
                 armIdleFinalTimeout()
             }
@@ -548,7 +585,7 @@ class MainActivity : AppCompatActivity() {
 
         if (viewModel.state.value == AppState.IDLE || viewModel.state.value == AppState.ERROR) {
             viewModel.statusText.value = when (type) {
-                StreamingFailure.CodecUnavailable -> "Streaming V2 chưa tương thích codec, dùng HTTP dự phòng"
+                StreamingFailure.CodecUnavailable -> getString(R.string.status_ws_not_ready_backup)
                 StreamingFailure.WebSocketUnavailable -> message // Hiển thị nguyên văn lỗi (Timeout, Refused...)
                 StreamingFailure.ProtocolError,
                 StreamingFailure.NetworkLost,
@@ -613,7 +650,7 @@ class MainActivity : AppCompatActivity() {
 
             if (completed != true) {
                 activeTransport = ActiveVoiceTransport.NONE
-                viewModel.onError("Không kết nối được server. Kiểm tra server demo hoặc mạng.")
+                viewModel.onError(getString(R.string.err_ws_connection))
             }
         }
     }
@@ -628,7 +665,7 @@ class MainActivity : AppCompatActivity() {
             if (stillWaitingAck) {
                 onStreamingTimeout(
                     reachability = WsReachability.DEGRADED,
-                    message = "Server chưa xác nhận nghe (LISTENING), bé thử lại nhé"
+                    message = getString(R.string.err_ws_not_listening)
                 )
             }
         }
@@ -644,7 +681,7 @@ class MainActivity : AppCompatActivity() {
             if (stillWaitingProcessing) {
                 onStreamingTimeout(
                     reachability = WsReachability.DEGRADED,
-                    message = "Server chưa phản hồi PROCESSING, bé thử lại nhé"
+                    message = getString(R.string.err_ws_not_processing)
                 )
             }
         }
@@ -660,7 +697,7 @@ class MainActivity : AppCompatActivity() {
             if (stillWaitingAudio) {
                 onStreamingTimeout(
                     reachability = WsReachability.DEGRADED,
-                    message = "Server chưa trả audio, bé thử lại nhé"
+                    message = getString(R.string.err_ws_not_audio)
                 )
             }
         }
@@ -676,7 +713,7 @@ class MainActivity : AppCompatActivity() {
             if (stalledPlayback) {
                 onStreamingTimeout(
                     reachability = WsReachability.DEGRADED,
-                    message = "Luồng trả lời bị gián đoạn, bé thử lại nhé"
+                    message = getString(R.string.err_ws_interrupted)
                 )
             }
         }
@@ -692,7 +729,7 @@ class MainActivity : AppCompatActivity() {
             if (missingIdleFinal) {
                 onStreamingTimeout(
                     reachability = WsReachability.DEGRADED,
-                    message = "Server chưa kết thúc phiên trả lời (IDLE), bé thử lại nhé"
+                    message = getString(R.string.err_ws_not_idle)
                 )
             }
         }
@@ -757,8 +794,8 @@ class MainActivity : AppCompatActivity() {
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (!isGranted) {
-                viewModel.statusText.value = "Cần cấp quyền micro để ghi âm"
-                Toast.makeText(this, "App cần quyền micro để hoạt động!", Toast.LENGTH_LONG).show()
+                viewModel.statusText.value = getString(R.string.err_mic_permission)
+                Toast.makeText(this, getString(R.string.err_mic_permission_activity), Toast.LENGTH_LONG).show()
             }
         }
 

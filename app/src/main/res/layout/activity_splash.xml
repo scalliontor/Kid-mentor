@@ -61,6 +61,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="@dimen/space_l" />
 
+    <!-- Star Burst particle overlay (toàn màn hình, vẽ bằng Canvas) -->
+    <com.buivan.ptalk_child.StarBurstView
+        android:id="@+id/starBurstView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
     <TextView
         android:id="@+id/tvMadeBy"
         android:layout_width="wrap_content"

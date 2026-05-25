@@ -5,7 +5,7 @@
     <!-- Bo góc (Rounded corners) -->
     <corners android:radius="24dp" />
     
-    <!-- Hiệu ứng gradient mờ như kính (Glassmorphism) - Tăng độ đậm (opaque) -->
+    <!-- Light mode: Kính mờ trắng đục hơn, dễ nhìn trên nền pastel sáng -->
     <gradient
         android:angle="135"
         android:startColor="#FFFFFFFF"

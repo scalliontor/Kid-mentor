@@ -33,7 +33,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="QUẢN LÝ TÀI KHOẢN"
+            android:text="@string/profile_header"
             android:textSize="20sp"
             android:textStyle="bold"
             android:gravity="center"
@@ -69,11 +69,11 @@
                 app:cardElevation="6dp">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="24dp"
-                    android:gravity="center">
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:orientation="vertical"
+                     android:padding="24dp"
+                     android:gravity="center">
 
                     <ImageView
                         android:layout_width="100dp"
@@ -93,7 +93,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Thành viên miễn phí"
+                        android:text="@string/profile_free_member"
                         android:textSize="16sp"
                         android:textColor="#707072"
                         android:layout_marginTop="4dp" />
@@ -104,7 +104,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="GÓI SUBSCRIPTION"
+                android:text="@string/profile_subscription_title"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:textColor="#888888"
@@ -136,14 +136,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Gói Cơ Bản"
+                            android:text="@string/profile_plan_basic"
                             android:textStyle="bold"
                             android:textSize="18sp"
                             android:textColor="#333333"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Giới hạn 20 câu/ngày"
+                            android:text="@string/profile_plan_basic_desc"
                             android:textSize="14sp"
                             android:textColor="#666666"
                             android:layout_marginTop="4dp"/>
@@ -152,7 +152,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Đang dùng"
+                        android:text="@string/profile_plan_active"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:textColor="#2E7D52"
@@ -188,23 +188,31 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Gói Pro"
+                            android:text="@string/profile_plan_pro"
                             android:textStyle="bold"
                             android:textSize="18sp"
                             android:textColor="#2196F3"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Giới hạn 500 câu/ngày"
+                            android:text="@string/profile_plan_pro_desc"
                             android:textSize="14sp"
                             android:textColor="#666666"
                             android:layout_marginTop="4dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/profile_plan_pro_price"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="#E07B20"
+                            android:layout_marginTop="2dp"/>
                     </LinearLayout>
 
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
-                        android:text="Nâng cấp"
+                        android:text="@string/profile_btn_upgrade"
                         android:textSize="12sp"
                         android:textColor="#FFFFFF"
                         android:backgroundTint="#2196F3"
@@ -217,7 +225,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
+                android:layout_marginBottom="24dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="8dp"
                 app:cardBackgroundColor="#1A1A2E">
@@ -236,27 +244,104 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Gói Ultra"
+                            android:text="@string/profile_plan_ultra"
                             android:textStyle="bold"
                             android:textSize="20sp"
                             android:textColor="#FFD700"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Unlimited - Không giới hạn"
+                            android:text="@string/profile_plan_ultra_desc"
                             android:textSize="14sp"
                             android:textColor="#CCCCCC"
+                            android:layout_marginTop="4dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/profile_plan_ultra_price"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="#FFB300"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="@string/profile_btn_upgrade"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="#1A1A2E"
+                        android:backgroundTint="#FFD700"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Gói sản phẩm vật lý Title -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/profile_physical_title"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#888888"
+                android:letterSpacing="0.05"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginStart="8dp"/>
+
+            <!-- PHYSICAL DEVICE CARD -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="#FFFFFF">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="20dp"
+                    android:gravity="center_vertical">
+                    
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/profile_physical_name"
+                            android:textStyle="bold"
+                            android:textSize="18sp"
+                            android:textColor="#E07B20"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/profile_physical_desc"
+                            android:textSize="13sp"
+                            android:textColor="#666666"
+                            android:layout_marginTop="4dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/profile_physical_price"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#D30005"
                             android:layout_marginTop="4dp"/>
                     </LinearLayout>
 
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
-                        android:text="Nâng cấp"
+                        android:text="@string/profile_physical_btn_buy"
                         android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:textColor="#1A1A2E"
-                        android:backgroundTint="#FFD700"
+                        android:textColor="#FFFFFF"
+                        android:backgroundTint="#D30005"
                         android:insetTop="0dp"
                         android:insetBottom="0dp"/>
                 </LinearLayout>
@@ -267,7 +352,7 @@
                 android:id="@+id/btnLogout"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:text="Đăng xuất"
+                android:text="@string/profile_btn_logout"
                 android:backgroundTint="#FFF0F0"
                 android:textColor="#D32F2F"
                 android:textSize="16sp"
