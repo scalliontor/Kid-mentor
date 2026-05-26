@@ -236,6 +236,21 @@
                 android:textColor="#111111"
                 android:textSize="@dimen/text_guest_button" />
 
+            <!-- Register link -->
+            <TextView
+                android:id="@+id/tvRegisterLink"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/login_register_link"
+                android:textSize="@dimen/text_login_label"
+                android:textColor="#2563EB"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:clickable="true"
+                android:focusable="true" />
+
         </LinearLayout>
 
         <TextView
