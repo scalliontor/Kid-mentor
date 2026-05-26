@@ -33,16 +33,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.imageview.ShapeableImageView
+    <ImageView
         android:id="@+id/ivBrandPtitLeft"
         android:layout_width="@dimen/brand_ptit_size"
         android:layout_height="@dimen/brand_ptit_size"
         android:layout_marginStart="@dimen/brand_side_margin"
         android:contentDescription="PTIT"
-        android:scaleType="centerCrop"
+        android:scaleType="fitCenter"
         android:src="@drawable/logo_ptit"
         android:elevation="7dp"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Circle"
         app:layout_constraintBottom_toBottomOf="@id/brandBarBg"
         app:layout_constraintStart_toStartOf="@id/brandBarBg"
         app:layout_constraintTop_toTopOf="@id/brandBarBg" />

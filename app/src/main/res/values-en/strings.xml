@@ -1,0 +1,71 @@
+<resources>
+    <string name="app_name">Kid Mentor</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="ok">OK</string>
+
+    <!-- Login Screen -->
+    <string name="login_headline">WELCOME\nBACK</string>
+    <string name="login_subheadline">Login to continue learning with AI Mentor</string>
+    <string name="login_username_label">USERNAME</string>
+    <string name="login_username_hint">Enter username...</string>
+    <string name="login_password_label">PASSWORD</string>
+    <string name="login_password_hint">Enter password...</string>
+    <string name="login_btn_text">LOGIN</string>
+    <string name="login_or">  or  </string>
+    <string name="login_guest_btn_text">TRY AS GUEST</string>
+    <string name="login_footer">© 2025 Lab CTS · PTIT Academy of Posts and Telecommunications\nAll rights reserved.</string>
+    <string name="login_err_empty">Please enter both username and password.</string>
+    <string name="login_err_wrong">Incorrect username or password.</string>
+
+    <!-- Main Screen -->
+    <string name="main_greeting">Hello!</string>
+    <string name="main_sub_greeting">How can I help you today?</string>
+    <string name="status_idle">Tap to record</string>
+    <string name="status_idle_tablet">Hold button to talk</string>
+    <string name="status_listening">Listening...</string>
+    <string name="status_listening_press_again">Listening... (tap again to send)</string>
+    <string name="status_processing">Processing...</string>
+    <string name="status_thinking">Thinking...</string>
+    <string name="status_cancel">Cancel</string>
+    <string name="err_mic_permission">Microphone permission required</string>
+    <string name="err_mic_permission_toast">Please grant microphone permission to continue.</string>
+    <string name="err_mic_permission_activity">App needs microphone permission to run!</string>
+    <string name="err_ws_connection">Cannot connect to server. Please check your internet connection.</string>
+    <string name="err_ws_interrupted">Response stream was interrupted, please try again!</string>
+    <string name="err_ws_not_listening">Server did not acknowledge (LISTENING), try again!</string>
+    <string name="err_ws_not_processing">Server did not respond PROCESSING, try again!</string>
+    <string name="err_ws_not_audio">Server did not return audio, try again!</string>
+    <string name="err_ws_not_idle">Server did not finish session (IDLE), try again!</string>
+    <string name="status_ws_connecting">Connecting to WebSocket...</string>
+    <string name="status_ws_unstable">WebSocket unstable, trying backup protocol...</string>
+    <string name="status_ws_not_ready">WebSocket V2 not ready</string>
+    <string name="status_ws_not_ready_backup">WebSocket V2 not ready, using HTTP backup</string>
+    <string name="status_ws_connecting_wait">Connecting to server, please wait 1-2 seconds and try again...</string>
+    <string name="status_ws_error">Server error (%1$s): %2$s</string>
+    <string name="err_recording_start">Cannot start recording, try again!</string>
+    <string name="err_recording_cancel">Recording cancelled.</string>
+    <string name="err_recording_fail">Recording failed, try again!</string>
+    <string name="err_generic">An error occurred</string>
+
+    <!-- Profile Screen -->
+    <string name="profile_header">ACCOUNT MANAGEMENT</string>
+    <string name="profile_free_member">Free Member</string>
+    <string name="profile_subscription_title">REGISTRATION PLANS</string>
+    <string name="profile_plan_basic">Basic Plan</string>
+    <string name="profile_plan_basic_desc">20 messages/day limit</string>
+    <string name="profile_plan_active">Active</string>
+    <string name="profile_plan_pro">Pro Plan</string>
+    <string name="profile_plan_pro_desc">500 messages/day limit</string>
+    <string name="profile_plan_pro_price">800,000 VND/year</string>
+    <string name="profile_plan_ultra">Ultra Plan</string>
+    <string name="profile_plan_ultra_desc">Unlimited - No limits</string>
+    <string name="profile_plan_ultra_price">1,500,000 VND/year</string>
+    <string name="profile_btn_upgrade">Upgrade</string>
+    <string name="profile_btn_logout">Log out</string>
+    <string name="profile_physical_title">PHYSICAL PRODUCT</string>
+    <string name="profile_physical_name">KidMentor Device Kit</string>
+    <string name="profile_physical_desc">Smart speaker &amp; Robot supporting child communication</string>
+    <string name="profile_physical_price">4,800,000 VND</string>
+    <string name="profile_physical_btn_buy">Order Now</string>
+</resources>

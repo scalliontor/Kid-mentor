@@ -39,16 +39,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- PTIT Logo — left side (Circular crop để ẩn nền trắng) -->
-    <com.google.android.material.imageview.ShapeableImageView
+    <!-- PTIT Logo — left side -->
+    <ImageView
         android:id="@+id/ivBrandPtitLeft"
         android:layout_width="@dimen/brand_ptit_size"
         android:layout_height="@dimen/brand_ptit_size"
         android:src="@drawable/logo_ptit"
-        android:scaleType="centerCrop"
+        android:scaleType="fitCenter"
         android:layout_marginStart="@dimen/brand_side_margin"
         android:elevation="5dp"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Circle"
         app:layout_constraintTop_toTopOf="@id/brandBarBg"
         app:layout_constraintBottom_toBottomOf="@id/brandBarBg"
         app:layout_constraintStart_toStartOf="@id/brandBarBg" />

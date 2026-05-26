@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    
+    <!-- Bo góc (Rounded corners) -->
+    <corners android:radius="24dp" />
+    
+    <!-- Dark mode: Kính mờ trắng sữa trong suốt cao cấp trên nền vũ trụ tối -->
+    <gradient
+        android:angle="135"
+        android:startColor="#B3FFFFFF"
+        android:centerColor="#80FFFFFF"
+        android:endColor="#4DFFFFFF"
+        android:type="linear" />
+        
+    <!-- Viền sáng tạo cảm giác khối nổi (Glass edge) -->
+    <stroke
+        android:width="1.5dp"
+        android:color="#99FFFFFF" />
+</shape>

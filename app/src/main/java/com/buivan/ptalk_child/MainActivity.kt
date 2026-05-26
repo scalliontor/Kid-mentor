@@ -93,11 +93,8 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        // StarFieldView chỉ hiện ở Dark mode (sao lấp lánh trên nền tối)
-        val isDarkMode = (resources.configuration.uiMode and
-                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
-        binding.starFieldView.visibility = if (isDarkMode) View.VISIBLE else View.GONE
+        // StarFieldView luôn hiện (kể cả Light hay Dark mode) theo yêu cầu
+        binding.starFieldView.visibility = View.VISIBLE
 
         requestMicPermission()
         observeState()

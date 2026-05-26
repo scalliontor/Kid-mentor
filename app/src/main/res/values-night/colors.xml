@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ══ MAIN SCREEN SEMANTIC COLORS (DARK MODE — Twilight Cosmic) ══ -->
+    <color name="color_text_greeting">#7CE7C4</color>
+    <color name="color_text_sub_greeting">#FFFFFF</color>
+    <color name="color_text_status">#A2D1B8</color>
+    <color name="color_text_brand">#C8B6E2</color>
+    <color name="color_hamburger_tint">#FFFFFF</color>
+
+    <!-- ══ SPLASH SCREEN ══════════════════════════════════════════════ -->
+    <color name="color_splash_bg">#1B1947</color>
+    <color name="color_splash_topbar_bg">#0D0D2B</color>
+    <color name="color_splash_topbar_text">#FFFFFF</color>
+    <color name="color_splash_title">#FFFFFF</color>
+    <color name="color_splash_subtitle">#B0A8CC</color>
+    <color name="color_splash_footer_text">#7A6FA0</color>
+    <color name="color_splash_divider">#3D225B</color>
+
+    <!-- ══ LOGIN SCREEN ═══════════════════════════════════════════════ -->
+    <color name="color_login_bg">#1B1947</color>
+    <color name="color_login_headline">#FFFFFF</color>
+    <color name="color_login_subheadline">#B0A8CC</color>
+    <color name="color_login_label">#B0A8CC</color>
+    <color name="color_login_input_text">#FFFFFF</color>
+    <color name="color_login_input_hint">#7A6FA0</color>
+    <color name="color_login_error">#FF6B6B</color>
+    <color name="color_login_btn_text">#FFFFFF</color>
+    <color name="color_login_guest_text">#E0D8F0</color>
+    <color name="color_login_divider_text">#7A6FA0</color>
+    <color name="color_login_divider_line">#3D225B</color>
+    <color name="color_login_footer">#7A6FA0</color>
+
+    <!-- ══ PROFILE SCREEN ═════════════════════════════════════════════ -->
+    <color name="color_profile_bg">#1B1947</color>
+    <color name="color_profile_header_text">#FFFFFF</color>
+    <color name="color_profile_back_tint">#FFFFFF</color>
+</resources>
