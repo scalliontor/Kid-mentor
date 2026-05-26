@@ -342,6 +342,28 @@ class MainActivity : AppCompatActivity() {
     private val GUEST_MAX_REQUESTS = 20
     private var quotaCheckPassed = false
 
+    private fun countQuotaUsage() {
+        val isGuest = intent.getBooleanExtra("is_guest", false)
+        if (isGuest) {
+            val prefs = getSharedPreferences("ptalk_guest", MODE_PRIVATE)
+            val used = prefs.getInt("guest_request_count", 0)
+            prefs.edit().putInt("guest_request_count", used + 1).apply()
+            return
+        }
+
+        if (TokenManager.isLoggedIn()) {
+            val accessToken = TokenManager.getAccessToken() ?: return
+            lifecycleScope.launch {
+                val result = AuthApiService.useQuota(accessToken)
+                if (result is AuthApiService.AuthResult.Error) {
+                    runOnUiThread {
+                        Toast.makeText(this@MainActivity, result.message, Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+    }
+
     private fun startMicCapture(fromTouch: Boolean): Boolean {
         val state = viewModel.state.value ?: AppState.IDLE
         if (state == AppState.UPLOADING || state == AppState.PLAYING) return false
@@ -353,7 +375,7 @@ class MainActivity : AppCompatActivity() {
             return false
         }
 
-        // Guest mode — local counter (persisted)
+        // Guest mode — check quota (don't count yet, count on send)
         val isGuest = intent.getBooleanExtra("is_guest", false)
         if (isGuest) {
             val prefs = getSharedPreferences("ptalk_guest", MODE_PRIVATE)
@@ -361,22 +383,6 @@ class MainActivity : AppCompatActivity() {
             if (used >= GUEST_MAX_REQUESTS) {
                 Toast.makeText(this, getString(R.string.profile_quota_exhausted), Toast.LENGTH_LONG).show()
                 return false
-            }
-            prefs.edit().putInt("guest_request_count", used + 1).apply()
-        }
-
-        // Logged-in user — async quota check (fire & forget, don't block mic)
-        if (!isGuest && TokenManager.isLoggedIn()) {
-            val accessToken = TokenManager.getAccessToken()
-            if (accessToken != null) {
-                lifecycleScope.launch {
-                    val result = AuthApiService.useQuota(accessToken)
-                    if (result is AuthApiService.AuthResult.Error) {
-                        runOnUiThread {
-                            Toast.makeText(this@MainActivity, result.message, Toast.LENGTH_LONG).show()
-                        }
-                    }
-                }
             }
         }
 
@@ -452,6 +458,9 @@ class MainActivity : AppCompatActivity() {
             viewModel.onError(getString(R.string.err_recording_cancel))
             return
         }
+
+        // Ghi nhận quota khi thực sự gửi (không bị huỷ)
+        countQuotaUsage()
 
         if (activeTransport == ActiveVoiceTransport.STREAMING) {
             clearStartAckTimeout()
