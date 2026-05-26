@@ -353,14 +353,16 @@ class MainActivity : AppCompatActivity() {
             return false
         }
 
-        // Guest mode — local counter
+        // Guest mode — local counter (persisted)
         val isGuest = intent.getBooleanExtra("is_guest", false)
         if (isGuest) {
-            if (guestRequestCount >= GUEST_MAX_REQUESTS) {
+            val prefs = getSharedPreferences("ptalk_guest", MODE_PRIVATE)
+            val used = prefs.getInt("guest_request_count", 0)
+            if (used >= GUEST_MAX_REQUESTS) {
                 Toast.makeText(this, getString(R.string.profile_quota_exhausted), Toast.LENGTH_LONG).show()
                 return false
             }
-            guestRequestCount++
+            prefs.edit().putInt("guest_request_count", used + 1).apply()
         }
 
         // Logged-in user — async quota check (fire & forget, don't block mic)

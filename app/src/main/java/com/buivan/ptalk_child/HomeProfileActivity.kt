@@ -21,8 +21,14 @@ class HomeProfileActivity : AppCompatActivity() {
         TokenManager.init(this)
 
         setupClickListeners()
-        loadUserProfile()
-        loadQuota()
+
+        if (TokenManager.isLoggedIn()) {
+            loadUserProfile()
+            loadQuota()
+        } else {
+            // Guest mode
+            loadGuestProfile()
+        }
     }
 
     private fun setupClickListeners() {
@@ -33,7 +39,9 @@ class HomeProfileActivity : AppCompatActivity() {
 
         // Logout
         findViewById<Button>(R.id.btnLogout).setOnClickListener {
-            TokenManager.clearTokens()
+            if (TokenManager.isLoggedIn()) {
+                TokenManager.clearTokens()
+            }
             val intent = Intent(this, LoginActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
@@ -57,6 +65,33 @@ class HomeProfileActivity : AppCompatActivity() {
         }
     }
 
+    // ── Guest mode ───────────────────────────────────────────────────────
+    private fun loadGuestProfile() {
+        findViewById<TextView>(R.id.tvProfileUsername).text = "Khách"
+        findViewById<TextView>(R.id.tvProfileTier).text = "Chế độ xem thử"
+
+        // Read guest counter from SharedPreferences
+        val prefs = getSharedPreferences("ptalk_guest", MODE_PRIVATE)
+        val used = prefs.getInt("guest_request_count", 0)
+        val limit = 20
+
+        val tvCount = findViewById<TextView>(R.id.tvQuotaCount)
+        val progress = findViewById<ProgressBar>(R.id.progressQuota)
+        val tvHint = findViewById<TextView>(R.id.tvQuotaHint)
+
+        tvCount.text = "$used / $limit"
+        val pct = if (limit > 0) (used * 100 / limit) else 0
+        progress.progress = pct.coerceIn(0, 100)
+        tvHint.text = if (used >= limit)
+            getString(R.string.profile_quota_exhausted)
+        else
+            "Đăng ký tài khoản để dùng nhiều hơn"
+
+        // Hide upgrade buttons for guest (show register prompt instead)
+        findViewById<Button>(R.id.btnLogout).text = "Đăng nhập / Đăng ký"
+    }
+
+    // ── Logged-in user ───────────────────────────────────────────────────
     private fun loadUserProfile() {
         val username = TokenManager.getUsername() ?: "User"
         findViewById<TextView>(R.id.tvProfileUsername).text = username
@@ -102,7 +137,7 @@ class HomeProfileActivity : AppCompatActivity() {
 
                     if (quota.dailyLimit == -1) {
                         // Unlimited
-                        tvCount.text = getString(R.string.profile_quota_unlimited)
+                        tvCount.text = "Đã dùng ${quota.usedToday} lượt"
                         progress.progress = 0
                         tvHint.text = if (quota.isAdmin)
                             getString(R.string.profile_quota_hint_admin)
