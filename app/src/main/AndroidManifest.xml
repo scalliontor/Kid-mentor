@@ -29,9 +29,15 @@
             </intent-filter>
         </activity>
 
-        <!-- LoginActivity — màn hình đăng nhập giả -->
+        <!-- LoginActivity — màn hình đăng nhập -->
         <activity
             android:name=".LoginActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- RegisterActivity — màn hình đăng ký -->
+        <activity
+            android:name=".RegisterActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 

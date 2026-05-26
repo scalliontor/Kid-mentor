@@ -9,22 +9,26 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
+import androidx.lifecycle.lifecycleScope
 import com.buivan.ptalk_child.databinding.ActivityLoginBinding
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
 
-    // ── Tài khoản giả (demo) ─────────────────────────────────────────────
-    companion object {
-        private const val DEMO_USERNAME = "ptalk"
-        private const val DEMO_PASSWORD = "ptit2025"
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        TokenManager.init(this)
+
+        // Nếu đã đăng nhập → vào thẳng Main
+        if (TokenManager.isLoggedIn()) {
+            goToMain(isGuest = false)
+            return
+        }
 
         setupUI()
         setupLanguageToggle()
@@ -50,6 +54,13 @@ class LoginActivity : AppCompatActivity() {
             hideKeyboard()
             goToMain(isGuest = true)
         }
+
+        // Link Đăng ký
+        binding.tvRegisterLink.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        }
     }
 
     private fun setupLanguageToggle() {
@@ -60,8 +71,6 @@ class LoginActivity : AppCompatActivity() {
         binding.btnLanguageToggle.setOnClickListener {
             val isCurrentEng = AppCompatDelegate.getApplicationLocales().toLanguageTags().startsWith("en")
             val newLang = if (isCurrentEng) "vi" else "en"
-            
-            // Đặt ngôn ngữ động. AppCompat tự động recreate activity và lưu trạng thái.
             AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(newLang))
         }
     }
@@ -70,13 +79,13 @@ class LoginActivity : AppCompatActivity() {
         if (isEnglish) {
             binding.tvLangVIE.setBackgroundResource(0)
             binding.tvLangVIE.setTextColor(android.graphics.Color.parseColor("#707072"))
-            
+
             binding.tvLangENG.setBackgroundResource(R.drawable.bg_lang_selected)
             binding.tvLangENG.setTextColor(android.graphics.Color.parseColor("#FFFFFF"))
         } else {
             binding.tvLangVIE.setBackgroundResource(R.drawable.bg_lang_selected)
             binding.tvLangVIE.setTextColor(android.graphics.Color.parseColor("#FFFFFF"))
-            
+
             binding.tvLangENG.setBackgroundResource(0)
             binding.tvLangENG.setTextColor(android.graphics.Color.parseColor("#707072"))
         }
@@ -94,19 +103,49 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        // Kiểm tra credentials giả
-        if (username == DEMO_USERNAME && password == DEMO_PASSWORD) {
-            hideError()
-            animateSuccess()
-        } else {
-            showError(getString(R.string.login_err_wrong))
-            shakeButton(binding.btnLogin)
+        // Gọi API đăng nhập
+        setLoading(true)
+        hideError()
+
+        lifecycleScope.launch {
+            val result = AuthApiService.login(
+                username = username,
+                password = password,
+                deviceInfo = "android-${android.os.Build.MODEL}"
+            )
+
+            when (result) {
+                is AuthApiService.AuthResult.Success -> {
+                    // Lưu token an toàn
+                    TokenManager.saveTokens(
+                        accessToken = result.data.accessToken,
+                        refreshToken = result.data.refreshToken,
+                        expiresIn = result.data.expiresIn,
+                        username = username
+                    )
+                    hideError()
+                    animateSuccess()
+                }
+                is AuthApiService.AuthResult.Error -> {
+                    setLoading(false)
+                    showError(result.message)
+                    shakeButton(binding.btnLogin)
+                }
+            }
         }
+    }
+
+    // ── Loading state ────────────────────────────────────────────────────
+    private fun setLoading(loading: Boolean) {
+        binding.btnLogin.isEnabled = !loading
+        binding.btnLogin.text = if (loading)
+            getString(R.string.login_logging_in)
+        else
+            getString(R.string.login_btn_text)
     }
 
     // ── Animation ────────────────────────────────────────────────────────
     private fun animateSuccess() {
-        // Scale nút login → hiệu ứng "bấm được"
         binding.btnLogin.animate()
             .scaleX(0.96f).scaleY(0.96f)
             .setDuration(100)

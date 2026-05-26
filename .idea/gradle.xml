@@ -15,6 +15,9 @@
         </option>
       </GradleProjectSettings>
     </option>
+<<<<<<< HEAD
     <option name="parallelModelFetch" value="true" />
+=======
+>>>>>>> 851933c (init AndroidPTalk project)
   </component>
 </project>

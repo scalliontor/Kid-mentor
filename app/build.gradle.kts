@@ -27,7 +27,7 @@ android {
         }
     }
     buildFeatures {
-        viewBinding = true   // ← thêm đúng dòng này
+        viewBinding = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -52,5 +52,8 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.9.3")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.11.0")  // cho Health Check trả JSON
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+
+    // Encrypted SharedPreferences for secure token storage
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
 }

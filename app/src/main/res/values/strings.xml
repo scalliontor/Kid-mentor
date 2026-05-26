@@ -14,9 +14,32 @@
     <string name="login_btn_text">ĐĂNG NHẬP</string>
     <string name="login_or">  hoặc  </string>
     <string name="login_guest_btn_text">VÀO XEM THỬ</string>
+    <string name="login_register_link">Chưa có tài khoản? Đăng ký ngay</string>
     <string name="login_footer">© 2025 Lab CTS · Học viện Bưu chính Viễn thông PTIT\nMọi quyền được bảo lưu.</string>
     <string name="login_err_empty">Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.</string>
     <string name="login_err_wrong">Tên đăng nhập hoặc mật khẩu không đúng.</string>
+    <string name="login_logging_in">Đang đăng nhập...</string>
+
+    <!-- Register Screen -->
+    <string name="register_headline">TẠO TÀI KHOẢN</string>
+    <string name="register_subheadline">Đăng ký để bắt đầu học cùng AI Mentor</string>
+    <string name="register_username_label">TÊN ĐĂNG NHẬP</string>
+    <string name="register_username_hint">Nhập tên đăng nhập...</string>
+    <string name="register_email_label">EMAIL</string>
+    <string name="register_email_hint">Nhập email...</string>
+    <string name="register_password_label">MẬT KHẨU</string>
+    <string name="register_password_hint">Ít nhất 8 ký tự...</string>
+    <string name="register_confirm_label">XÁC NHẬN MẬT KHẨU</string>
+    <string name="register_confirm_hint">Nhập lại mật khẩu...</string>
+    <string name="register_btn_text">ĐĂNG KÝ</string>
+    <string name="register_login_link">Đã có tài khoản? Đăng nhập</string>
+    <string name="register_err_empty">Vui lòng nhập đầy đủ thông tin.</string>
+    <string name="register_err_password_mismatch">Mật khẩu xác nhận không khớp.</string>
+    <string name="register_err_password_short">Mật khẩu phải có ít nhất 8 ký tự.</string>
+    <string name="register_err_email_invalid">Email không hợp lệ.</string>
+    <string name="register_err_exists">Tên đăng nhập hoặc email đã tồn tại.</string>
+    <string name="register_success">Đăng ký thành công! Đang đăng nhập...</string>
+    <string name="register_registering">Đang đăng ký...</string>
 
     <!-- Main Screen -->
     <string name="main_greeting">Xin chào!</string>
