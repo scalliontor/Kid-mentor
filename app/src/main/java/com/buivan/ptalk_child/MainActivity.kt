@@ -87,6 +87,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        TokenManager.init(this)
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -336,6 +338,10 @@ class MainActivity : AppCompatActivity() {
                 PackageManager.PERMISSION_GRANTED
     }
 
+    private var guestRequestCount = 0
+    private val GUEST_MAX_REQUESTS = 20
+    private var quotaCheckPassed = false
+
     private fun startMicCapture(fromTouch: Boolean): Boolean {
         val state = viewModel.state.value ?: AppState.IDLE
         if (state == AppState.UPLOADING || state == AppState.PLAYING) return false
@@ -345,6 +351,31 @@ class MainActivity : AppCompatActivity() {
             viewModel.statusText.value = getString(R.string.err_mic_permission)
             Toast.makeText(this, getString(R.string.err_mic_permission_toast), Toast.LENGTH_SHORT).show()
             return false
+        }
+
+        // Guest mode — local counter
+        val isGuest = intent.getBooleanExtra("is_guest", false)
+        if (isGuest) {
+            if (guestRequestCount >= GUEST_MAX_REQUESTS) {
+                Toast.makeText(this, getString(R.string.profile_quota_exhausted), Toast.LENGTH_LONG).show()
+                return false
+            }
+            guestRequestCount++
+        }
+
+        // Logged-in user — async quota check (fire & forget, don't block mic)
+        if (!isGuest && TokenManager.isLoggedIn()) {
+            val accessToken = TokenManager.getAccessToken()
+            if (accessToken != null) {
+                lifecycleScope.launch {
+                    val result = AuthApiService.useQuota(accessToken)
+                    if (result is AuthApiService.AuthResult.Error) {
+                        runOnUiThread {
+                            Toast.makeText(this@MainActivity, result.message, Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+            }
         }
 
         if (ServerConfig.TRANSPORT_MODE != TransportMode.LEGACY_HTTP_ONLY &&
