@@ -43,8 +43,18 @@ data class UserResponse(
     @SerializedName("email") val email: String,
     @SerializedName("user_type") val userType: String,
     @SerializedName("display_name") val displayName: String?,
+    @SerializedName("subscription_tier") val subscriptionTier: String = "basic",
     @SerializedName("is_active") val isActive: Boolean,
+    @SerializedName("is_superuser") val isSuperuser: Boolean = false,
     @SerializedName("created_at") val createdAt: String
+)
+
+data class QuotaResponse(
+    @SerializedName("tier") val tier: String,
+    @SerializedName("is_admin") val isAdmin: Boolean,
+    @SerializedName("daily_limit") val dailyLimit: Int,
+    @SerializedName("used_today") val usedToday: Int,
+    @SerializedName("remaining") val remaining: Int
 )
 
 data class ErrorResponse(
@@ -66,6 +76,12 @@ interface AuthApi {
 
     @GET("auth/me")
     suspend fun getMe(@Header("Authorization") bearer: String): Response<UserResponse>
+
+    @GET("auth/quota")
+    suspend fun getQuota(@Header("Authorization") bearer: String): Response<QuotaResponse>
+
+    @POST("auth/quota/use")
+    suspend fun useQuota(@Header("Authorization") bearer: String): Response<QuotaResponse>
 
     @GET("auth/health")
     suspend fun health(): Response<Map<String, String>>
@@ -177,6 +193,38 @@ object AuthApiService {
                     AuthResult.Success(response.body()!!)
                 } else {
                     AuthResult.Error("Token không hợp lệ")
+                }
+            } catch (e: Exception) {
+                AuthResult.Error("Không kết nối được server")
+            }
+        }
+
+    // ── Quota ──────────────────────────────────────────────────────────────
+
+    suspend fun getQuota(accessToken: String): AuthResult<QuotaResponse> =
+        withContext(Dispatchers.IO) {
+            try {
+                val response = api.getQuota("Bearer $accessToken")
+                if (response.isSuccessful && response.body() != null) {
+                    AuthResult.Success(response.body()!!)
+                } else {
+                    AuthResult.Error("Không lấy được thông tin quota")
+                }
+            } catch (e: Exception) {
+                AuthResult.Error("Không kết nối được server")
+            }
+        }
+
+    suspend fun useQuota(accessToken: String): AuthResult<QuotaResponse> =
+        withContext(Dispatchers.IO) {
+            try {
+                val response = api.useQuota("Bearer $accessToken")
+                if (response.isSuccessful && response.body() != null) {
+                    AuthResult.Success(response.body()!!)
+                } else if (response.code() == 429) {
+                    AuthResult.Error("Đã hết lượt hôm nay!")
+                } else {
+                    AuthResult.Error("Lỗi quota")
                 }
             } catch (e: Exception) {
                 AuthResult.Error("Không kết nối được server")

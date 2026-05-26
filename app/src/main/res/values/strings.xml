@@ -91,4 +91,17 @@
     <string name="profile_physical_desc">Loa &amp; Robot thông minh hỗ trợ giao tiếp cho bé</string>
     <string name="profile_physical_price">4.800.000đ</string>
     <string name="profile_physical_btn_buy">Đặt mua</string>
+
+    <!-- Quota -->
+    <string name="profile_quota_title">LƯỢT SỬ DỤNG HÔM NAY</string>
+    <string name="profile_quota_unlimited">Không giới hạn ∞</string>
+    <string name="profile_quota_hint_basic">Nâng cấp gói Pro hoặc Ultra để dùng nhiều hơn</string>
+    <string name="profile_quota_hint_pro">Gói Pro: 500 lượt/ngày</string>
+    <string name="profile_quota_hint_admin">Tài khoản Admin — không giới hạn</string>
+    <string name="profile_quota_exhausted">Đã hết lượt hôm nay! Nâng cấp để tiếp tục.</string>
+    <string name="profile_tier_admin">Admin</string>
+    <string name="profile_tier_ultra">Ultra Member</string>
+    <string name="profile_tier_pro">Pro Member</string>
+    <string name="profile_tier_basic">Thành viên miễn phí</string>
+    <string name="profile_upgrade_coming_soon">Tính năng thanh toán đang phát triển</string>
 </resources>
