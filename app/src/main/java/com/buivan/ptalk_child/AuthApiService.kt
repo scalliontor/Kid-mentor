@@ -81,7 +81,7 @@ object AuthApiService {
     private const val AUTH_BASE_URL = "${ServerConfig.HTTP_BASE_URL}../auth/"
 
     // Fallback direct URL if gateway doesn't have /auth/ yet
-    private const val AUTH_DIRECT_URL = "http://171.226.10.121:8003/"
+    private const val AUTH_DIRECT_URL = "http://171.226.10.121:8005/"
 
     private val client = OkHttpClient.Builder()
         .connectTimeout(10, TimeUnit.SECONDS)
