@@ -18,6 +18,10 @@ class HomeProfileActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btnLogout).setOnClickListener {
+            // Xóa token đã lưu
+            TokenManager.init(this)
+            TokenManager.clearTokens()
+
             val intent = Intent(this, LoginActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
