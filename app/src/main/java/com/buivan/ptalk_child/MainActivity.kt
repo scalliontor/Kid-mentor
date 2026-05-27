@@ -110,9 +110,6 @@ class MainActivity : AppCompatActivity() {
 
         streamingVoiceClient.preconnect()
         runHttpHealthDiagnostic()
-
-        // Start Dashboard chat session for voice interaction logging
-        DashboardChatApi.startNewSession()
     }
 
     override fun onResume() {0
@@ -487,8 +484,6 @@ class MainActivity : AppCompatActivity() {
 
         if (audioFile != null && audioFile.length() > 0) {
             viewModel.onStopRecording()
-            // Log user voice message to Dashboard
-            DashboardChatApi.logUserMessage("[Voice message]")
             sendAudioToServer(audioFile)
             return
         }
@@ -867,7 +862,6 @@ class MainActivity : AppCompatActivity() {
         audioPlayer.stop()
         audioRecorder.stop()
         characterAnimator.stopCurrent()
-        DashboardChatApi.endSession()
     }
 
     private companion object {
