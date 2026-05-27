@@ -23,6 +23,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
+import com.buivan.ptalk_child.DashboardChatApi
 import java.io.File
 
 private enum class ActiveVoiceTransport {
@@ -109,6 +110,9 @@ class MainActivity : AppCompatActivity() {
 
         streamingVoiceClient.preconnect()
         runHttpHealthDiagnostic()
+
+        // Start Dashboard chat session for voice interaction logging
+        DashboardChatApi.startNewSession()
     }
 
     override fun onResume() {0
@@ -483,6 +487,8 @@ class MainActivity : AppCompatActivity() {
 
         if (audioFile != null && audioFile.length() > 0) {
             viewModel.onStopRecording()
+            // Log user voice message to Dashboard
+            DashboardChatApi.logUserMessage("[Voice message]")
             sendAudioToServer(audioFile)
             return
         }
@@ -854,6 +860,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        // End Dashboard chat session
+        DashboardChatApi.endSession()
         clearAllStreamingTimeouts()
         streamingVoiceClient.shutdown()
         audioPlayer.stop()
