@@ -56,7 +56,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         // Link Đăng ký
-        binding.tvRegisterLink.setOnClickListener {
+        binding.tvRegisterLink?.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)

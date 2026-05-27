@@ -14,7 +14,7 @@
     <string name="login_btn_text">LOGIN</string>
     <string name="login_or">  or  </string>
     <string name="login_guest_btn_text">TRY AS GUEST</string>
-    <string name="login_footer">© 2025 Lab CTS · PTIT Academy of Posts and Telecommunications\nAll rights reserved.</string>
+    <string name="login_footer">© 2025 Lab CTS · Posts and Telecommunications Institute of Technology\nAll rights reserved.</string>
     <string name="login_err_empty">Please enter both username and password.</string>
     <string name="login_err_wrong">Incorrect username or password.</string>
 

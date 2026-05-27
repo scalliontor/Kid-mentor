@@ -15,7 +15,7 @@
     <string name="login_or">  hoặc  </string>
     <string name="login_guest_btn_text">VÀO XEM THỬ</string>
     <string name="login_register_link">Chưa có tài khoản? Đăng ký ngay</string>
-    <string name="login_footer">© 2025 Lab CTS · Học viện Bưu chính Viễn thông PTIT\nMọi quyền được bảo lưu.</string>
+    <string name="login_footer">© 2025 Lab CTS · Học viện Công nghệ Bưu chính Viễn thông PTIT\nMọi quyền được bảo lưu.</string>
     <string name="login_err_empty">Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.</string>
     <string name="login_err_wrong">Tên đăng nhập hoặc mật khẩu không đúng.</string>
     <string name="login_logging_in">Đang đăng nhập...</string>
