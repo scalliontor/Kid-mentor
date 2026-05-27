@@ -60,7 +60,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         // Nút SSO (Authentik)
-        binding.btnSSO.setOnClickListener {
+        binding.btnSSO?.setOnClickListener {
             hideKeyboard()
             authentikManager.login(this, AUTHENTIK_REQUEST_CODE)
         }
