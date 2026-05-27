@@ -88,6 +88,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         TokenManager.init(this)
+        DashboardChatApi.startNewSession()
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -462,6 +463,9 @@ class MainActivity : AppCompatActivity() {
         // Ghi nhận quota khi thực sự gửi (không bị huỷ)
         countQuotaUsage()
 
+        // Log voice interaction to Dashboard
+        DashboardChatApi.logUserMessage("[Voice message]")
+
         if (activeTransport == ActiveVoiceTransport.STREAMING) {
             clearStartAckTimeout()
             streamingVoiceClient.stopSession(sendEnd = true)
@@ -569,6 +573,8 @@ class MainActivity : AppCompatActivity() {
                 wsSessionPhase = WsSessionPhase.WAIT_AUDIO
                 waitingForFirstStreamingChunk = true
                 viewModel.onStartPlaying()  // Switch to X button with "Huỷ" label
+                // Log robot response to Dashboard
+                DashboardChatApi.logRobotResponse("[Voice response]")
                 armFirstAudioTimeout()
                 armIdleFinalTimeout()
             }
@@ -853,6 +859,7 @@ class MainActivity : AppCompatActivity() {
         audioPlayer.stop()
         audioRecorder.stop()
         characterAnimator.stopCurrent()
+        DashboardChatApi.endSession()
     }
 
     private companion object {

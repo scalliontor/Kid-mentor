@@ -56,4 +56,7 @@ dependencies {
 
     // Encrypted SharedPreferences for secure token storage
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
+
+    // AppAuth for OIDC (Authentik SSO)
+    implementation("net.openid:appauth:0.11.1")
 }

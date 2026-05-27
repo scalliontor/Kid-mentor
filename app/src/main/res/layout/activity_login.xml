@@ -239,6 +239,21 @@
                 android:background="@drawable/bg_guest_button"
                 android:layout_marginTop="@dimen/space_m" />
 
+            <!-- SSO Button (Authentik) -->
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSSO"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/input_height"
+                android:text="Đăng nhập với SSO"
+                android:textSize="@dimen/text_guest_button"
+                android:textColor="#2563EB"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="0.06"
+                android:background="@drawable/bg_sso_button"
+                android:layout_marginTop="@dimen/space_s"
+                android:drawableStart="@drawable/ic_key"
+                android:drawablePadding="8dp" />
+
             <!-- Register link -->
             <TextView
                 android:id="@+id/tvRegisterLink"

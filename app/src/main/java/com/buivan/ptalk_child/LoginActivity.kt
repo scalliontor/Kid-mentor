@@ -34,7 +34,11 @@ class LoginActivity : AppCompatActivity() {
         setupLanguageToggle()
     }
 
+    private lateinit var authentikManager: AuthentikAuthManager
+
     private fun setupUI() {
+        authentikManager = AuthentikAuthManager(this)
+
         // Khi nhấn Done trên bàn phím → tự submit login
         binding.etPassword.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -55,12 +59,27 @@ class LoginActivity : AppCompatActivity() {
             goToMain(isGuest = true)
         }
 
+        // Nút SSO (Authentik)
+        binding.btnSSO.setOnClickListener {
+            hideKeyboard()
+            authentikManager.login(this, AUTHENTIK_REQUEST_CODE)
+        }
+
         // Link Đăng ký
         binding.tvRegisterLink?.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
+
+        // Check for auth error from callback
+        intent.getStringExtra("auth_error")?.let { error ->
+            showError(error)
+        }
+    }
+
+    companion object {
+        private const val AUTHENTIK_REQUEST_CODE = 1001
     }
 
     private fun setupLanguageToggle() {
@@ -199,5 +218,12 @@ class LoginActivity : AppCompatActivity() {
     private fun hideKeyboard() {
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         currentFocus?.let { imm.hideSoftInputFromWindow(it.windowToken, 0) }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (::authentikManager.isInitialized) {
+            authentikManager.dispose()
+        }
     }
 }

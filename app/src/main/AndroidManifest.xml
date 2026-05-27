@@ -32,8 +32,30 @@
         <!-- LoginActivity — màn hình đăng nhập -->
         <activity
             android:name=".LoginActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <!-- Handle auth error callback -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="app" android:host="kidmentor" android:path="/error" />
+            </intent-filter>
+        </activity>
+
+        <!-- AuthCallbackActivity — receives Authentik OIDC redirect -->
+        <activity
+            android:name=".AuthCallbackActivity"
+            android:exported="true"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="app" android:host="kidmentor" android:path="/callback" />
+            </intent-filter>
+        </activity>
 
         <!-- RegisterActivity — màn hình đăng ký -->
         <activity
