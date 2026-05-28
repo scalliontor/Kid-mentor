@@ -43,19 +43,14 @@
             </intent-filter>
         </activity>
 
-        <!-- AuthCallbackActivity — receives Authentik OIDC redirect -->
+        <!-- AuthCallbackActivity — internal only, no intent-filter
+             AppAuth intercepts the redirect via AuthorizationManagementActivity
+             and forwards the response to LoginActivity via startActivityForResult -->
         <activity
             android:name=".AuthCallbackActivity"
-            android:exported="true"
+            android:exported="false"
             android:noHistory="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="app" android:host="kidmentor" android:path="/callback" />
-            </intent-filter>
-        </activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <!-- RegisterActivity — màn hình đăng ký -->
         <activity
