@@ -9,6 +9,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.coroutines.runBlocking
 
 class HomeProfileActivity : AppCompatActivity() {
 
@@ -107,14 +108,39 @@ class HomeProfileActivity : AppCompatActivity() {
     }
 
     private fun loadQuota() {
-        // Quota is tracked server-side per user; show basic info
         val tvCount = findViewById<TextView>(R.id.tvQuotaCount)
         val progress = findViewById<ProgressBar>(R.id.progressQuota)
         val tvHint = findViewById<TextView>(R.id.tvQuotaHint)
 
-        tvCount.text = "—"
-        progress.progress = 0
-        tvHint.text = getString(R.string.profile_quota_hint_basic)
+        val username = TokenManager.getUsername()
+        if (username == null) {
+            tvCount.text = "—"
+            progress.progress = 0
+            tvHint.text = getString(R.string.profile_quota_hint_basic)
+            return
+        }
+
+        // Fetch quota from server
+        Thread {
+            val quota = runBlocking { AuthApiService.getQuota(username) }
+            runOnUiThread {
+                if (quota != null) {
+                    val limit = quota.dailyLimit
+                    val used = quota.usedToday
+                    tvCount.text = if (limit == -1) "$used / ∞" else "$used / $limit"
+                    val pct = if (limit > 0) (used * 100 / limit) else 0
+                    progress.progress = pct.coerceIn(0, 100)
+                    tvHint.text = if (limit != -1 && used >= limit)
+                        getString(R.string.profile_quota_exhausted)
+                    else
+                        getString(R.string.profile_quota_hint_basic)
+                } else {
+                    tvCount.text = "—"
+                    progress.progress = 0
+                    tvHint.text = getString(R.string.profile_quota_hint_basic)
+                }
+            }
+        }.start()
     }
 
     private fun updatePlanBadges(tier: String, isSuperuser: Boolean) {

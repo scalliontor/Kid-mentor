@@ -19,9 +19,11 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.buivan.ptalk_child.databinding.ActivityMainBinding
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import com.buivan.ptalk_child.DashboardChatApi
 import java.io.File
@@ -343,6 +345,7 @@ class MainActivity : AppCompatActivity() {
     private var guestRequestCount = 0
     private val GUEST_MAX_REQUESTS = 20
     private var quotaCheckPassed = false
+    private var cachedRemainingQuota = -1 // -1 = unknown
 
     private fun countQuotaUsage() {
         val isGuest = intent.getBooleanExtra("is_guest", false)
@@ -350,8 +353,19 @@ class MainActivity : AppCompatActivity() {
             val prefs = getSharedPreferences("ptalk_guest", MODE_PRIVATE)
             val used = prefs.getInt("guest_request_count", 0)
             prefs.edit().putInt("guest_request_count", used + 1).apply()
+        } else {
+            // Logged-in users: track quota server-side
+            val username = TokenManager.getUsername() ?: return
+            lifecycleScope.launch {
+                val result = AuthApiService.useQuota(username)
+                if (result == null) {
+                    // Quota exhausted or error
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@MainActivity, "Đã hết quota hôm nay", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
         }
-        // Logged-in users: quota tracked server-side, no client action needed
     }
 
     private fun startMicCapture(fromTouch: Boolean): Boolean {
@@ -373,6 +387,22 @@ class MainActivity : AppCompatActivity() {
             if (used >= GUEST_MAX_REQUESTS) {
                 Toast.makeText(this, getString(R.string.profile_quota_exhausted), Toast.LENGTH_LONG).show()
                 return false
+            }
+        } else {
+            // Logged-in users — check cached quota
+            if (cachedRemainingQuota == 0) {
+                Toast.makeText(this, "Đã hết quota hôm nay", Toast.LENGTH_LONG).show()
+                return false
+            }
+            // Refresh quota in background if unknown
+            if (cachedRemainingQuota < 0) {
+                val username = TokenManager.getUsername()
+                if (username != null) {
+                    lifecycleScope.launch {
+                        val quota = AuthApiService.getQuota(username)
+                        cachedRemainingQuota = quota?.remaining ?: -1
+                    }
+                }
             }
         }
 

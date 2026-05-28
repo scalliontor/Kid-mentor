@@ -43,6 +43,13 @@ data class ErrorResponse(
     @SerializedName("error") val error: String?
 )
 
+data class QuotaResponse(
+    @SerializedName("tier") val tier: String = "basic",
+    @SerializedName("daily_limit") val dailyLimit: Int = 20,
+    @SerializedName("used_today") val usedToday: Int = 0,
+    @SerializedName("remaining") val remaining: Int = 20
+)
+
 // ── Retrofit Interfaces ──────────────────────────────────────────────────────
 
 /**
@@ -51,6 +58,17 @@ data class ErrorResponse(
 interface DashboardAuthApi {
     @POST("api/auth/signup")
     suspend fun register(@Body body: RegisterBody): Response<RegisterResponse>
+}
+
+/**
+ * Kids server API for quota tracking
+ */
+interface QuotaApi {
+    @GET("v2/quota")
+    suspend fun getQuota(@Query("device_id") deviceId: String): Response<QuotaResponse>
+
+    @POST("v2/quota/use")
+    suspend fun useQuota(@Query("device_id") deviceId: String): Response<QuotaResponse>
 }
 
 // ── Auth Service ──────────────────────────────────────────────────────────────
@@ -75,6 +93,18 @@ object AuthApiService {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(DashboardAuthApi::class.java)
+    }
+
+    // Kids server API for quota tracking
+    private const val KIDS_SERVER_URL = "http://171.226.10.121:8000/"
+
+    private val quotaApi: QuotaApi by lazy {
+        Retrofit.Builder()
+            .baseUrl(KIDS_SERVER_URL)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(QuotaApi::class.java)
     }
 
     // ── Register (via Dashboard → Authentik) ──────────────────────────────
@@ -127,6 +157,36 @@ object AuthApiService {
                 429 -> "Quá nhiều lần thử. Vui lòng chờ."
                 else -> "Lỗi server ($code)"
             }
+        }
+    }
+
+    // ── Quota tracking ─────────────────────────────────────────────────────
+
+    suspend fun getQuota(deviceId: String): QuotaResponse? = withContext(Dispatchers.IO) {
+        try {
+            val response = quotaApi.getQuota(deviceId)
+            if (response.isSuccessful) response.body() else null
+        } catch (e: Exception) {
+            Log.e(TAG, "getQuota error: ${e.message}")
+            null
+        }
+    }
+
+    suspend fun useQuota(deviceId: String): QuotaResponse? = withContext(Dispatchers.IO) {
+        try {
+            val response = quotaApi.useQuota(deviceId)
+            if (response.isSuccessful) {
+                response.body()
+            } else if (response.code() == 429) {
+                Log.w(TAG, "Quota exhausted for device $deviceId")
+                null
+            } else {
+                Log.w(TAG, "useQuota failed: ${response.code()}")
+                null
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "useQuota error: ${e.message}")
+            null
         }
     }
 }
