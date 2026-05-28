@@ -88,8 +88,8 @@ class RegisterActivity : AppCompatActivity() {
             when (result) {
                 is AuthApiService.AuthResult.Success -> {
                     showSuccess(getString(R.string.register_success))
-                    // Auto-login after register
-                    autoLogin(username, password)
+                    // Registration succeeded — redirect to SSO login
+                    goToLogin()
                 }
                 is AuthApiService.AuthResult.Error -> {
                     setLoading(false)
@@ -100,39 +100,13 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun autoLogin(username: String, password: String) {
-        val loginResult = AuthApiService.login(
-            username = username,
-            password = password,
-            deviceInfo = "android-${android.os.Build.MODEL}"
-        )
-
-        when (loginResult) {
-            is AuthApiService.AuthResult.Success -> {
-                TokenManager.saveTokens(
-                    accessToken = loginResult.data.accessToken,
-                    refreshToken = loginResult.data.refreshToken,
-                    expiresIn = loginResult.data.expiresIn,
-                    username = username
-                )
-                goToMain()
-            }
-            is AuthApiService.AuthResult.Error -> {
-                setLoading(false)
-                // Register succeeded but auto-login failed — go to login screen
-                val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
-                startActivity(intent)
-                finish()
-            }
-        }
-    }
-
     // ── Navigation ───────────────────────────────────────────────────────
-    private fun goToMain() {
-        val intent = Intent(this, MainActivity::class.java).apply {
+    private fun goToLogin() {
+        val intent = Intent(this, LoginActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         startActivity(intent)
+        finish()
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
     }
 

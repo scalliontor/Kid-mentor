@@ -9,8 +9,6 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
 
 class HomeProfileActivity : AppCompatActivity() {
 
@@ -94,71 +92,29 @@ class HomeProfileActivity : AppCompatActivity() {
     // ── Logged-in user ───────────────────────────────────────────────────
     private fun loadUserProfile() {
         val username = TokenManager.getUsername() ?: "User"
+        val userType = TokenManager.getUserType() ?: "child"
+
         findViewById<TextView>(R.id.tvProfileUsername).text = username
 
-        val accessToken = TokenManager.getAccessToken() ?: return
-
-        lifecycleScope.launch {
-            when (val result = AuthApiService.getMe(accessToken)) {
-                is AuthApiService.AuthResult.Success -> {
-                    val user = result.data
-                    findViewById<TextView>(R.id.tvProfileUsername).text =
-                        user.displayName ?: user.username
-
-                    // Update tier label
-                    val tierLabel = when {
-                        user.isSuperuser -> getString(R.string.profile_tier_admin)
-                        user.subscriptionTier == "ultra" -> getString(R.string.profile_tier_ultra)
-                        user.subscriptionTier == "pro" -> getString(R.string.profile_tier_pro)
-                        else -> getString(R.string.profile_tier_basic)
-                    }
-                    findViewById<TextView>(R.id.tvProfileTier).text = tierLabel
-
-                    // Update plan badges
-                    updatePlanBadges(user.subscriptionTier, user.isSuperuser)
-                }
-                is AuthApiService.AuthResult.Error -> {
-                    // Token expired or invalid — still show cached username
-                }
-            }
+        val tierLabel = when (userType) {
+            "admin" -> getString(R.string.profile_tier_admin)
+            "ultra" -> getString(R.string.profile_tier_ultra)
+            "pro" -> getString(R.string.profile_tier_pro)
+            else -> getString(R.string.profile_tier_basic)
         }
+        findViewById<TextView>(R.id.tvProfileTier).text = tierLabel
+        updatePlanBadges(userType, userType == "admin")
     }
 
     private fun loadQuota() {
-        val accessToken = TokenManager.getAccessToken() ?: return
+        // Quota is tracked server-side per user; show basic info
+        val tvCount = findViewById<TextView>(R.id.tvQuotaCount)
+        val progress = findViewById<ProgressBar>(R.id.progressQuota)
+        val tvHint = findViewById<TextView>(R.id.tvQuotaHint)
 
-        lifecycleScope.launch {
-            when (val result = AuthApiService.getQuota(accessToken)) {
-                is AuthApiService.AuthResult.Success -> {
-                    val quota = result.data
-                    val tvCount = findViewById<TextView>(R.id.tvQuotaCount)
-                    val progress = findViewById<ProgressBar>(R.id.progressQuota)
-                    val tvHint = findViewById<TextView>(R.id.tvQuotaHint)
-
-                    if (quota.dailyLimit == -1) {
-                        // Unlimited
-                        tvCount.text = "Đã dùng ${quota.usedToday} lượt"
-                        progress.progress = 0
-                        tvHint.text = if (quota.isAdmin)
-                            getString(R.string.profile_quota_hint_admin)
-                        else
-                            "Gói Ultra — không giới hạn"
-                    } else {
-                        tvCount.text = "${quota.usedToday} / ${quota.dailyLimit}"
-                        val pct = if (quota.dailyLimit > 0) (quota.usedToday * 100 / quota.dailyLimit) else 0
-                        progress.progress = pct.coerceIn(0, 100)
-
-                        tvHint.text = if (quota.remaining <= 0)
-                            getString(R.string.profile_quota_exhausted)
-                        else
-                            getString(R.string.profile_quota_hint_basic)
-                    }
-                }
-                is AuthApiService.AuthResult.Error -> {
-                    // Can't load quota — show default
-                }
-            }
-        }
+        tvCount.text = "—"
+        progress.progress = 0
+        tvHint.text = getString(R.string.profile_quota_hint_basic)
     }
 
     private fun updatePlanBadges(tier: String, isSuperuser: Boolean) {

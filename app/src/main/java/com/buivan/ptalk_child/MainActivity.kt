@@ -350,20 +350,8 @@ class MainActivity : AppCompatActivity() {
             val prefs = getSharedPreferences("ptalk_guest", MODE_PRIVATE)
             val used = prefs.getInt("guest_request_count", 0)
             prefs.edit().putInt("guest_request_count", used + 1).apply()
-            return
         }
-
-        if (TokenManager.isLoggedIn()) {
-            val accessToken = TokenManager.getAccessToken() ?: return
-            lifecycleScope.launch {
-                val result = AuthApiService.useQuota(accessToken)
-                if (result is AuthApiService.AuthResult.Error) {
-                    runOnUiThread {
-                        Toast.makeText(this@MainActivity, result.message, Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
-        }
+        // Logged-in users: quota tracked server-side, no client action needed
     }
 
     private fun startMicCapture(fromTouch: Boolean): Boolean {

@@ -43,7 +43,8 @@ class LoginActivity : AppCompatActivity() {
                     accessToken = authResult.accessToken,
                     refreshToken = authResult.refreshToken,
                     expiresIn = authResult.expiresIn,
-                    username = authResult.name
+                    username = authResult.name,
+                    userType = authResult.userType
                 )
                 goToMain(isGuest = false)
             },
