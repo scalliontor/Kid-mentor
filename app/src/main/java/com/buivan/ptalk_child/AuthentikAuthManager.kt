@@ -13,6 +13,7 @@ import net.openid.appauth.EndSessionResponse
 import net.openid.appauth.ResponseTypeValues
 import net.openid.appauth.TokenRequest
 import net.openid.appauth.TokenResponse
+import net.openid.appauth.ClientSecretBasic
 import org.json.JSONObject
 
 /**
@@ -98,18 +99,8 @@ class AuthentikAuthManager(private val context: Context) {
         // Exchange authorization code for tokens
         // Must include client_secret for confidential client authentication
         val tokenRequest = response.createTokenExchangeRequest()
-            .let { req ->
-                // Rebuild with client_secret (AppAuth's createTokenExchangeRequest doesn't include it)
-                net.openid.appauth.TokenRequest.Builder(req.configuration, req.clientId)
-                    .setGrantType(req.grantType)
-                    .setAuthorizationCode(req.authorizationCode)
-                    .setRedirectUri(req.redirectUri)
-                    .setNonce(req.nonce)
-                    .setCodeVerifier(req.codeVerifier)
-                    .setClientSecret(AuthentikConfig.CLIENT_SECRET)
-                    .build()
-            }
-        authService.performTokenRequest(tokenRequest) { tokenResponse, tokenException ->
+        val clientAuth = ClientSecretBasic(AuthentikConfig.CLIENT_SECRET)
+        authService.performTokenRequest(tokenRequest, clientAuth) { tokenResponse, tokenException ->
             if (tokenException != null) {
                 onError("Token exchange failed: ${tokenException.errorDescription ?: tokenException.error}")
                 return@performTokenRequest
@@ -185,10 +176,10 @@ class AuthentikAuthManager(private val context: Context) {
             .setGrantType("refresh_token")
             .setRefreshToken(refreshToken)
             .setScopes(AuthentikConfig.SCOPES)
-            .setClientSecret(AuthentikConfig.CLIENT_SECRET)
             .build()
 
-        authService.performTokenRequest(tokenRequest) { response, exception ->
+        val clientAuth = ClientSecretBasic(AuthentikConfig.CLIENT_SECRET)
+        authService.performTokenRequest(tokenRequest, clientAuth) { response, exception ->
             if (exception != null) {
                 onError("Refresh failed: ${exception.errorDescription ?: exception.error}")
                 return@performTokenRequest
