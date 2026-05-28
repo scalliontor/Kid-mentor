@@ -84,6 +84,11 @@ class LoginActivity : AppCompatActivity() {
             goToMain(isGuest = true)
         }
 
+        // Link đăng ký
+        binding.tvRegisterLink.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
+        }
+
         // Check for auth error from callback
         intent.getStringExtra("auth_error")?.let { error ->
             showError(error)
