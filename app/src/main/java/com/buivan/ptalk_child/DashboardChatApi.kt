@@ -17,7 +17,7 @@ import org.json.JSONObject
  */
 object DashboardChatApi {
     private const val TAG = "DashboardChatApi"
-    private const val BASE_URL = "https://auth.ctslab.net"
+    private const val BASE_URL = "https://dashboard.ctslab.net"
     private const val SESSIONS_URL = "$BASE_URL/api/v1/chat/sessions"
     private const val MESSAGES_URL = "$BASE_URL/api/v1/chat/messages"
 
