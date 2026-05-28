@@ -66,6 +66,10 @@
             android:name=".HomeProfileActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ChatHistoryActivity"
+            android:exported="false" />
+
         <!-- Tự động lưu và khôi phục ngôn ngữ đã chọn qua AndroidX AppCompat -->
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"

@@ -417,6 +417,20 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
+            <!-- Lịch sử chat -->
+            <Button
+                android:id="@+id/btnChatHistory"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="Lịch sử chat"
+                android:backgroundTint="#F0F4FF"
+                android:textColor="#1565C0"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:elevation="0dp"
+                android:layout_marginBottom="12dp"
+                app:cornerRadius="12dp"/>
+
             <!-- Đăng xuất -->
             <Button
                 android:id="@+id/btnLogout"
