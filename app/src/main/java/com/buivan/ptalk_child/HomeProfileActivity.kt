@@ -35,11 +35,6 @@ class HomeProfileActivity : AppCompatActivity() {
             finish()
         }
 
-        // Chat History
-        findViewById<Button>(R.id.btnChatHistory).setOnClickListener {
-            startActivity(Intent(this, ChatHistoryActivity::class.java))
-        }
-
         // Logout
         findViewById<Button>(R.id.btnLogout).setOnClickListener {
             if (TokenManager.isLoggedIn()) {
