@@ -17,7 +17,7 @@ data class RegisterBody(
     @SerializedName("username") val username: String,
     @SerializedName("email") val email: String,
     @SerializedName("password") val password: String,
-    @SerializedName("user_type") val userType: String = "account_owner"
+    @SerializedName("confirmPassword") val confirmPassword: String
 )
 
 data class LoginBody(
@@ -41,12 +41,18 @@ data class UserResponse(
     @SerializedName("id") val id: String,
     @SerializedName("username") val username: String,
     @SerializedName("email") val email: String,
-    @SerializedName("user_type") val userType: String,
-    @SerializedName("display_name") val displayName: String?,
+    @SerializedName("user_type") val userType: String = "account_owner",
+    @SerializedName("display_name") val displayName: String? = null,
     @SerializedName("subscription_tier") val subscriptionTier: String = "basic",
-    @SerializedName("is_active") val isActive: Boolean,
+    @SerializedName("is_active") val isActive: Boolean = true,
     @SerializedName("is_superuser") val isSuperuser: Boolean = false,
-    @SerializedName("created_at") val createdAt: String
+    @SerializedName("created_at") val createdAt: String = ""
+)
+
+data class RegisterResponse(
+    @SerializedName("success") val success: Boolean,
+    @SerializedName("user") val user: UserResponse?,
+    @SerializedName("error") val error: String? = null
 )
 
 data class QuotaResponse(
@@ -58,16 +64,24 @@ data class QuotaResponse(
 )
 
 data class ErrorResponse(
-    @SerializedName("detail") val detail: String?
+    @SerializedName("detail") val detail: String?,
+    @SerializedName("error") val error: String?
 )
 
-// ── Retrofit Interface ────────────────────────────────────────────────────────
+// ── Retrofit Interfaces ──────────────────────────────────────────────────────
 
-interface AuthApi {
+/**
+ * Dashboard API for registration (creates user in both Authentik + Dashboard DB)
+ */
+interface DashboardAuthApi {
+    @POST("api/auth/signup")
+    suspend fun register(@Body body: RegisterBody): Response<RegisterResponse>
+}
 
-    @POST("auth/register")
-    suspend fun register(@Body body: RegisterBody): Response<UserResponse>
-
+/**
+ * CloudPTalk Auth API for login/refresh/quota (JWT-based)
+ */
+interface CloudAuthApi {
     @POST("auth/login")
     suspend fun login(@Body body: LoginBody): Response<TokenResponse>
 
@@ -93,11 +107,11 @@ object AuthApiService {
 
     private const val TAG = "AuthApiService"
 
-    // Auth service base URL — goes through nginx gateway
-    private const val AUTH_BASE_URL = "${ServerConfig.HTTP_BASE_URL}../auth/"
+    // Dashboard API for registration (creates user in Authentik)
+    private const val DASHBOARD_URL = "https://dashboard.ctslab.net/"
 
-    // Auth service via Cloudflare Tunnel (HTTPS)
-    private const val AUTH_DIRECT_URL = "https://auth.ctslab.net/"
+    // CloudPTalk Auth for login/refresh/quota (via nginx gateway)
+    private const val CLOUD_AUTH_URL = "http://171.226.10.121:8000/"
 
     private val client = OkHttpClient.Builder()
         .connectTimeout(10, TimeUnit.SECONDS)
@@ -105,16 +119,25 @@ object AuthApiService {
         .writeTimeout(10, TimeUnit.SECONDS)
         .build()
 
-    private val api: AuthApi by lazy {
+    private val dashboardApi: DashboardAuthApi by lazy {
         Retrofit.Builder()
-            .baseUrl(AUTH_DIRECT_URL)
+            .baseUrl(DASHBOARD_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(AuthApi::class.java)
+            .create(DashboardAuthApi::class.java)
     }
 
-    // ── Register ──────────────────────────────────────────────────────────
+    private val cloudAuthApi: CloudAuthApi by lazy {
+        Retrofit.Builder()
+            .baseUrl(CLOUD_AUTH_URL)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(CloudAuthApi::class.java)
+    }
+
+    // ── Register (via Dashboard → Authentik) ──────────────────────────────
 
     sealed class AuthResult<out T> {
         data class Success<T>(val data: T) : AuthResult<T>()
@@ -127,10 +150,17 @@ object AuthApiService {
         password: String
     ): AuthResult<UserResponse> = withContext(Dispatchers.IO) {
         try {
-            val response = api.register(RegisterBody(username, email, password))
+            val response = dashboardApi.register(
+                RegisterBody(username, email, password, password)
+            )
             if (response.isSuccessful && response.body() != null) {
-                Log.d(TAG, "Register success: ${response.body()!!.username}")
-                AuthResult.Success(response.body()!!)
+                val body = response.body()!!
+                if (body.success && body.user != null) {
+                    Log.d(TAG, "Register success: ${body.user.username}")
+                    AuthResult.Success(body.user)
+                } else {
+                    AuthResult.Error(body.error ?: "Đăng ký thất bại")
+                }
             } else {
                 val errorBody = response.errorBody()?.string() ?: ""
                 val message = parseErrorMessage(errorBody, response.code())
@@ -143,7 +173,7 @@ object AuthApiService {
         }
     }
 
-    // ── Login ─────────────────────────────────────────────────────────────
+    // ── Login (via CloudPTalk Auth) ───────────────────────────────────────
 
     suspend fun login(
         username: String,
@@ -151,7 +181,7 @@ object AuthApiService {
         deviceInfo: String? = null
     ): AuthResult<TokenResponse> = withContext(Dispatchers.IO) {
         try {
-            val response = api.login(LoginBody(username, password, deviceInfo))
+            val response = cloudAuthApi.login(LoginBody(username, password, deviceInfo))
             if (response.isSuccessful && response.body() != null) {
                 Log.d(TAG, "Login success")
                 AuthResult.Success(response.body()!!)
@@ -172,7 +202,7 @@ object AuthApiService {
     suspend fun refreshToken(refreshToken: String): AuthResult<TokenResponse> =
         withContext(Dispatchers.IO) {
             try {
-                val response = api.refresh(RefreshBody(refreshToken))
+                val response = cloudAuthApi.refresh(RefreshBody(refreshToken))
                 if (response.isSuccessful && response.body() != null) {
                     AuthResult.Success(response.body()!!)
                 } else {
@@ -188,7 +218,7 @@ object AuthApiService {
     suspend fun getMe(accessToken: String): AuthResult<UserResponse> =
         withContext(Dispatchers.IO) {
             try {
-                val response = api.getMe("Bearer $accessToken")
+                val response = cloudAuthApi.getMe("Bearer $accessToken")
                 if (response.isSuccessful && response.body() != null) {
                     AuthResult.Success(response.body()!!)
                 } else {
@@ -204,7 +234,7 @@ object AuthApiService {
     suspend fun getQuota(accessToken: String): AuthResult<QuotaResponse> =
         withContext(Dispatchers.IO) {
             try {
-                val response = api.getQuota("Bearer $accessToken")
+                val response = cloudAuthApi.getQuota("Bearer $accessToken")
                 if (response.isSuccessful && response.body() != null) {
                     AuthResult.Success(response.body()!!)
                 } else {
@@ -218,7 +248,7 @@ object AuthApiService {
     suspend fun useQuota(accessToken: String): AuthResult<QuotaResponse> =
         withContext(Dispatchers.IO) {
             try {
-                val response = api.useQuota("Bearer $accessToken")
+                val response = cloudAuthApi.useQuota("Bearer $accessToken")
                 if (response.isSuccessful && response.body() != null) {
                     AuthResult.Success(response.body()!!)
                 } else if (response.code() == 429) {
@@ -237,7 +267,7 @@ object AuthApiService {
         return try {
             val gson = com.google.gson.Gson()
             val error = gson.fromJson(errorBody, ErrorResponse::class.java)
-            error.detail ?: "Lỗi không xác định ($code)"
+            error.detail ?: error.error ?: "Lỗi không xác định ($code)"
         } catch (_: Exception) {
             when (code) {
                 401 -> "Sai tên đăng nhập hoặc mật khẩu"
