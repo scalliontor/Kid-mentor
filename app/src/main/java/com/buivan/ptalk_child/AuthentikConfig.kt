@@ -7,12 +7,12 @@ import android.net.Uri
  * These values must match the Authentik blueprint (system-setup.yaml).
  */
 object AuthentikConfig {
-    // Authentik server URL (change to production URL when deploying)
-    const val ISSUER_URL = "http://171.226.10.121:9090/application/o/kid-mentor/"
-    const val AUTH_ENDPOINT = "http://171.226.10.121:9090/application/o/authorize/"
-    const val TOKEN_ENDPOINT = "http://171.226.10.121:9090/application/o/token/"
-    const val USERINFO_ENDPOINT = "http://171.226.10.121:9090/application/o/userinfo/"
-    const val END_SESSION_ENDPOINT = "http://171.226.10.121:9090/application/o/kid-mentor/end-session/"
+    // Authentik server URL
+    const val ISSUER_URL = "https://auth.ctslab.net/application/o/kid-mentor/"
+    const val AUTH_ENDPOINT = "https://auth.ctslab.net/application/o/authorize/"
+    const val TOKEN_ENDPOINT = "https://auth.ctslab.net/application/o/token/"
+    const val USERINFO_ENDPOINT = "https://auth.ctslab.net/application/o/userinfo/"
+    const val END_SESSION_ENDPOINT = "https://auth.ctslab.net/application/o/kid-mentor/end-session/"
 
     // Client credentials (from Authentik blueprint)
     const val CLIENT_ID = "kid-mentor-client"
