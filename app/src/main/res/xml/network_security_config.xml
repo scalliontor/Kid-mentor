@@ -6,8 +6,9 @@
             <certificates src="user" />
         </trust-anchors>
     </base-config>
-    <!-- Allow cleartext for local dev only -->
+    <!-- Allow cleartext for local dev and PTalk server -->
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">localhost</domain>
+        <domain>171.226.10.121</domain>
     </domain-config>
 </network-security-config>
