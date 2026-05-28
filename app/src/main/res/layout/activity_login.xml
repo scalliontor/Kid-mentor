@@ -99,7 +99,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- ══ FORM CARD ═══════════════════════════════════════════════════ -->
+        <!-- ══ SSO LOGIN CARD ════════════════════════════════════════════════ -->
         <LinearLayout
             android:id="@+id/loginFormCard"
             android:layout_width="0dp"
@@ -111,65 +111,6 @@
             app:layout_constraintTop_toBottomOf="@id/tvLoginSubheadline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
-
-            <!-- Username label -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/login_username_label"
-                android:textSize="@dimen/text_login_label"
-                android:textColor="#707072"
-                android:fontFamily="sans-serif-medium"
-                android:letterSpacing="0.10"
-                android:layout_marginBottom="@dimen/space_xs" />
-
-            <!-- Username input -->
-            <EditText
-                android:id="@+id/etUsername"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/input_height"
-                android:hint="@string/login_username_hint"
-                android:textSize="@dimen/text_input"
-                android:textColor="#111111"
-                android:textColorHint="#9E9EA0"
-                android:fontFamily="sans-serif"
-                android:background="@drawable/bg_input_field"
-                android:paddingStart="@dimen/input_padding_h"
-                android:paddingEnd="@dimen/input_padding_h"
-                android:inputType="text"
-                android:importantForAutofill="no"
-                android:imeOptions="actionNext"
-                android:singleLine="true" />
-
-            <!-- Password label -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/login_password_label"
-                android:textSize="@dimen/text_login_label"
-                android:textColor="#707072"
-                android:fontFamily="sans-serif-medium"
-                android:letterSpacing="0.10"
-                android:layout_marginTop="@dimen/space_l"
-                android:layout_marginBottom="@dimen/space_xs" />
-
-            <!-- Password input -->
-            <EditText
-                android:id="@+id/etPassword"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/input_height"
-                android:hint="@string/login_password_hint"
-                android:textSize="@dimen/text_input"
-                android:textColor="#111111"
-                android:textColorHint="#9E9EA0"
-                android:fontFamily="sans-serif"
-                android:background="@drawable/bg_input_field"
-                android:paddingStart="@dimen/input_padding_h"
-                android:paddingEnd="@dimen/input_padding_h"
-                android:inputType="textPassword"
-                android:importantForAutofill="no"
-                android:imeOptions="actionDone"
-                android:singleLine="true" />
 
             <!-- Error text (hidden by default) -->
             <TextView
@@ -183,19 +124,21 @@
                 android:layout_marginTop="@dimen/space_s"
                 android:visibility="gone" />
 
-            <!-- Login button (Nike Black pill) -->
+            <!-- SSO Button (Authentik) - Primary login -->
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnLogin"
+                android:id="@+id/btnSSO"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/input_height"
-                android:text="@string/login_btn_text"
+                android:text="Đăng nhập với SSO"
                 android:textSize="@dimen/text_login_button"
                 android:textColor="#FFFFFF"
                 android:fontFamily="sans-serif-medium"
                 android:letterSpacing="0.08"
                 android:background="@drawable/bg_login_button"
                 android:layout_marginTop="@dimen/space_xl"
-                android:elevation="2dp" />
+                android:elevation="2dp"
+                android:drawableStart="@drawable/ic_key"
+                android:drawablePadding="8dp" />
 
             <!-- Divider with text -->
             <LinearLayout
@@ -239,20 +182,10 @@
                 android:background="@drawable/bg_guest_button"
                 android:layout_marginTop="@dimen/space_m" />
 
-            <!-- SSO Button (Authentik) -->
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnSSO"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/input_height"
-                android:text="Đăng nhập với SSO"
-                android:textSize="@dimen/text_guest_button"
-                android:textColor="#2563EB"
-                android:fontFamily="sans-serif-medium"
-                android:letterSpacing="0.06"
-                android:background="@drawable/bg_sso_button"
-                android:layout_marginTop="@dimen/space_s"
-                android:drawableStart="@drawable/ic_key"
-                android:drawablePadding="8dp" />
+            <!-- Hidden fields for compatibility (GONE) -->
+            <EditText android:id="@+id/etUsername" android:visibility="gone" android:layout_width="0dp" android:layout_height="0dp" />
+            <EditText android:id="@+id/etPassword" android:visibility="gone" android:layout_width="0dp" android:layout_height="0dp" />
+            <androidx.appcompat.widget.AppCompatButton android:id="@+id/btnLogin" android:visibility="gone" android:layout_width="0dp" android:layout_height="0dp" />
 
             <!-- Register link -->
             <TextView
