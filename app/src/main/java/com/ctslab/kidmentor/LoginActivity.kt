@@ -75,12 +75,13 @@ class LoginActivity : AppCompatActivity() {
         authentikManager = AuthentikAuthManager(this)
 
         // Privacy/Terms consent — must be agreed before any login path is enabled.
-        binding.btnSSO.isEnabled = binding.cbAgreeTerms.isChecked
-        binding.btnGuest.isEnabled = binding.cbAgreeTerms.isChecked
-        binding.cbAgreeTerms.setOnCheckedChangeListener { _, checked ->
+        val updateConsent = { checked: Boolean ->
             binding.btnSSO.isEnabled = checked
             binding.btnGuest.isEnabled = checked
+            binding.tvTermsError.visibility = if (checked) View.GONE else View.VISIBLE
         }
+        updateConsent(binding.cbAgreeTerms.isChecked)
+        binding.cbAgreeTerms.setOnCheckedChangeListener { _, checked -> updateConsent(checked) }
         binding.tvPrivacyLink.setOnClickListener { openUrl("https://dashboard.ctslab.net/privacy") }
         binding.tvTermsLink.setOnClickListener { openUrl("https://dashboard.ctslab.net/terms") }
 

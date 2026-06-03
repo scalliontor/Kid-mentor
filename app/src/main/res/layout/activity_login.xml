@@ -13,6 +13,61 @@
         android:paddingBottom="32dp"
         android:minHeight="@dimen/login_min_height">
 
+        <!-- ══ CO-BRANDING HEADER (glass pill) ═══════════════════════════ -->
+        <LinearLayout
+            android:id="@+id/loginBrandHeader"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/login_header_height"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/login_header_padding_h"
+            android:paddingEnd="@dimen/login_header_padding_h"
+            android:background="@drawable/bg_glass_header"
+            android:elevation="6dp"
+            android:layout_marginStart="@dimen/form_margin_h"
+            android:layout_marginEnd="@dimen/form_margin_h"
+            android:layout_marginTop="@dimen/space_l"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:layout_width="@dimen/login_ptit_logo_size"
+                android:layout_height="@dimen/login_ptit_logo_size"
+                android:src="@drawable/logo_ptit"
+                android:scaleType="fitCenter" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="@dimen/login_header_separator_height"
+                android:layout_marginStart="@dimen/space_m"
+                android:layout_marginEnd="@dimen/space_m"
+                android:background="@color/color_login_divider_line" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/app_name"
+                android:textSize="@dimen/text_login_header_title"
+                android:textColor="@color/color_login_headline"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="@dimen/login_header_separator_height"
+                android:layout_marginStart="@dimen/space_m"
+                android:layout_marginEnd="@dimen/space_m"
+                android:background="@color/color_login_divider_line" />
+
+            <ImageView
+                android:layout_width="@dimen/login_cts_logo_width"
+                android:layout_height="@dimen/login_cts_logo_height"
+                android:src="@drawable/logo_cts_main"
+                android:scaleType="fitCenter" />
+        </LinearLayout>
+
         <!-- ══ HERO SECTION ════════════════════════════════════════════════ -->
         <!-- PTIT Logo big - editorial hero -->
         <ImageView
@@ -21,8 +76,8 @@
             android:layout_height="@dimen/login_hero_size"
             android:src="@drawable/logo_ptit"
             android:scaleType="fitCenter"
-            android:layout_marginTop="@dimen/space_hero_top"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="@dimen/space_l"
+            app:layout_constraintTop_toBottomOf="@id/loginBrandHeader"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -48,7 +103,7 @@
                 android:layout_width="44dp"
                 android:layout_height="match_parent"
                 android:text="VIE"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_login_label"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:background="@drawable/bg_lang_selected"
@@ -59,7 +114,7 @@
                 android:layout_width="44dp"
                 android:layout_height="match_parent"
                 android:text="ENG"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_login_label"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:background="@android:color/transparent"
@@ -76,7 +131,7 @@
             android:textColor="#111111"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
-            android:lineSpacingMultiplier="0.95"
+            android:lineSpacingMultiplier="1.05"
             android:letterSpacing="0.02"
             android:layout_marginTop="@dimen/space_l"
             app:layout_constraintTop_toBottomOf="@id/ivLoginHero"
@@ -130,8 +185,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_xl"
-                android:text="Tôi đồng ý với Điều khoản &amp; Chính sách bảo mật"
-                android:textSize="13sp" />
+                android:text="@string/consent_prefix"
+                android:textSize="@dimen/text_login_label"
+                android:textColor="@color/color_login_subheadline" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -144,26 +200,39 @@
                     android:id="@+id/tvPrivacyLink"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Chính sách bảo mật"
-                    android:textColor="#D30005"
-                    android:textSize="13sp"
+                    android:text="@string/consent_privacy"
+                    android:textColor="@color/color_link_blue"
+                    android:textSize="@dimen/text_login_label"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="  •  "
-                    android:textSize="13sp" />
+                    android:text="@string/consent_and"
+                    android:textSize="@dimen/text_login_label"
+                    android:textColor="@color/color_login_subheadline" />
 
                 <TextView
                     android:id="@+id/tvTermsLink"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Điều khoản"
-                    android:textColor="#D30005"
-                    android:textSize="13sp"
+                    android:text="@string/consent_terms"
+                    android:textColor="@color/color_link_blue"
+                    android:textSize="@dimen/text_login_label"
                     android:textStyle="bold" />
             </LinearLayout>
+
+            <!-- Consent error (shown while unchecked, hidden after) -->
+            <TextView
+                android:id="@+id/tvTermsError"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/consent_error"
+                android:textSize="@dimen/text_login_error"
+                android:textColor="@color/color_login_error"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginTop="@dimen/space_xs"
+                android:visibility="gone" />
 
             <!-- SSO Button (Authentik) - Primary login -->
             <androidx.appcompat.widget.AppCompatButton

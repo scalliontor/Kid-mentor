@@ -61,7 +61,7 @@
                 android:layout_width="44dp"
                 android:layout_height="match_parent"
                 android:text="VIE"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_login_label"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:background="@drawable/bg_lang_selected"
@@ -72,7 +72,7 @@
                 android:layout_width="44dp"
                 android:layout_height="match_parent"
                 android:text="ENG"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_login_label"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:background="@android:color/transparent"
@@ -87,7 +87,7 @@
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
             android:letterSpacing="0.02"
-            android:lineSpacingMultiplier="0.95"
+            android:lineSpacingMultiplier="1.05"
             android:text="@string/login_headline"
             android:textColor="#111111"
             android:textSize="@dimen/text_login_headline"
@@ -134,14 +134,15 @@
                 android:textSize="@dimen/text_login_error"
                 android:visibility="gone" />
 
-            <!-- Privacy & Terms consent (tablet) — mirrors phone so consent gating applies here too -->
+            <!-- Privacy & Terms consent (tablet) — synced with phone layout -->
             <CheckBox
                 android:id="@+id/cbAgreeTerms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_xl"
-                android:text="Tôi đồng ý với Điều khoản &amp; Chính sách bảo mật"
-                android:textSize="13sp" />
+                android:text="@string/consent_prefix"
+                android:textSize="@dimen/text_login_label"
+                android:textColor="@color/color_login_subheadline" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -154,26 +155,38 @@
                     android:id="@+id/tvPrivacyLink"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Chính sách bảo mật"
-                    android:textColor="#D30005"
-                    android:textSize="13sp"
+                    android:text="@string/consent_privacy"
+                    android:textColor="@color/color_link_blue"
+                    android:textSize="@dimen/text_login_label"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="  •  "
-                    android:textSize="13sp" />
+                    android:text="@string/consent_and"
+                    android:textSize="@dimen/text_login_label"
+                    android:textColor="@color/color_login_subheadline" />
 
                 <TextView
                     android:id="@+id/tvTermsLink"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Điều khoản"
-                    android:textColor="#D30005"
-                    android:textSize="13sp"
+                    android:text="@string/consent_terms"
+                    android:textColor="@color/color_link_blue"
+                    android:textSize="@dimen/text_login_label"
                     android:textStyle="bold" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvTermsError"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/consent_error"
+                android:textSize="@dimen/text_login_error"
+                android:textColor="@color/color_login_error"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginTop="@dimen/space_xs"
+                android:visibility="gone" />
 
             <!-- SSO Button (Authentik) - Primary login -->
             <androidx.appcompat.widget.AppCompatButton

@@ -33,6 +33,9 @@
     <color name="color_login_divider_line">#E5E5E5</color>
     <color name="color_login_footer">#9E9EA0</color>
 
+    <!-- Standard hyperlink color — used for consent Privacy/Terms links (both apps) -->
+    <color name="color_link_blue">#0066CC</color>
+
     <!-- ══ PROFILE SCREEN ═════════════════════════════════════════════ -->
     <color name="color_profile_bg">#F5F7FA</color>
     <color name="color_profile_header_text">#111111</color>
