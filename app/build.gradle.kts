@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.buivan.ptalk_twin"
+    namespace = "com.ctslab.ptalk_signature"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.buivan.ptalk_twin"
+        applicationId = "com.ctslab.ptalk_signature"
         minSdk = 28
         targetSdk = 36
         versionCode = 1
