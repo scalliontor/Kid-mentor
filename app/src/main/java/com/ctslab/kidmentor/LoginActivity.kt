@@ -8,7 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
-import com.buivan.ptalk_child.databinding.ActivityLoginBinding
+import com.ctslab.kidmentor.databinding.ActivityLoginBinding
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationResponse
 

@@ -9,7 +9,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.buivan.ptalk_child.databinding.ActivityRegisterBinding
+import com.ctslab.kidmentor.databinding.ActivityRegisterBinding
 import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {
