@@ -93,18 +93,23 @@ class HomeProfileActivity : AppCompatActivity() {
     // ── Logged-in user ───────────────────────────────────────────────────
     private fun loadUserProfile() {
         val username = TokenManager.getUsername() ?: "User"
-        val userType = TokenManager.getUserType() ?: "child"
-
         findViewById<TextView>(R.id.tvProfileUsername).text = username
+        // The membership tier is NOT the JWT `user_type` claim (that's a role like
+        // "account_owner"/"child"). It comes authoritatively from the server quota
+        // (loadQuota → applyTier). Show a placeholder until that returns.
+        applyTier("basic")
+    }
 
-        val tierLabel = when (userType) {
+    /** Set the tier badge + plan badges from the real subscription tier. */
+    private fun applyTier(tier: String) {
+        val label = when (tier) {
             "admin" -> getString(R.string.profile_tier_admin)
             "ultra" -> getString(R.string.profile_tier_ultra)
             "pro" -> getString(R.string.profile_tier_pro)
             else -> getString(R.string.profile_tier_basic)
         }
-        findViewById<TextView>(R.id.tvProfileTier).text = tierLabel
-        updatePlanBadges(userType, userType == "admin")
+        findViewById<TextView>(R.id.tvProfileTier).text = label
+        updatePlanBadges(tier, tier == "admin")
     }
 
     private fun loadQuota() {
@@ -125,15 +130,20 @@ class HomeProfileActivity : AppCompatActivity() {
             val quota = runBlocking { AuthApiService.getQuota(username) }
             runOnUiThread {
                 if (quota != null) {
+                    // Authoritative tier from server → drives the badge (fixes the bug
+                    // where everyone showed "Thành viên miễn phí" from user_type).
+                    applyTier(quota.tier)
                     val limit = quota.dailyLimit
                     val used = quota.usedToday
                     tvCount.text = if (limit == -1) "$used / ∞" else "$used / $limit"
                     val pct = if (limit > 0) (used * 100 / limit) else 0
                     progress.progress = pct.coerceIn(0, 100)
-                    tvHint.text = if (limit != -1 && used >= limit)
-                        getString(R.string.profile_quota_exhausted)
-                    else
-                        getString(R.string.profile_quota_hint_basic)
+                    tvHint.text = when {
+                        quota.tier == "admin" -> getString(R.string.profile_quota_hint_admin)
+                        limit != -1 && used >= limit -> getString(R.string.profile_quota_exhausted)
+                        quota.tier == "pro" -> getString(R.string.profile_quota_hint_pro)
+                        else -> getString(R.string.profile_quota_hint_basic)
+                    }
                 } else {
                     tvCount.text = "—"
                     progress.progress = 0
