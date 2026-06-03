@@ -1,4 +1,4 @@
-package com.buivan.ptalk_child
+package com.ctslab.ptalk_signature
 
 import android.annotation.SuppressLint
 import android.Manifest

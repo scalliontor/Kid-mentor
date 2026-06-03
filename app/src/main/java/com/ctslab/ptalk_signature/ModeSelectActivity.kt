@@ -1,4 +1,4 @@
-package com.buivan.ptalk_child
+package com.ctslab.ptalk_signature
 
 import android.content.Intent
 import android.os.Bundle

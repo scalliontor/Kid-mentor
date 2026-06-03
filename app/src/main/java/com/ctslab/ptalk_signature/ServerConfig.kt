@@ -1,4 +1,4 @@
-package com.buivan.ptalk_child
+package com.ctslab.ptalk_signature
 
 object ServerConfig {
     /** Raw host:port — used to construct full URLs */

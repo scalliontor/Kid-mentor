@@ -130,7 +130,7 @@
     <!-- ══════════════════════════════════════════════════════════════════ -->
 
     <!-- ① SÓNG ÂM — khai báo TRƯỚC ảnh để nằm phía sau -->
-    <com.buivan.ptalk_child.WaveformView
+    <com.ctslab.ptalk_signature.WaveformView
         android:id="@+id/waveformView"
         android:layout_width="0dp"
         android:layout_height="@dimen/waveform_height"

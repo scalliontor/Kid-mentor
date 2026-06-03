@@ -1,4 +1,4 @@
-package com.buivan.ptalk_child
+package com.ctslab.ptalk_signature
 
 import android.media.AudioAttributes
 import android.media.AudioFormat
