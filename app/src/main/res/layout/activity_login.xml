@@ -183,47 +183,30 @@
                 android:layout_marginTop="@dimen/space_s"
                 android:visibility="gone" />
 
-            <!-- Privacy & Terms consent (mandatory before login) -->
-            <CheckBox
-                android:id="@+id/cbAgreeTerms"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_xl"
-                android:text="@string/consent_prefix"
-                android:textSize="@dimen/text_login_label"
-                android:textColor="@color/color_login_subheadline" />
-
+            <!-- Privacy & Terms consent — inline clickable links (text set in LoginActivity) -->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="2dp"
-                android:layout_marginStart="32dp">
+                android:gravity="top"
+                android:layout_marginTop="@dimen/space_xl">
 
-                <TextView
-                    android:id="@+id/tvPrivacyLink"
+                <CheckBox
+                    android:id="@+id/cbAgreeTerms"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/consent_privacy"
-                    android:textColor="@color/color_link_blue"
-                    android:textSize="@dimen/text_login_label"
-                    android:textStyle="bold" />
+                    android:minWidth="0dp"
+                    android:minHeight="0dp" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tvConsent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/consent_and"
+                    android:layout_weight="1"
+                    android:layout_marginStart="@dimen/space_s"
                     android:textSize="@dimen/text_login_label"
-                    android:textColor="@color/color_login_subheadline" />
-
-                <TextView
-                    android:id="@+id/tvTermsLink"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/consent_terms"
-                    android:textColor="@color/color_link_blue"
-                    android:textSize="@dimen/text_login_label"
-                    android:textStyle="bold" />
+                    android:textColor="@color/color_login_subheadline"
+                    android:lineSpacingMultiplier="1.2" />
             </LinearLayout>
 
             <!-- Consent error (shown while unchecked, hidden after) -->

@@ -1,12 +1,21 @@
 package com.ctslab.kidmentor
 
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
+import android.text.style.UnderlineSpan
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.core.os.LocaleListCompat
 import com.ctslab.kidmentor.databinding.ActivityLoginBinding
 import net.openid.appauth.AuthorizationException
@@ -82,8 +91,7 @@ class LoginActivity : AppCompatActivity() {
         }
         updateConsent(binding.cbAgreeTerms.isChecked)
         binding.cbAgreeTerms.setOnCheckedChangeListener { _, checked -> updateConsent(checked) }
-        binding.tvPrivacyLink.setOnClickListener { openUrl("https://dashboard.ctslab.net/privacy") }
-        binding.tvTermsLink.setOnClickListener { openUrl("https://dashboard.ctslab.net/terms") }
+        setupConsentText()
 
         // Nút SSO (Authentik) - Primary login
         binding.btnSSO.setOnClickListener {
@@ -148,6 +156,38 @@ class LoginActivity : AppCompatActivity() {
     // ── Helpers ───────────────────────────────────────────────────────────
     private fun openUrl(url: String) {
         startActivity(Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url)))
+    }
+
+    /**
+     * Build the consent sentence with the two links bold/blue/underlined and tappable
+     * INLINE (no separate links row): "Tôi đồng ý với <Chính sách bảo mật> và <Điều khoản>".
+     */
+    private fun setupConsentText() {
+        val prefix = getString(R.string.consent_prefix)   // "Tôi đồng ý với "
+        val privacy = getString(R.string.consent_privacy) // "Chính sách bảo mật"
+        val mid = getString(R.string.consent_and)          // " và "
+        val terms = getString(R.string.consent_terms)      // "Điều khoản"
+        val sb = SpannableStringBuilder(prefix + privacy + mid + terms)
+        val blue = ContextCompat.getColor(this, R.color.color_link_blue)
+
+        fun linkify(start: Int, end: Int, url: String) {
+            sb.setSpan(object : ClickableSpan() {
+                override fun onClick(widget: View) = openUrl(url)
+            }, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            sb.setSpan(ForegroundColorSpan(blue), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            sb.setSpan(StyleSpan(Typeface.BOLD), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            sb.setSpan(UnderlineSpan(), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+
+        val pStart = prefix.length
+        val pEnd = pStart + privacy.length
+        linkify(pStart, pEnd, "https://dashboard.ctslab.net/privacy")
+        val tStart = pEnd + mid.length
+        val tEnd = tStart + terms.length
+        linkify(tStart, tEnd, "https://dashboard.ctslab.net/terms")
+
+        binding.tvConsent.text = sb
+        binding.tvConsent.movementMethod = LinkMovementMethod.getInstance()
     }
 
     private fun showError(message: String) {
