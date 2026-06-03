@@ -74,6 +74,16 @@ class LoginActivity : AppCompatActivity() {
     private fun setupUI() {
         authentikManager = AuthentikAuthManager(this)
 
+        // Privacy/Terms consent — must be agreed before any login path is enabled.
+        binding.btnSSO.isEnabled = binding.cbAgreeTerms.isChecked
+        binding.btnGuest.isEnabled = binding.cbAgreeTerms.isChecked
+        binding.cbAgreeTerms.setOnCheckedChangeListener { _, checked ->
+            binding.btnSSO.isEnabled = checked
+            binding.btnGuest.isEnabled = checked
+        }
+        binding.tvPrivacyLink.setOnClickListener { openUrl("https://dashboard.ctslab.net/privacy") }
+        binding.tvTermsLink.setOnClickListener { openUrl("https://dashboard.ctslab.net/terms") }
+
         // Nút SSO (Authentik) - Primary login
         binding.btnSSO.setOnClickListener {
             val authIntent = authentikManager.getAuthorizationIntent()
@@ -135,6 +145,10 @@ class LoginActivity : AppCompatActivity() {
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────
+    private fun openUrl(url: String) {
+        startActivity(Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url)))
+    }
+
     private fun showError(message: String) {
         binding.tvLoginError.text = message
         binding.tvLoginError.visibility = View.VISIBLE
