@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">PTalk</string>
+    <string name="app_name">P-Talk Signature</string>
+    <string name="app_tagline">Interactive Learning for Kids & Elderly</string>
+    <string name="brand_institution">CTS Lab - PTIT</string>
+    <string name="mode_kid_mentor">Kid Mentor</string>
+    <string name="mode_elder_care">Elder Care</string>
 </resources>

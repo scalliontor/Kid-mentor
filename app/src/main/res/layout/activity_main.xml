@@ -71,7 +71,7 @@
             android:id="@+id/tvBrandTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="PTALK"
+            android:text="P-Talk Signature"
             android:textSize="@dimen/text_brand_title"
             android:textColor="#111111"
             android:fontFamily="sans-serif-medium"
