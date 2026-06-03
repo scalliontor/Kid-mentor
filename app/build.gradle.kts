@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.buivan.kidmentor"
+    namespace = "com.ctslab.kidmentor"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.buivan.kidmentor"
+        applicationId = "com.ctslab.kidmentor"
         minSdk = 28
         targetSdk = 36
         versionCode = 1
