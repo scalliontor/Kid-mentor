@@ -4,4 +4,24 @@
     <string name="brand_institution">CTS Lab - PTIT</string>
     <string name="mode_kid_mentor">Kid Mentor</string>
     <string name="mode_elder_care">Elder Care</string>
+
+    <!-- Login Screen (extracted from hardcoded layout) -->
+    <string name="login_headline">CHÀO MỪNG\nBẠN TRỞ LẠI</string>
+    <string name="login_subheadline">Đăng nhập để tiếp tục sử dụng PTalk</string>
+    <string name="login_username_label">TÊN ĐĂNG NHẬP</string>
+    <string name="login_username_hint">Nhập tên đăng nhập...</string>
+    <string name="login_password_label">MẬT KHẨU</string>
+    <string name="login_password_hint">Nhập mật khẩu...</string>
+    <string name="login_btn_text">ĐĂNG NHẬP</string>
+    <string name="login_guest_btn_text">VÀO XEM THỬ</string>
+    <string name="login_footer">© 2025 Lab CTS · Học viện Bưu chính Viễn thông PTIT\nMọi quyền được bảo lưu.</string>
+    <string name="login_err_empty">Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.</string>
+    <string name="login_err_wrong">Tên đăng nhập hoặc mật khẩu không đúng.</string>
+
+    <!-- Privacy / Terms consent row (shared pattern with KidMentor) -->
+    <string name="consent_prefix">Tôi đồng ý với </string>
+    <string name="consent_privacy">Chính sách bảo mật</string>
+    <string name="consent_and"> và </string>
+    <string name="consent_terms">Điều khoản</string>
+    <string name="consent_error">Vui lòng đồng ý Chính sách bảo mật và Điều khoản sử dụng</string>
 </resources>

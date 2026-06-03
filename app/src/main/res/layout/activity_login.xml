@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:text="PTALK"
                     android:textSize="@dimen/text_login_header_title"
-                    android:textColor="#111111"
+                    android:textColor="@color/color_login_headline"
                     android:fontFamily="sans-serif-medium"
                     android:letterSpacing="0.06" />
             </LinearLayout>
@@ -96,12 +96,12 @@
             android:id="@+id/tvLoginHeadline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CHÀO MỪNG\nBẠN TRỞ LẠI"
+            android:text="@string/login_headline"
             android:textSize="@dimen/text_login_headline"
-            android:textColor="#111111"
+            android:textColor="@color/color_login_headline"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
-            android:lineSpacingMultiplier="0.95"
+            android:lineSpacingMultiplier="1.05"
             android:letterSpacing="0.02"
             android:layout_marginTop="@dimen/space_l"
             app:layout_constraintTop_toBottomOf="@id/ivLoginHero"
@@ -112,9 +112,9 @@
             android:id="@+id/tvLoginSubheadline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Đăng nhập để tiếp tục sử dụng PTalk"
+            android:text="@string/login_subheadline"
             android:textSize="@dimen/text_login_subheadline"
-            android:textColor="#707072"
+            android:textColor="@color/color_login_subheadline"
             android:fontFamily="sans-serif"
             android:gravity="center"
             android:layout_marginTop="@dimen/space_s"
@@ -141,9 +141,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TÊN ĐĂNG NHẬP"
+                android:text="@string/login_username_label"
                 android:textSize="@dimen/text_login_label"
-                android:textColor="#707072"
+                android:textColor="@color/color_login_subheadline"
                 android:fontFamily="sans-serif-medium"
                 android:letterSpacing="0.10"
                 android:layout_marginBottom="@dimen/space_xs" />
@@ -153,9 +153,9 @@
                 android:id="@+id/etUsername"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/input_height"
-                android:hint="Nhập tên đăng nhập..."
+                android:hint="@string/login_username_hint"
                 android:textSize="@dimen/text_input"
-                android:textColor="#111111"
+                android:textColor="@color/color_login_headline"
                 android:textColorHint="#9E9EA0"
                 android:fontFamily="sans-serif"
                 android:background="@drawable/bg_input_field"
@@ -170,9 +170,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="MẬT KHẨU"
+                android:text="@string/login_password_label"
                 android:textSize="@dimen/text_login_label"
-                android:textColor="#707072"
+                android:textColor="@color/color_login_subheadline"
                 android:fontFamily="sans-serif-medium"
                 android:letterSpacing="0.10"
                 android:layout_marginTop="@dimen/space_l"
@@ -183,9 +183,9 @@
                 android:id="@+id/etPassword"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/input_height"
-                android:hint="Nhập mật khẩu..."
+                android:hint="@string/login_password_hint"
                 android:textSize="@dimen/text_input"
-                android:textColor="#111111"
+                android:textColor="@color/color_login_headline"
                 android:textColorHint="#9E9EA0"
                 android:fontFamily="sans-serif"
                 android:background="@drawable/bg_input_field"
@@ -203,12 +203,12 @@
                 android:layout_height="wrap_content"
                 android:text=""
                 android:textSize="@dimen/text_login_error"
-                android:textColor="#D30005"
+                android:textColor="@color/color_login_error"
                 android:fontFamily="sans-serif-medium"
                 android:layout_marginTop="@dimen/space_s"
                 android:visibility="gone" />
 
-            <!-- Privacy & Terms Agreement Checkbox -->
+            <!-- Privacy & Terms consent (synced with KidMentor) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -222,15 +222,15 @@
                     android:layout_height="wrap_content"
                     android:minWidth="0dp"
                     android:minHeight="0dp"
-                    android:buttonTint="#111111" />
+                    android:buttonTint="@color/color_login_headline" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="I agree to "
+                    android:text="@string/consent_prefix"
                     android:textSize="@dimen/text_login_label"
-                    android:textColor="#111111"
+                    android:textColor="@color/color_login_subheadline"
                     android:fontFamily="sans-serif"
                     android:layout_marginStart="@dimen/space_xs" />
 
@@ -238,9 +238,9 @@
                     android:id="@+id/tvPrivacyPolicy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Privacy Policy"
+                    android:text="@string/consent_privacy"
                     android:textSize="@dimen/text_login_label"
-                    android:textColor="#0066CC"
+                    android:textColor="@color/color_link_blue"
                     android:fontFamily="sans-serif"
                     android:textStyle="bold"
                     android:clickable="true"
@@ -252,18 +252,18 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" and "
+                    android:text="@string/consent_and"
                     android:textSize="@dimen/text_login_label"
-                    android:textColor="#111111"
+                    android:textColor="@color/color_login_subheadline"
                     android:fontFamily="sans-serif" />
 
                 <TextView
                     android:id="@+id/tvTermsConditions"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Terms"
+                    android:text="@string/consent_terms"
                     android:textSize="@dimen/text_login_label"
-                    android:textColor="#0066CC"
+                    android:textColor="@color/color_link_blue"
                     android:fontFamily="sans-serif"
                     android:textStyle="bold"
                     android:clickable="true"
@@ -273,14 +273,14 @@
                     android:paddingEnd="@dimen/space_xs" />
             </LinearLayout>
 
-            <!-- Error message for unchecked terms -->
+            <!-- Consent error (shown while unchecked) -->
             <TextView
                 android:id="@+id/tvTermsError"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="You must agree to Privacy Policy and Terms &amp; Conditions"
+                android:text="@string/consent_error"
                 android:textSize="@dimen/text_login_error"
-                android:textColor="#D30005"
+                android:textColor="@color/color_login_error"
                 android:fontFamily="sans-serif-medium"
                 android:layout_marginTop="@dimen/space_xs"
                 android:visibility="gone" />
@@ -290,7 +290,7 @@
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/input_height"
-                android:text="ĐĂNG NHẬP"
+                android:text="@string/login_btn_text"
                 android:textSize="@dimen/text_login_button"
                 android:textColor="#FFFFFF"
                 android:fontFamily="sans-serif-medium"
@@ -318,7 +318,7 @@
                     android:layout_height="wrap_content"
                     android:text="  hoặc  "
                     android:textSize="@dimen/text_login_footer"
-                    android:textColor="#9E9EA0"
+                    android:textColor="@color/color_login_footer"
                     android:fontFamily="sans-serif" />
 
                 <View
@@ -333,9 +333,9 @@
                 android:id="@+id/btnGuest"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/input_height"
-                android:text="VÀO XEM THỬ"
+                android:text="@string/login_guest_btn_text"
                 android:textSize="@dimen/text_guest_button"
-                android:textColor="#111111"
+                android:textColor="@color/color_login_headline"
                 android:fontFamily="sans-serif-medium"
                 android:letterSpacing="0.06"
                 android:background="@drawable/bg_guest_button"
@@ -350,7 +350,7 @@
             android:layout_height="wrap_content"
             android:text="© 2025 Lab CTS · Học viện Bưu chính Viễn thông PTIT\nMọi quyền được bảo lưu."
             android:textSize="@dimen/text_login_footer"
-            android:textColor="#9E9EA0"
+            android:textColor="@color/color_login_footer"
             android:fontFamily="sans-serif"
             android:gravity="center"
             android:lineSpacingMultiplier="1.5"

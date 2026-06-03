@@ -2,4 +2,21 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- ══ LOGIN SCREEN (synced with KidMentor) ═══════════════════════ -->
+    <color name="color_login_bg">#FFFFFF</color>
+    <color name="color_login_headline">#111111</color>
+    <color name="color_login_subheadline">#707072</color>
+    <color name="color_login_label">#707072</color>
+    <color name="color_login_input_text">#111111</color>
+    <color name="color_login_input_hint">#9E9EA0</color>
+    <color name="color_login_error">#D30005</color>
+    <color name="color_login_btn_text">#FFFFFF</color>
+    <color name="color_login_guest_text">#111111</color>
+    <color name="color_login_divider_text">#9E9EA0</color>
+    <color name="color_login_divider_line">#E5E5E5</color>
+    <color name="color_login_footer">#9E9EA0</color>
+
+    <!-- Standard hyperlink color — used for consent Privacy/Terms links (both apps) -->
+    <color name="color_link_blue">#0066CC</color>
 </resources>
