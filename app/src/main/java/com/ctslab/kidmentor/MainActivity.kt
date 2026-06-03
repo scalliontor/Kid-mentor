@@ -25,7 +25,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
-import com.buivan.ptalk_child.DashboardChatApi
+import com.ctslab.kidmentor.DashboardChatApi
 import java.io.File
 
 private enum class ActiveVoiceTransport {
