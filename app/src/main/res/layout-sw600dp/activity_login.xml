@@ -212,12 +212,12 @@
                 android:textSize="@dimen/text_login_error"
                 android:visibility="gone" />
 
-            <!-- Privacy & Terms consent (tablet) — synced with phone and KidMentor -->
+            <!-- Privacy & Terms consent — inline clickable links (text set in LoginActivity) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_vertical"
+                android:gravity="top"
                 android:layout_marginTop="@dimen/space_l">
 
                 <CheckBox
@@ -229,48 +229,14 @@
                     android:buttonTint="@color/color_login_headline" />
 
                 <TextView
+                    android:id="@+id/tvConsent"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/consent_prefix"
+                    android:layout_marginStart="@dimen/space_s"
                     android:textSize="@dimen/text_login_label"
                     android:textColor="@color/color_login_subheadline"
-                    android:layout_marginStart="@dimen/space_xs" />
-
-                <TextView
-                    android:id="@+id/tvPrivacyPolicy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/consent_privacy"
-                    android:textSize="@dimen/text_login_label"
-                    android:textColor="@color/color_link_blue"
-                    android:textStyle="bold"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackground"
-                    android:paddingStart="@dimen/space_xs"
-                    android:paddingEnd="@dimen/space_xs" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/consent_and"
-                    android:textSize="@dimen/text_login_label"
-                    android:textColor="@color/color_login_subheadline" />
-
-                <TextView
-                    android:id="@+id/tvTermsConditions"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/consent_terms"
-                    android:textSize="@dimen/text_login_label"
-                    android:textColor="@color/color_link_blue"
-                    android:textStyle="bold"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackground"
-                    android:paddingStart="@dimen/space_xs"
-                    android:paddingEnd="@dimen/space_xs" />
+                    android:lineSpacingMultiplier="1.2" />
             </LinearLayout>
 
             <TextView

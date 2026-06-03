@@ -1,12 +1,21 @@
 package com.ctslab.ptalk_signature
 
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
+import android.text.style.UnderlineSpan
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.ctslab.ptalk_signature.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
@@ -95,12 +104,43 @@ class LoginActivity : AppCompatActivity() {
             binding.btnGuest.isEnabled = checked
             binding.tvTermsError.visibility = if (checked) View.GONE else View.VISIBLE
         }
-        binding.tvPrivacyPolicy.setOnClickListener { openUrl("https://dashboard.ctslab.net/privacy") }
-        binding.tvTermsConditions.setOnClickListener { openUrl("https://dashboard.ctslab.net/terms") }
+        setupConsentText()
     }
 
     private fun openUrl(url: String) {
         startActivity(Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url)))
+    }
+
+    /**
+     * Build the consent sentence with the two links bold/blue/underlined and tappable
+     * INLINE: "Tôi đồng ý với <Chính sách bảo mật> và <Điều khoản>".
+     */
+    private fun setupConsentText() {
+        val prefix = getString(R.string.consent_prefix)
+        val privacy = getString(R.string.consent_privacy)
+        val mid = getString(R.string.consent_and)
+        val terms = getString(R.string.consent_terms)
+        val sb = SpannableStringBuilder(prefix + privacy + mid + terms)
+        val blue = ContextCompat.getColor(this, R.color.color_link_blue)
+
+        fun linkify(start: Int, end: Int, url: String) {
+            sb.setSpan(object : ClickableSpan() {
+                override fun onClick(widget: View) = openUrl(url)
+            }, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            sb.setSpan(ForegroundColorSpan(blue), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            sb.setSpan(StyleSpan(Typeface.BOLD), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            sb.setSpan(UnderlineSpan(), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+
+        val pStart = prefix.length
+        val pEnd = pStart + privacy.length
+        linkify(pStart, pEnd, "https://dashboard.ctslab.net/privacy")
+        val tStart = pEnd + mid.length
+        val tEnd = tStart + terms.length
+        linkify(tStart, tEnd, "https://dashboard.ctslab.net/terms")
+
+        binding.tvConsent.text = sb
+        binding.tvConsent.movementMethod = LinkMovementMethod.getInstance()
     }
 
     // ── Xử lý đăng nhập ─────────────────────────────────────────────────
