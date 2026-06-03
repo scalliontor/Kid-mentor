@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="@drawable/bg_gradient"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -92,9 +92,9 @@
             android:layout_width="@dimen/login_hero_size"
             android:layout_height="@dimen/login_hero_size"
             android:layout_marginTop="@dimen/tablet_login_hero_top"
-            android:contentDescription="PTIT logo"
+            android:contentDescription="@string/app_name"
             android:scaleType="fitCenter"
-            android:src="@drawable/logo_ptit"
+            android:src="@drawable/char_idle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/loginBrandHeader" />
@@ -139,6 +139,9 @@
             android:layout_marginStart="@dimen/tablet_login_form_side_margin"
             android:layout_marginEnd="@dimen/tablet_login_form_side_margin"
             android:orientation="vertical"
+            android:background="@drawable/bg_form_card"
+            android:padding="24dp"
+            android:elevation="3dp"
             app:layout_constraintEnd_toStartOf="@id/contentEndGuide"
             app:layout_constraintStart_toStartOf="@id/contentStartGuide"
             app:layout_constraintTop_toBottomOf="@id/tvLoginSubheadline">
