@@ -7,7 +7,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import com.buivan.ptalk_child.databinding.ActivityLoginBinding
+import com.ctslab.ptalk_signature.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
 

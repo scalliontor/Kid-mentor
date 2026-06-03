@@ -6,7 +6,7 @@ import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.OvershootInterpolator
 import androidx.appcompat.app.AppCompatActivity
-import com.buivan.ptalk_child.databinding.ActivityModeSelectBinding
+import com.ctslab.ptalk_signature.databinding.ActivityModeSelectBinding
 
 /**
  * Màn hình chọn chế độ: Kid Mentor hoặc Elder Care.

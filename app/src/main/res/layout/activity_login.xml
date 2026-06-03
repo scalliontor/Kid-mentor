@@ -278,7 +278,7 @@
                 android:id="@+id/tvTermsError"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="You must agree to Privacy Policy and Terms & Conditions"
+                android:text="You must agree to Privacy Policy and Terms &amp; Conditions"
                 android:textSize="@dimen/text_login_error"
                 android:textColor="#D30005"
                 android:fontFamily="sans-serif-medium"

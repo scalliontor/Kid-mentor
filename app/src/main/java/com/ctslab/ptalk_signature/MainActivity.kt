@@ -18,7 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import com.buivan.ptalk_child.databinding.ActivityMainBinding
+import com.ctslab.ptalk_signature.databinding.ActivityMainBinding
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
