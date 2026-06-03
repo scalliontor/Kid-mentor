@@ -1,4 +1,4 @@
-package com.buivan.ptalk_child
+package com.ctslab.kidmentor
 
 object ServerConfig {
     const val HTTP_BASE_URL = "http://171.226.10.121:8000/v2/"

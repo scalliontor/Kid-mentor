@@ -1,4 +1,4 @@
-package com.buivan.ptalk_child
+package com.ctslab.kidmentor
 
 import java.nio.ByteBuffer
 import java.nio.ByteOrder

@@ -1,4 +1,4 @@
-package com.buivan.ptalk_child
+package com.ctslab.kidmentor
 
 sealed class StreamingEvent {
     data object Listening : StreamingEvent()

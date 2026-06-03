@@ -1,4 +1,4 @@
-package com.buivan.ptalk_child
+package com.ctslab.kidmentor
 
 import android.animation.ValueAnimator
 import android.content.Context

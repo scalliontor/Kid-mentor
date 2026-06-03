@@ -62,7 +62,7 @@
         android:layout_marginTop="@dimen/space_l" />
 
     <!-- Star Burst particle overlay (toàn màn hình, vẽ bằng Canvas) -->
-    <com.buivan.ptalk_child.StarBurstView
+    <com.ctslab.kidmentor.StarBurstView
         android:id="@+id/starBurstView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

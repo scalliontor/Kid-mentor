@@ -1,4 +1,4 @@
-package com.buivan.ptalk_child
+package com.ctslab.kidmentor
 
 enum class AppState {
     IDLE,        // Chờ user, nút hold sẵn sàng

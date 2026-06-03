@@ -10,7 +10,7 @@
     tools:context=".MainActivity">
 
     <!-- Subtle animated star background -->
-    <com.buivan.ptalk_child.StarFieldView
+    <com.ctslab.kidmentor.StarFieldView
         android:id="@+id/starFieldView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -145,7 +145,7 @@
     <!-- ══════════════════════════════════════════════════════════════════ -->
 
     <!-- ① SÓNG ÂM — khai báo TRƯỚC ảnh để nằm phía sau -->
-    <com.buivan.ptalk_child.WaveformView
+    <com.ctslab.kidmentor.WaveformView
         android:id="@+id/waveformView"
         android:layout_width="0dp"
         android:layout_height="@dimen/waveform_height"
