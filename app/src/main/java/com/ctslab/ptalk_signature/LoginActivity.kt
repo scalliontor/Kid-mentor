@@ -85,6 +85,22 @@ class LoginActivity : AppCompatActivity() {
             hideKeyboard()
             goToMain(isGuest = true)
         }
+
+        // Privacy/Terms consent — phải đồng ý mới được đăng nhập / vào xem thử.
+        binding.btnLogin.isEnabled = binding.cbAgreeTerms.isChecked
+        binding.btnGuest.isEnabled = binding.cbAgreeTerms.isChecked
+        binding.tvTermsError.visibility = if (binding.cbAgreeTerms.isChecked) View.GONE else View.VISIBLE
+        binding.cbAgreeTerms.setOnCheckedChangeListener { _, checked ->
+            binding.btnLogin.isEnabled = checked
+            binding.btnGuest.isEnabled = checked
+            binding.tvTermsError.visibility = if (checked) View.GONE else View.VISIBLE
+        }
+        binding.tvPrivacyPolicy.setOnClickListener { openUrl("https://dashboard.ctslab.net/privacy") }
+        binding.tvTermsConditions.setOnClickListener { openUrl("https://dashboard.ctslab.net/terms") }
+    }
+
+    private fun openUrl(url: String) {
+        startActivity(Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url)))
     }
 
     // ── Xử lý đăng nhập ─────────────────────────────────────────────────
