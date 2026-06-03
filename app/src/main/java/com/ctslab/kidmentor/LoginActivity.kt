@@ -163,11 +163,17 @@ class LoginActivity : AppCompatActivity() {
      * INLINE (no separate links row): "Tôi đồng ý với <Chính sách bảo mật> và <Điều khoản>".
      */
     private fun setupConsentText() {
-        val prefix = getString(R.string.consent_prefix)   // "Tôi đồng ý với "
-        val privacy = getString(R.string.consent_privacy) // "Chính sách bảo mật"
-        val mid = getString(R.string.consent_and)          // " và "
-        val terms = getString(R.string.consent_terms)      // "Điều khoản"
-        val sb = SpannableStringBuilder(prefix + privacy + mid + terms)
+        // trim + explicit spaces (Android trims edge whitespace from string resources,
+        // so spaces baked into the strings can't be relied on) + dynamic offsets.
+        val prefix = getString(R.string.consent_prefix).trim()
+        val privacy = getString(R.string.consent_privacy).trim()
+        val mid = getString(R.string.consent_and).trim()
+        val terms = getString(R.string.consent_terms).trim()
+        val sb = SpannableStringBuilder()
+        sb.append(prefix).append(" ")
+        val pStart = sb.length; sb.append(privacy); val pEnd = sb.length
+        sb.append(" ").append(mid).append(" ")
+        val tStart = sb.length; sb.append(terms); val tEnd = sb.length
         val blue = ContextCompat.getColor(this, R.color.color_link_blue)
 
         fun linkify(start: Int, end: Int, url: String) {
@@ -179,11 +185,7 @@ class LoginActivity : AppCompatActivity() {
             sb.setSpan(UnderlineSpan(), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
 
-        val pStart = prefix.length
-        val pEnd = pStart + privacy.length
         linkify(pStart, pEnd, "https://dashboard.ctslab.net/privacy")
-        val tStart = pEnd + mid.length
-        val tEnd = tStart + terms.length
         linkify(tStart, tEnd, "https://dashboard.ctslab.net/terms")
 
         binding.tvConsent.text = sb
