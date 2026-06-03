@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.buivan.ptalk_child"
+    namespace = "com.buivan.kidmentor"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.buivan.ptalk_child"
+        applicationId = "com.buivan.kidmentor"
         minSdk = 28
         targetSdk = 36
         versionCode = 1
