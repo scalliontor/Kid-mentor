@@ -13,7 +13,4 @@
 .externalNativeBuild
 .cxx
 local.properties
-<<<<<<< HEAD
 *.log
-=======
->>>>>>> 851933c (init AndroidPTalk project)
