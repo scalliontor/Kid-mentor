@@ -652,10 +652,21 @@ class MainActivity : AppCompatActivity() {
                     }
                 )
             } catch (e: Exception) {
+                Log.e(TAG, "Holobox voice turn lỗi", e)
                 activeTransport = ActiveVoiceTransport.NONE
-                viewModel.onError(e.message ?: "Không kết nối được máy chủ, bác thử lại nhé")
+                viewModel.onError(friendlyNetworkMessage(e))
             }
         }
+    }
+
+    /** Đổi exception kỹ thuật thành thông báo dễ hiểu cho người lớn tuổi. */
+    private fun friendlyNetworkMessage(e: Throwable): String = when (e) {
+        is java.net.UnknownHostException ->
+            "Không có kết nối Internet (không tìm thấy máy chủ). Kiểm tra Wi-Fi/4G rồi thử lại nhé."
+        is java.net.SocketTimeoutException ->
+            "Mạng chậm hoặc máy chủ bận, bác thử lại nhé."
+        is java.io.IOException -> e.message ?: "Lỗi kết nối, bác thử lại nhé."
+        else -> e.message ?: "Có lỗi xảy ra, bác thử lại nhé."
     }
 
     /** Bật & nối các nút riêng của ELDER_CARE: quét thuốc + gọi khẩn cấp. */

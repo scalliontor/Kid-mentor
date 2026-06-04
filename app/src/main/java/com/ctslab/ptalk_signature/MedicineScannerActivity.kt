@@ -157,8 +157,12 @@ class MedicineScannerActivity : AppCompatActivity() {
                     speak(text)
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "Phân tích lỗi: ${e.message}")
-                statusText.text = e.message ?: "Lỗi phân tích, thử lại nhé"
+                Log.e(TAG, "Phân tích lỗi", e)
+                statusText.text = when (e) {
+                    is java.net.UnknownHostException -> "Không có Internet (không tìm thấy máy chủ), kiểm tra mạng rồi thử lại"
+                    is java.net.SocketTimeoutException -> "Mạng chậm, thử lại nhé"
+                    else -> e.message ?: "Lỗi phân tích, thử lại nhé"
+                }
             } finally {
                 setBusy(false)
                 photoFile.delete()
