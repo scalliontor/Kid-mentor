@@ -1,6 +1,8 @@
 package com.ctslab.kidmentor
 
 import android.content.Intent
+import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -8,10 +10,20 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.runBlocking
 
 class HomeProfileActivity : AppCompatActivity() {
+
+    private data class Plan(
+        val tier: String, val name: String, val quota: String, val price: String, val badge: String?
+    )
+    private lateinit var plans: List<Plan>
+    private val tabIds = listOf(R.id.tabPlanBasic, R.id.tabPlanPro, R.id.tabPlanUltra)
+    private var currentTier = "basic"
+    private var selectedIndex = 1   // default highlight = Pro
+    private var plansReady = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +32,7 @@ class HomeProfileActivity : AppCompatActivity() {
         TokenManager.init(this)
 
         setupClickListeners()
+        setupPlans()
 
         if (TokenManager.isLoggedIn()) {
             loadUserProfile()
@@ -46,16 +59,6 @@ class HomeProfileActivity : AppCompatActivity() {
             }
             startActivity(intent)
             finish()
-        }
-
-        // Upgrade Pro
-        findViewById<Button>(R.id.btnUpgradePro).setOnClickListener {
-            Toast.makeText(this, getString(R.string.profile_upgrade_coming_soon), Toast.LENGTH_SHORT).show()
-        }
-
-        // Upgrade Ultra
-        findViewById<Button>(R.id.btnUpgradeUltra).setOnClickListener {
-            Toast.makeText(this, getString(R.string.profile_upgrade_coming_soon), Toast.LENGTH_SHORT).show()
         }
 
         // Buy device
@@ -100,8 +103,9 @@ class HomeProfileActivity : AppCompatActivity() {
         applyTier("basic")
     }
 
-    /** Set the tier badge + plan badges from the real subscription tier. */
+    /** Set the tier badge from the real subscription tier + refresh the plan card. */
     private fun applyTier(tier: String) {
+        currentTier = tier
         val label = when (tier) {
             "admin" -> getString(R.string.profile_tier_admin)
             "ultra" -> getString(R.string.profile_tier_ultra)
@@ -109,7 +113,10 @@ class HomeProfileActivity : AppCompatActivity() {
             else -> getString(R.string.profile_tier_basic)
         }
         findViewById<TextView>(R.id.tvProfileTier).text = label
-        updatePlanBadges(tier, tier == "admin")
+        if (plansReady) {
+            // Jump the selector to the user's own plan (admin → showcase Ultra).
+            selectPlan(when (tier) { "pro" -> 1; "ultra", "admin" -> 2; else -> 0 })
+        }
     }
 
     private fun loadQuota() {
@@ -153,29 +160,99 @@ class HomeProfileActivity : AppCompatActivity() {
         }.start()
     }
 
-    private fun updatePlanBadges(tier: String, isSuperuser: Boolean) {
-        val badgeBasic = findViewById<TextView>(R.id.tvBasicBadge)
-        val btnPro = findViewById<Button>(R.id.btnUpgradePro)
-        val btnUltra = findViewById<Button>(R.id.btnUpgradeUltra)
+    // ── Subscription plans (segmented selector + detail card) ─────────────
+    private fun setupPlans() {
+        plans = listOf(
+            Plan("basic", getString(R.string.profile_plan_basic),
+                getString(R.string.profile_plan_basic_quota),
+                getString(R.string.profile_plan_basic_price), null),
+            Plan("pro", getString(R.string.profile_plan_pro),
+                getString(R.string.profile_plan_pro_quota),
+                getString(R.string.profile_plan_pro_price),
+                getString(R.string.profile_plan_badge_popular)),
+            Plan("ultra", getString(R.string.profile_plan_ultra),
+                getString(R.string.profile_plan_ultra_quota),
+                getString(R.string.profile_plan_ultra_price), null),
+        )
+        tabIds.forEachIndexed { i, id ->
+            findViewById<TextView>(id).setOnClickListener { selectPlan(i) }
+        }
+        plansReady = true
+        selectPlan(selectedIndex)
+    }
 
-        val activeTier = if (isSuperuser) "admin" else tier
+    /** Plans differ ONLY by daily quota; rank decides current/upgrade/lower. */
+    private fun planRank(tier: String) = when (tier) {
+        "pro" -> 1; "ultra" -> 2; "admin" -> 3; else -> 0
+    }
 
-        when (activeTier) {
-            "admin", "ultra" -> {
-                badgeBasic.visibility = View.GONE
-                btnPro.visibility = View.GONE
-                btnUltra.text = getString(R.string.profile_plan_active)
-                btnUltra.isEnabled = false
-            }
-            "pro" -> {
-                badgeBasic.visibility = View.GONE
-                btnPro.text = getString(R.string.profile_plan_active)
-                btnPro.isEnabled = false
-            }
-            else -> {
-                // basic — default state, all buttons active
+    private fun selectPlan(index: Int) {
+        if (!plansReady) return
+        selectedIndex = index
+        val plan = plans[index]
+
+        // Segmented tab visuals (reuse the language-toggle pill drawables).
+        tabIds.forEachIndexed { i, id ->
+            val tv = findViewById<TextView>(id)
+            if (i == index) {
+                tv.setBackgroundResource(R.drawable.bg_lang_selected)
+                tv.setTextColor(Color.WHITE)
+            } else {
+                tv.setBackgroundResource(0)
+                tv.setTextColor(Color.parseColor("#707072"))
             }
         }
+
+        findViewById<TextView>(R.id.tvPlanName).text = plan.name
+        findViewById<TextView>(R.id.tvPlanQuota).text = plan.quota
+        findViewById<TextView>(R.id.tvPlanPrice).text = plan.price
+
+        val badge = findViewById<TextView>(R.id.tvPlanBadge)
+        val action = findViewById<Button>(R.id.btnPlanAction)
+        val curRank = planRank(currentTier)
+        val planR = planRank(plan.tier)
+
+        when {
+            planR == curRank -> {                       // the plan the user is on
+                badge.text = getString(R.string.profile_plan_active)
+                badge.visibility = View.VISIBLE
+                action.text = getString(R.string.profile_plan_active)
+                action.isEnabled = false
+            }
+            planR > curRank -> {                        // an upgrade
+                if (plan.badge != null) {
+                    badge.text = plan.badge
+                    badge.visibility = View.VISIBLE
+                } else badge.visibility = View.GONE
+                action.text = getString(R.string.profile_btn_upgrade_fmt, plan.name)
+                action.isEnabled = true
+            }
+            else -> {                                   // below the user's plan
+                badge.visibility = View.GONE
+                action.text = getString(R.string.profile_plan_have_higher)
+                action.isEnabled = false
+            }
+        }
+        action.setOnClickListener { if (action.isEnabled) showUpgradeDialog() }
+    }
+
+    /** No payment yet — point the user at the contact email. */
+    private fun showUpgradeDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.profile_upgrade_title)
+            .setMessage(R.string.profile_upgrade_message)
+            .setPositiveButton(R.string.profile_upgrade_send_email) { _, _ ->
+                val intent = Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:ctslab@ptit.vn")).apply {
+                    putExtra(Intent.EXTRA_SUBJECT, "Nâng cấp gói PTalk")
+                }
+                try {
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    Toast.makeText(this, "ctslab@ptit.vn", Toast.LENGTH_LONG).show()
+                }
+            }
+            .setNegativeButton(R.string.profile_close, null)
+            .show()
     }
 
     override fun onBackPressed() {

@@ -87,10 +87,23 @@
     <string name="profile_plan_active">Đang dùng</string>
     <string name="profile_plan_pro">Gói Pro</string>
     <string name="profile_plan_pro_desc">Giới hạn 500 câu/ngày</string>
-    <string name="profile_plan_pro_price">800.000đ/năm</string>
+    <string name="profile_plan_pro_price">800.000đ/tháng</string>
     <string name="profile_plan_ultra">Gói Ultra</string>
     <string name="profile_plan_ultra_desc">Unlimited - Không giới hạn</string>
-    <string name="profile_plan_ultra_price">1.500.000đ/năm</string>
+    <string name="profile_plan_ultra_price">1.500.000đ/tháng</string>
+
+    <!-- Plan selector (segmented + detail card) -->
+    <string name="profile_plan_basic_quota">20 câu hỏi mỗi ngày</string>
+    <string name="profile_plan_pro_quota">500 câu hỏi mỗi ngày</string>
+    <string name="profile_plan_ultra_quota">Không giới hạn câu hỏi</string>
+    <string name="profile_plan_basic_price">Miễn phí</string>
+    <string name="profile_plan_badge_popular">★ Đáng giá nhất</string>
+    <string name="profile_plan_have_higher">Bạn đang dùng gói cao hơn</string>
+    <string name="profile_btn_upgrade_fmt">Nâng cấp %1$s</string>
+    <string name="profile_upgrade_title">Nâng cấp gói</string>
+    <string name="profile_upgrade_message">Tính năng thanh toán đang được hoàn thiện.\n\nVui lòng liên hệ ctslab@ptit.vn để nâng cấp gói.</string>
+    <string name="profile_upgrade_send_email">Gửi email</string>
+    <string name="profile_close">Đóng</string>
     <string name="profile_btn_upgrade">Nâng cấp</string>
     <string name="profile_btn_logout">Đăng xuất</string>
     <string name="profile_physical_title">SẢN PHẨM VẬT LÝ</string>

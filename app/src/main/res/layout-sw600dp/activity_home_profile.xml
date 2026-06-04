@@ -177,173 +177,126 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginStart="8dp"/>
 
-            <!-- BASIC PLAN -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardBasic"
+            <!-- Segmented plan selector (reuses the language-toggle pill style) -->
+            <LinearLayout
+                android:id="@+id/planTabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="#FFFFFF">
-                <LinearLayout
-                    android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:background="@drawable/bg_lang_toggle"
+                android:padding="4dp"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:id="@+id/tabPlanBasic"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="20dp"
-                    android:gravity="center_vertical">
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:text="@string/profile_plan_basic"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="#707072" />
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/profile_plan_basic"
-                            android:textStyle="bold"
-                            android:textSize="18sp"
-                            android:textColor="#333333"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/profile_plan_basic_desc"
-                            android:textSize="14sp"
-                            android:textColor="#666666"
-                            android:layout_marginTop="4dp"/>
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/tvBasicBadge"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/profile_plan_active"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:textColor="#2E7D52"
-                        android:background="#E8F5E9"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="12dp"
-                        android:paddingTop="6dp"
-                        android:paddingBottom="6dp"/>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- PRO PLAN -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardPro"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="#FFFFFF">
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tabPlanPro"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="20dp"
-                    android:gravity="center_vertical">
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:text="@string/profile_plan_pro"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="#707072" />
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/profile_plan_pro"
-                            android:textStyle="bold"
-                            android:textSize="18sp"
-                            android:textColor="#2196F3"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/profile_plan_pro_desc"
-                            android:textSize="14sp"
-                            android:textColor="#666666"
-                            android:layout_marginTop="4dp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/profile_plan_pro_price"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:textColor="#E07B20"
-                            android:layout_marginTop="2dp"/>
-                    </LinearLayout>
+                <TextView
+                    android:id="@+id/tabPlanUltra"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:text="@string/profile_plan_ultra"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="#707072" />
+            </LinearLayout>
 
-                    <Button
-                        android:id="@+id/btnUpgradePro"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:text="@string/profile_btn_upgrade"
-                        android:textSize="12sp"
-                        android:textColor="#FFFFFF"
-                        android:backgroundTint="#2196F3"
-                        android:insetTop="0dp"
-                        android:insetBottom="0dp"/>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- ULTRA PLAN -->
+            <!-- Selected-plan detail card -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardUltra"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="8dp"
-                app:cardBackgroundColor="#1A1A2E">
+                app:cardCornerRadius="20dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="#FFFFFF">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="20dp"
-                    android:gravity="center_vertical">
+                    android:orientation="vertical"
+                    android:padding="24dp">
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:id="@+id/tvPlanName"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="@string/profile_plan_ultra"
+                            android:layout_weight="1"
                             android:textStyle="bold"
-                            android:textSize="20sp"
-                            android:textColor="#FFD700"/>
+                            android:textSize="22sp"
+                            android:textColor="#1A1A2E" />
                         <TextView
+                            android:id="@+id/tvPlanBadge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/profile_plan_ultra_desc"
-                            android:textSize="14sp"
-                            android:textColor="#CCCCCC"
-                            android:layout_marginTop="4dp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/profile_plan_ultra_price"
-                            android:textSize="14sp"
+                            android:textSize="12sp"
                             android:textStyle="bold"
-                            android:textColor="#FFB300"
-                            android:layout_marginTop="2dp"/>
+                            android:textColor="#E07B20"
+                            android:background="#FFF3E0"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:visibility="gone" />
                     </LinearLayout>
 
-                    <Button
-                        android:id="@+id/btnUpgradeUltra"
+                    <TextView
+                        android:id="@+id/tvPlanQuota"
                         android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:text="@string/profile_btn_upgrade"
-                        android:textSize="12sp"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:textColor="#666666"
+                        android:layout_marginTop="12dp" />
+
+                    <TextView
+                        android:id="@+id/tvPlanPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="24sp"
                         android:textStyle="bold"
                         android:textColor="#1A1A2E"
-                        android:backgroundTint="#FFD700"
+                        android:layout_marginTop="6dp" />
+
+                    <Button
+                        android:id="@+id/btnPlanAction"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginTop="18dp"
+                        android:text="@string/profile_btn_upgrade"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"
+                        android:backgroundTint="#2196F3"
                         android:insetTop="0dp"
-                        android:insetBottom="0dp"/>
+                        android:insetBottom="0dp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
