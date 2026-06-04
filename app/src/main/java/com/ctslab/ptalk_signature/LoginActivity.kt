@@ -11,22 +11,53 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.text.style.UnderlineSpan
 import android.view.View
-import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.ctslab.ptalk_signature.databinding.ActivityLoginBinding
+import net.openid.appauth.AuthorizationException
+import net.openid.appauth.AuthorizationResponse
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
+    private lateinit var authentikManager: AuthentikAuthManager
     private var appMode: AppMode = AppMode.KID_MENTOR
 
-    // ── Tài khoản giả (demo) ─────────────────────────────────────────────
-    companion object {
-        private const val DEMO_USERNAME = "ptalk"
-        private const val DEMO_PASSWORD = "ptit2025"
+    // AppAuth: nhận kết quả authorization qua ActivityResult API
+    private val authLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val data = result.data ?: return@registerForActivityResult
+        val ex = AuthorizationException.fromIntent(data)
+        val resp = AuthorizationResponse.fromIntent(data)
+
+        if (ex != null) {
+            showError("Lỗi Authentik: ${ex.errorDescription ?: ex.error}")
+            return@registerForActivityResult
+        }
+        if (resp == null) {
+            showError("Không nhận được phản hồi từ Authentik")
+            return@registerForActivityResult
+        }
+
+        // Đổi code lấy token
+        authentikManager.handleAuthorizationResponse(
+            data = data,
+            onSuccess = { authResult ->
+                TokenManager.init(this)
+                TokenManager.saveTokens(
+                    accessToken = authResult.accessToken,
+                    refreshToken = authResult.refreshToken,
+                    expiresIn = authResult.expiresIn,
+                    username = authResult.name,
+                    userType = authResult.userType
+                )
+                goToMain(isGuest = false)
+            },
+            onError = { error -> showError(error) }
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,9 +65,19 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        TokenManager.init(this)
+
         // Nhận AppMode từ ModeSelectActivity
         val modeName = intent.getStringExtra(ModeSelectActivity.EXTRA_APP_MODE)
         appMode = modeName?.let { AppMode.valueOf(it) } ?: AppMode.KID_MENTOR
+
+        // Nếu đã đăng nhập → vào thẳng Main (giữ mode đã chọn)
+        if (TokenManager.isLoggedIn()) {
+            goToMain(isGuest = false)
+            return
+        }
+
+        authentikManager = AuthentikAuthManager(this)
 
         applyModeUI()
         setupUI()
@@ -44,17 +85,14 @@ class LoginActivity : AppCompatActivity() {
 
     /** Cập nhật giao diện Login theo chế độ đã chọn */
     private fun applyModeUI() {
-        // Brand title trong header
-        val brandTitle = binding.loginBrandHeader.findViewWithTag<android.widget.TextView>("brandTitle")
-        // Nếu không dùng tag thì sửa trực tiếp text ở XML, hoặc tìm theo thứ tự con
-        // Ở đây ta sẽ duyệt header tìm TextView đầu tiên có text "PTALK"
+        // Brand title trong header (duyệt header tìm TextView có text "PTALK")
         findTextViewWithText(binding.loginBrandHeader, "PTALK")?.text = appMode.brandTitle
 
         // Headline & subheadline
         binding.tvLoginHeadline.text = appMode.loginHeadline
         binding.tvLoginSubheadline.text = appMode.loginSubheadline
 
-        // Login button color theo mode
+        // Màu nút đăng nhập theo mode
         if (appMode == AppMode.ELDER_CARE) {
             binding.btnLogin.setBackgroundResource(R.drawable.bg_login_button_elder)
         }
@@ -75,18 +113,11 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
-        // Khi nhấn Done trên bàn phím → tự submit login
-        binding.etPassword.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                attemptLogin()
-                true
-            } else false
-        }
-
-        // Nút Đăng nhập chính
+        // Nút Đăng nhập → khởi chạy Authentik SSO
         binding.btnLogin.setOnClickListener {
             hideKeyboard()
-            attemptLogin()
+            hideError()
+            authLauncher.launch(authentikManager.getAuthorizationIntent())
         }
 
         // Nút Vào xem thử (guest)
@@ -145,61 +176,6 @@ class LoginActivity : AppCompatActivity() {
         binding.tvConsent.movementMethod = LinkMovementMethod.getInstance()
     }
 
-    // ── Xử lý đăng nhập ─────────────────────────────────────────────────
-    private fun attemptLogin() {
-        val username = binding.etUsername.text.toString().trim()
-        val password = binding.etPassword.text.toString().trim()
-
-        // Validate không để trống
-        if (username.isEmpty() || password.isEmpty()) {
-            showError("Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.")
-            shakeButton(binding.btnLogin)
-            return
-        }
-
-        // Kiểm tra credentials giả
-        if (username == DEMO_USERNAME && password == DEMO_PASSWORD) {
-            hideError()
-            animateSuccess()
-        } else {
-            showError("Tên đăng nhập hoặc mật khẩu không đúng.")
-            shakeButton(binding.btnLogin)
-        }
-    }
-
-    // ── Animation ────────────────────────────────────────────────────────
-    private fun animateSuccess() {
-        // Scale nút login → hiệu ứng "bấm được"
-        binding.btnLogin.animate()
-            .scaleX(0.96f).scaleY(0.96f)
-            .setDuration(100)
-            .withEndAction {
-                binding.btnLogin.animate()
-                    .scaleX(1f).scaleY(1f)
-                    .setDuration(100)
-                    .withEndAction { goToMain(isGuest = false) }
-                    .start()
-            }
-            .start()
-    }
-
-    private fun shakeButton(view: View) {
-        view.animate()
-            .translationX(-12f).setDuration(60)
-            .withEndAction {
-                view.animate().translationX(12f).setDuration(60)
-                    .withEndAction {
-                        view.animate().translationX(-8f).setDuration(50)
-                            .withEndAction {
-                                view.animate().translationX(0f)
-                                    .setDuration(50)
-                                    .setInterpolator(AccelerateDecelerateInterpolator())
-                                    .start()
-                            }.start()
-                    }.start()
-            }.start()
-    }
-
     // ── Navigation ───────────────────────────────────────────────────────
     private fun goToMain(isGuest: Boolean) {
         val intent = Intent(this, MainActivity::class.java).apply {
@@ -224,5 +200,12 @@ class LoginActivity : AppCompatActivity() {
     private fun hideKeyboard() {
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         currentFocus?.let { imm.hideSoftInputFromWindow(it.windowToken, 0) }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (::authentikManager.isInitialized) {
+            authentikManager.dispose()
+        }
     }
 }

@@ -147,61 +147,6 @@
             app:layout_constraintTop_toBottomOf="@id/tvLoginSubheadline">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/space_xs"
-                android:fontFamily="sans-serif-medium"
-                android:letterSpacing="0.10"
-                android:text="@string/login_username_label"
-                android:textColor="@color/color_login_subheadline"
-                android:textSize="@dimen/text_login_label" />
-
-            <EditText
-                android:id="@+id/etUsername"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/input_height"
-                android:background="@drawable/bg_input_field"
-                android:fontFamily="sans-serif"
-                android:hint="@string/login_username_hint"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="text"
-                android:paddingStart="@dimen/input_padding_h"
-                android:paddingEnd="@dimen/input_padding_h"
-                android:singleLine="true"
-                android:textColor="@color/color_login_headline"
-                android:textColorHint="#9E9EA0"
-                android:textSize="@dimen/text_input" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_l"
-                android:layout_marginBottom="@dimen/space_xs"
-                android:fontFamily="sans-serif-medium"
-                android:letterSpacing="0.10"
-                android:text="@string/login_password_label"
-                android:textColor="@color/color_login_subheadline"
-                android:textSize="@dimen/text_login_label" />
-
-            <EditText
-                android:id="@+id/etPassword"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/input_height"
-                android:background="@drawable/bg_input_field"
-                android:fontFamily="sans-serif"
-                android:hint="@string/login_password_hint"
-                android:imeOptions="actionDone"
-                android:importantForAutofill="no"
-                android:inputType="textPassword"
-                android:paddingStart="@dimen/input_padding_h"
-                android:paddingEnd="@dimen/input_padding_h"
-                android:singleLine="true"
-                android:textColor="@color/color_login_headline"
-                android:textColorHint="#9E9EA0"
-                android:textSize="@dimen/text_input" />
-
-            <TextView
                 android:id="@+id/tvLoginError"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

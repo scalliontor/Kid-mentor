@@ -141,65 +141,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <!-- Username label -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/login_username_label"
-                android:textSize="@dimen/text_login_label"
-                android:textColor="@color/color_login_subheadline"
-                android:fontFamily="sans-serif-medium"
-                android:letterSpacing="0.10"
-                android:layout_marginBottom="@dimen/space_xs" />
-
-            <!-- Username input -->
-            <EditText
-                android:id="@+id/etUsername"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/input_height"
-                android:hint="@string/login_username_hint"
-                android:textSize="@dimen/text_input"
-                android:textColor="@color/color_login_headline"
-                android:textColorHint="#9E9EA0"
-                android:fontFamily="sans-serif"
-                android:background="@drawable/bg_input_field"
-                android:paddingStart="@dimen/input_padding_h"
-                android:paddingEnd="@dimen/input_padding_h"
-                android:inputType="text"
-                android:importantForAutofill="no"
-                android:imeOptions="actionNext"
-                android:singleLine="true" />
-
-            <!-- Password label -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/login_password_label"
-                android:textSize="@dimen/text_login_label"
-                android:textColor="@color/color_login_subheadline"
-                android:fontFamily="sans-serif-medium"
-                android:letterSpacing="0.10"
-                android:layout_marginTop="@dimen/space_l"
-                android:layout_marginBottom="@dimen/space_xs" />
-
-            <!-- Password input -->
-            <EditText
-                android:id="@+id/etPassword"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/input_height"
-                android:hint="@string/login_password_hint"
-                android:textSize="@dimen/text_input"
-                android:textColor="@color/color_login_headline"
-                android:textColorHint="#9E9EA0"
-                android:fontFamily="sans-serif"
-                android:background="@drawable/bg_input_field"
-                android:paddingStart="@dimen/input_padding_h"
-                android:paddingEnd="@dimen/input_padding_h"
-                android:inputType="textPassword"
-                android:importantForAutofill="no"
-                android:imeOptions="actionDone"
-                android:singleLine="true" />
-
             <!-- Error text (hidden by default) -->
             <TextView
                 android:id="@+id/tvLoginError"

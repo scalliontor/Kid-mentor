@@ -15,10 +15,10 @@ import androidx.appcompat.app.AppCompatActivity
 /**
  * Standalone subscription / plans screen ("Gói Đăng Ký").
  *
- * P-Talk Signature has no real subscription backend (demo login only), so the
- * signed-in user is treated as the free "Cơ Bản" tier — this screen showcases the
- * three plans (which differ only by daily question quota) and routes any upgrade to
- * a contact email. There is no payment flow yet.
+ * The three plans differ only by daily question quota. The user's current tier is
+ * resolved from the Authentik JWT access-token claims (subscription_tier /
+ * is_superuser); if the user is a guest or the claim is absent it falls back to the
+ * free "Cơ Bản" tier. Upgrades route to a contact email — there is no payment flow yet.
  */
 class SubscriptionActivity : AppCompatActivity() {
 
@@ -29,12 +29,16 @@ class SubscriptionActivity : AppCompatActivity() {
     private lateinit var plans: List<Plan>
     private val tabIds = listOf(R.id.tabPlanBasic, R.id.tabPlanPro, R.id.tabPlanUltra)
     private var appMode: AppMode = AppMode.KID_MENTOR
-    private val currentTier = "basic"   // demo account → free tier
+    private var currentTier = "basic"   // resolved from the signed-in user's JWT
     private var selectedIndex = 1       // showcase Pro first
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_subscription)
+
+        TokenManager.init(this)
+        currentTier = resolveTier(TokenManager.getAccessToken())
+        selectedIndex = when (currentTier) { "pro" -> 1; "ultra", "admin" -> 2; else -> 1 }
 
         val modeName = intent.getStringExtra(ModeSelectActivity.EXTRA_APP_MODE)
         appMode = modeName?.let { AppMode.valueOf(it) } ?: AppMode.KID_MENTOR
@@ -136,5 +140,29 @@ class SubscriptionActivity : AppCompatActivity() {
             }
             .setNegativeButton(R.string.plan_close, null)
             .show()
+    }
+
+    /**
+     * Resolve the subscription tier from the JWT access-token claims
+     * (subscription_tier / is_superuser). Any decode failure or missing token
+     * (e.g. guest mode) falls back to the free tier.
+     */
+    private fun resolveTier(token: String?): String {
+        if (token.isNullOrBlank()) return "basic"
+        return try {
+            val parts = token.split(".")
+            if (parts.size < 2) return "basic"
+            val payload = String(
+                android.util.Base64.decode(
+                    parts[1],
+                    android.util.Base64.URL_SAFE or android.util.Base64.NO_WRAP or android.util.Base64.NO_PADDING
+                )
+            )
+            val json = org.json.JSONObject(payload)
+            if (json.optBoolean("is_superuser", false)) "admin"
+            else json.optString("subscription_tier", "basic").ifBlank { "basic" }
+        } catch (e: Exception) {
+            "basic"
+        }
     }
 }

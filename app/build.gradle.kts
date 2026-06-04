@@ -13,6 +13,7 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
+        manifestPlaceholders["appAuthRedirectScheme"] = "app"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -54,4 +55,10 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")  // cho Health Check trả JSON
+
+    // Encrypted SharedPreferences for secure token storage
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
+
+    // AppAuth for OIDC (Authentik SSO)
+    implementation("net.openid:appauth:0.11.1")
 }
