@@ -109,6 +109,42 @@
         app:layout_constraintTop_toBottomOf="@id/brandBarBg"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Quét thuốc (chỉ hiện ở ELDER_CARE) — góc trái dưới brand bar -->
+    <ImageView
+        android:id="@+id/btnScanMedicine"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_scan_medicine"
+        android:scaleType="centerInside"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="9dp"
+        android:tint="#D35400"
+        android:visibility="gone"
+        android:contentDescription="@string/scan_medicine"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="12dp"
+        android:elevation="5dp"
+        app:layout_constraintTop_toBottomOf="@id/brandBarBg"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Gọi khẩn cấp (chỉ hiện ở ELDER_CARE) -->
+    <ImageView
+        android:id="@+id/btnEmergency"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_emergency"
+        android:scaleType="centerInside"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="9dp"
+        android:tint="#C0392B"
+        android:visibility="gone"
+        android:contentDescription="@string/emergency_call"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:elevation="5dp"
+        app:layout_constraintTop_toBottomOf="@id/brandBarBg"
+        app:layout_constraintStart_toEndOf="@id/btnScanMedicine" />
+
     <!-- ══════════════════════════════════════════════════════════════════ -->
     <!--  GREETING TEXTS                                                    -->
     <!-- ══════════════════════════════════════════════════════════════════ -->

@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     private val audioRecorder by lazy { AudioRecorder(this) }
     private val audioPlayer by lazy { AudioPlayer() }
     private val apiService by lazy { ApiService(this) }
+    private val holoboxApi by lazy { HoloboxApi() }   // ELDER_CARE: gọi API PTIT trực tiếp
     private val streamingVoiceClient by lazy {
         StreamingVoiceClient(
             listener = object : StreamingVoiceClient.Listener {
@@ -117,8 +118,14 @@ class MainActivity : AppCompatActivity() {
         }
         characterAnimator.playIdle()
 
-        streamingVoiceClient.preconnect()
-        runHttpHealthDiagnostic()
+        if (appMode == AppMode.ELDER_CARE) {
+            // ELDER_CARE dùng API trực tiếp của bản elder_care (Holobox + Dify),
+            // không đi qua WebSocket server -> bỏ preconnect/health, bật các nút phụ.
+            setupEldercareButtons()
+        } else {
+            streamingVoiceClient.preconnect()
+            runHttpHealthDiagnostic()
+        }
     }
 
     /**
@@ -147,7 +154,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        streamingVoiceClient.preconnect()
+        if (appMode != AppMode.ELDER_CARE) streamingVoiceClient.preconnect()
     }
 
     private fun runHttpHealthDiagnostic() {
@@ -313,6 +320,11 @@ class MainActivity : AppCompatActivity() {
             return false
         }
 
+        if (appMode == AppMode.ELDER_CARE) {
+            // ELDER_CARE: ghi âm m4a rồi gọi Holobox trực tiếp (bỏ qua WebSocket streaming).
+            return startLegacyMicCapture(fromTouch)
+        }
+
         if (ServerConfig.TRANSPORT_MODE != TransportMode.LEGACY_HTTP_ONLY &&
             streamingVoiceClient.canStartStreaming()
         ) {
@@ -389,7 +401,11 @@ class MainActivity : AppCompatActivity() {
 
         if (audioFile != null && audioFile.length() > 0) {
             viewModel.onStopRecording()
-            sendAudioToServer(audioFile)
+            if (appMode == AppMode.ELDER_CARE) {
+                sendAudioToHolobox(audioFile)
+            } else {
+                sendAudioToServer(audioFile)
+            }
             return
         }
 
@@ -609,6 +625,54 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * ELDER_CARE: gửi audio m4a tới Holobox/Dify trực tiếp (STT -> Chat -> TTS),
+     * nhận về 1 file WAV rồi phát bằng AudioPlayer như nhánh HTTP cũ.
+     */
+    private fun sendAudioToHolobox(audioFile: File) {
+        lifecycleScope.launch {
+            try {
+                val replyWav = holoboxApi.processVoiceTurn(audioFile, cacheDir)
+                viewModel.onStartPlaying()
+                audioPlayer.play(
+                    audioFile = replyWav,
+                    onComplete = {
+                        replyWav.delete()
+                        runOnUiThread {
+                            activeTransport = ActiveVoiceTransport.NONE
+                            viewModel.onFinishPlaying()
+                        }
+                    },
+                    onError = { errorMsg ->
+                        replyWav.delete()
+                        runOnUiThread {
+                            activeTransport = ActiveVoiceTransport.NONE
+                            viewModel.onError(errorMsg)
+                        }
+                    }
+                )
+            } catch (e: Exception) {
+                activeTransport = ActiveVoiceTransport.NONE
+                viewModel.onError(e.message ?: "Không kết nối được máy chủ, bác thử lại nhé")
+            }
+        }
+    }
+
+    /** Bật & nối các nút riêng của ELDER_CARE: quét thuốc + gọi khẩn cấp. */
+    private fun setupEldercareButtons() {
+        binding.btnScanMedicine?.visibility = View.VISIBLE
+        binding.btnEmergency?.visibility = View.VISIBLE
+
+        binding.btnScanMedicine?.setOnClickListener {
+            startActivity(Intent(this, MedicineScannerActivity::class.java).apply {
+                putExtra(ModeSelectActivity.EXTRA_APP_MODE, appMode.name)
+            })
+        }
+        binding.btnEmergency?.setOnClickListener {
+            startActivity(Intent(Intent.ACTION_DIAL, android.net.Uri.parse("tel:$EMERGENCY_NUMBER")))
+        }
+    }
+
     private fun armStartAckTimeout() {
         clearStartAckTimeout()
         startAckTimeoutJob = lifecycleScope.launch {
@@ -764,7 +828,8 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         clearAllStreamingTimeouts()
-        streamingVoiceClient.shutdown()
+        // ELDER_CARE không dùng streaming -> tránh ép khởi tạo lazy chỉ để shutdown.
+        if (appMode != AppMode.ELDER_CARE) streamingVoiceClient.shutdown()
         audioPlayer.stop()
         audioRecorder.stop()
         characterAnimator.stopCurrent()
@@ -772,6 +837,8 @@ class MainActivity : AppCompatActivity() {
 
     private companion object {
         private const val TAG = "MainActivity"
+
+        private const val EMERGENCY_NUMBER = "113"
 
         private const val START_ACK_TIMEOUT_MS = 5_000L
         private const val PROCESSING_TIMEOUT_MS = 10_000L

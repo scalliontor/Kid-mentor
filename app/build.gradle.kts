@@ -61,4 +61,10 @@ dependencies {
 
     // AppAuth for OIDC (Authentik SSO)
     implementation("net.openid:appauth:0.11.1")
+
+    // CameraX — quét thuốc ở ELDER_CARE (MedicineScannerActivity)
+    implementation("androidx.camera:camera-core:1.4.1")
+    implementation("androidx.camera:camera-camera2:1.4.1")
+    implementation("androidx.camera:camera-lifecycle:1.4.1")
+    implementation("androidx.camera:camera-view:1.4.1")
 }
