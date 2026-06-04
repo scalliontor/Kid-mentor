@@ -129,7 +129,7 @@
         <ImageView
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:src="@drawable/char_idle1"
+            android:src="@drawable/mode_logo_kid"
             android:scaleType="fitCenter"
             android:contentDescription="Kid Mentor" />
 
@@ -177,7 +177,7 @@
         <ImageView
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:src="@drawable/char_talking_2"
+            android:src="@drawable/mode_logo_elder"
             android:scaleType="fitCenter"
             android:contentDescription="Elder Care" />
 
