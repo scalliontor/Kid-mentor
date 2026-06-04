@@ -2,6 +2,7 @@ package com.ctslab.ptalk_signature
 
 import android.annotation.SuppressLint
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.SystemClock
@@ -104,6 +105,13 @@ class MainActivity : AppCompatActivity() {
         requestMicPermission()
         observeState()
         setupButtons()
+
+        // Account / subscription screen (carries the active mode through for theming).
+        binding.btnAccount.setOnClickListener {
+            startActivity(Intent(this, SubscriptionActivity::class.java).apply {
+                putExtra(ModeSelectActivity.EXTRA_APP_MODE, appMode.name)
+            })
+        }
         if (isTabletDevice) {
             binding.btnHoldToTalk.bringToFront()
         }

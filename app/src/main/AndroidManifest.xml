@@ -47,6 +47,11 @@
             android:name=".MainActivity"
             android:exported="false" />
 
+        <!-- SubscriptionActivity — màn Gói Đăng Ký -->
+        <activity
+            android:name=".SubscriptionActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

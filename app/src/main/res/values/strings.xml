@@ -24,4 +24,27 @@
     <string name="consent_and"> và </string>
     <string name="consent_terms">Điều khoản</string>
     <string name="consent_error">Vui lòng đồng ý Chính sách bảo mật và Điều khoản sử dụng</string>
+
+    <!-- Subscription / plans screen (Gói Đăng Ký) -->
+    <string name="sub_account">Tài khoản &amp; gói cước</string>
+    <string name="sub_title">Gói Đăng Ký</string>
+    <string name="sub_intro">Các gói chỉ khác nhau ở số câu hỏi mỗi ngày.</string>
+    <string name="sub_footer">Liên hệ ctslab@ptit.vn để được hỗ trợ nâng cấp.</string>
+    <string name="plan_basic">Cơ Bản</string>
+    <string name="plan_pro">Pro</string>
+    <string name="plan_ultra">Ultra</string>
+    <string name="plan_basic_quota">20 câu hỏi mỗi ngày</string>
+    <string name="plan_pro_quota">500 câu hỏi mỗi ngày</string>
+    <string name="plan_ultra_quota">Không giới hạn câu hỏi</string>
+    <string name="plan_basic_price">Miễn phí</string>
+    <string name="plan_pro_price">800.000đ/tháng</string>
+    <string name="plan_ultra_price">1.500.000đ/tháng</string>
+    <string name="plan_badge_popular">★ Đáng giá nhất</string>
+    <string name="plan_active">Đang dùng</string>
+    <string name="plan_have_higher">Bạn đang dùng gói cao hơn</string>
+    <string name="plan_btn_upgrade_fmt">Nâng cấp %1$s</string>
+    <string name="plan_upgrade_title">Nâng cấp gói</string>
+    <string name="plan_upgrade_message">Tính năng thanh toán đang được hoàn thiện.\n\nVui lòng liên hệ ctslab@ptit.vn để nâng cấp gói.</string>
+    <string name="plan_upgrade_send_email">Gửi email</string>
+    <string name="plan_close">Đóng</string>
 </resources>
