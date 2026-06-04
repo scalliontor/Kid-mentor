@@ -1,5 +1,7 @@
 package com.buivan.ptalk_child
 
+import com.ctslab.ptalk_signature.AudioFrameProtocol
+import com.ctslab.ptalk_signature.ProtocolException
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
