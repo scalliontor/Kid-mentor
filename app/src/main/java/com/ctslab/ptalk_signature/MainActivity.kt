@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
         setupButtons()
 
         // Account / subscription screen (carries the active mode through for theming).
-        binding.btnAccount.setOnClickListener {
+        binding.btnAccount?.setOnClickListener {
             startActivity(Intent(this, SubscriptionActivity::class.java).apply {
                 putExtra(ModeSelectActivity.EXTRA_APP_MODE, appMode.name)
             })
