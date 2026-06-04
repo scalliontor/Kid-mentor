@@ -1,5 +1,7 @@
-package com.buivan.ptalk_child
+package com.ctslab.kidmentor
 
+import com.ctslab.kidmentor.StreamingEvent
+import com.ctslab.kidmentor.StreamingEventParser
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
