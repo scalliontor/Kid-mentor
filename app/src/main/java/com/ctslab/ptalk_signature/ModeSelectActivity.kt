@@ -16,10 +16,15 @@ class ModeSelectActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityModeSelectBinding
 
+    /** Người dùng vào bằng "xem thử" (guest) hay đã đăng nhập — mang theo từ LoginActivity. */
+    private var isGuest: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityModeSelectBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        isGuest = intent.getBooleanExtra(LoginActivity.EXTRA_IS_GUEST, false)
 
         animateEntrance()
         setupCards()
@@ -52,15 +57,17 @@ class ModeSelectActivity : AppCompatActivity() {
                 selectedCard.animate()
                     .scaleX(1f).scaleY(1f)
                     .setDuration(100)
-                    .withEndAction { navigateToLogin(mode) }
+                    .withEndAction { navigateToMain(mode) }
                     .start()
             }
             .start()
     }
 
-    private fun navigateToLogin(mode: AppMode) {
-        val intent = Intent(this, LoginActivity::class.java).apply {
+    private fun navigateToMain(mode: AppMode) {
+        val intent = Intent(this, MainActivity::class.java).apply {
             putExtra(EXTRA_APP_MODE, mode.name)
+            putExtra(LoginActivity.EXTRA_IS_GUEST, isGuest)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         startActivity(intent)
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)

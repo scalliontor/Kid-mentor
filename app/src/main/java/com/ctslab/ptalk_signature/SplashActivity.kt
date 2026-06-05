@@ -113,7 +113,8 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun navigateToMain() {
-        val intent = Intent(this, ModeSelectActivity::class.java)
+        // Đăng nhập TRƯỚC, sau đó mới chọn chế độ (Kid/Elder) ở ModeSelectActivity.
+        val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         finish()

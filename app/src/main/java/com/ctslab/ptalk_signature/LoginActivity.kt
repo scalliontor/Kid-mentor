@@ -23,7 +23,6 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var authentikManager: AuthentikAuthManager
-    private var appMode: AppMode = AppMode.KID_MENTOR
 
     // AppAuth: nhận kết quả authorization qua ActivityResult API
     private val authLauncher = registerForActivityResult(
@@ -54,7 +53,7 @@ class LoginActivity : AppCompatActivity() {
                     username = authResult.name,
                     userType = authResult.userType
                 )
-                goToMain(isGuest = false)
+                goToModeSelect(isGuest = false)
             },
             onError = { error -> showError(error) }
         )
@@ -67,49 +66,17 @@ class LoginActivity : AppCompatActivity() {
 
         TokenManager.init(this)
 
-        // Nhận AppMode từ ModeSelectActivity
-        val modeName = intent.getStringExtra(ModeSelectActivity.EXTRA_APP_MODE)
-        appMode = modeName?.let { AppMode.valueOf(it) } ?: AppMode.KID_MENTOR
-
-        // Nếu đã đăng nhập → vào thẳng Main (giữ mode đã chọn)
+        // Login đứng TRƯỚC bước chọn chế độ → màn này KHÔNG theo Kid/Elder,
+        // dùng giao diện mặc định (1 lần đăng nhập mở khoá cả hai chế độ).
+        // Nếu đã đăng nhập → sang thẳng màn chọn chế độ.
         if (TokenManager.isLoggedIn()) {
-            goToMain(isGuest = false)
+            goToModeSelect(isGuest = false)
             return
         }
 
         authentikManager = AuthentikAuthManager(this)
 
-        applyModeUI()
         setupUI()
-    }
-
-    /** Cập nhật giao diện Login theo chế độ đã chọn */
-    private fun applyModeUI() {
-        // Brand title trong header (duyệt header tìm TextView có text "PTALK")
-        findTextViewWithText(binding.loginBrandHeader, "PTALK")?.text = appMode.brandTitle
-
-        // Headline & subheadline
-        binding.tvLoginHeadline.text = appMode.loginHeadline
-        binding.tvLoginSubheadline.text = appMode.loginSubheadline
-
-        // Màu nút đăng nhập theo mode
-        if (appMode == AppMode.ELDER_CARE) {
-            binding.btnLogin.setBackgroundResource(R.drawable.bg_login_button_elder)
-        }
-    }
-
-    /** Tìm TextView chứa text cụ thể trong ViewGroup (depth-first) */
-    private fun findTextViewWithText(parent: android.view.ViewGroup, targetText: String): android.widget.TextView? {
-        for (i in 0 until parent.childCount) {
-            val child = parent.getChildAt(i)
-            if (child is android.widget.TextView && child.text.toString() == targetText) {
-                return child
-            }
-            if (child is android.view.ViewGroup) {
-                findTextViewWithText(child, targetText)?.let { return it }
-            }
-        }
-        return null
     }
 
     private fun setupUI() {
@@ -123,7 +90,7 @@ class LoginActivity : AppCompatActivity() {
         // Nút Vào xem thử (guest)
         binding.btnGuest.setOnClickListener {
             hideKeyboard()
-            goToMain(isGuest = true)
+            goToModeSelect(isGuest = true)
         }
 
         // Privacy/Terms consent — phải đồng ý mới được đăng nhập / vào xem thử.
@@ -177,14 +144,18 @@ class LoginActivity : AppCompatActivity() {
     }
 
     // ── Navigation ───────────────────────────────────────────────────────
-    private fun goToMain(isGuest: Boolean) {
-        val intent = Intent(this, MainActivity::class.java).apply {
-            putExtra("is_guest", isGuest)
-            putExtra(ModeSelectActivity.EXTRA_APP_MODE, appMode.name)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+    /** Sau khi đăng nhập (hoặc vào xem thử) → sang màn chọn chế độ Kid/Elder. */
+    private fun goToModeSelect(isGuest: Boolean) {
+        val intent = Intent(this, ModeSelectActivity::class.java).apply {
+            putExtra(EXTRA_IS_GUEST, isGuest)
         }
         startActivity(intent)
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        finish()
+    }
+
+    companion object {
+        const val EXTRA_IS_GUEST = "is_guest"
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────
