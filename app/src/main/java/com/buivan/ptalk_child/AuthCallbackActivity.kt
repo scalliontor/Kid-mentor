@@ -30,7 +30,8 @@ class AuthCallbackActivity : AppCompatActivity() {
                     refreshToken = result.refreshToken,
                     expiresIn = result.expiresIn,
                     username = result.name,
-                    userType = result.userType
+                    userType = result.userType,
+                    email = result.email
                 )
 
                 // Navigate to main screen
