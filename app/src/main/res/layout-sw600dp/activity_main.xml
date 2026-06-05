@@ -223,22 +223,6 @@
         android:text="Giữ nút để nói chuyện"
         android:textColor="#8BAF9A"
         android:textSize="@dimen/text_status"
-        app:layout_constraintBottom_toTopOf="@id/btnCancel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnCancel"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/btn_cancel_height"
-        android:layout_marginBottom="@dimen/space_s"
-        android:background="@drawable/bg_cancel_button"
-        android:paddingStart="@dimen/space_xl"
-        android:paddingEnd="@dimen/space_xl"
-        android:text="⏹  Dừng lại"
-        android:textColor="#FFFFFF"
-        android:textSize="@dimen/text_btn_cancel"
-        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/micTouchContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -257,6 +241,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
+
+        <!-- Vùng tròn bóng mờ báo hiệu huỷ ghi âm (kéo mic ra ngoài; mặc định ẩn) -->
+        <View
+            android:id="@+id/cancelZoneShadow"
+            android:layout_width="380dp"
+            android:layout_height="380dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_circle_orange_pastel"
+            android:alpha="0"
+            android:visibility="gone" />
 
         <ImageButton
             android:id="@+id/btnHoldToTalk"

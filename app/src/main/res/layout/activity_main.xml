@@ -244,27 +244,22 @@
         android:textSize="@dimen/text_status"
         android:textColor="#8BAF9A"
         android:layout_marginBottom="@dimen/space_s"
-        app:layout_constraintBottom_toTopOf="@id/btnCancel"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- Nút cancel (chỉ hiện khi PLAYING) -->
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnCancel"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/btn_cancel_height"
-        android:text="⏹  Dừng lại"
-        android:textSize="@dimen/text_btn_cancel"
-        android:textColor="#FFFFFF"
-        android:background="@drawable/bg_cancel_button"
-        android:paddingStart="@dimen/space_xl"
-        android:paddingEnd="@dimen/space_xl"
-        android:visibility="gone"
-        android:elevation="4dp"
-        android:layout_marginBottom="@dimen/space_s"
         app:layout_constraintBottom_toTopOf="@id/btnHoldToTalk"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Vùng tròn bóng mờ báo hiệu huỷ ghi âm (kéo mic ra ngoài; mặc định ẩn) -->
+    <View
+        android:id="@+id/cancelZoneShadow"
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        android:background="@drawable/bg_circle_orange_pastel"
+        android:alpha="0"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/btnHoldToTalk"
+        app:layout_constraintBottom_toBottomOf="@id/btnHoldToTalk"
+        app:layout_constraintStart_toStartOf="@id/btnHoldToTalk"
+        app:layout_constraintEnd_toEndOf="@id/btnHoldToTalk" />
 
     <!-- Nút mic hold to talk -->
     <ImageButton

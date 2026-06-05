@@ -153,7 +153,6 @@ class MainActivity : AppCompatActivity() {
             binding.tvGreeting.setTextColor(0xFFD35400.toInt())
             binding.tvSubGreeting.setTextColor(0xFFBF6516.toInt())
             binding.tvStatus.setTextColor(0xFFBF6516.toInt())
-            binding.btnCancel.setBackgroundResource(R.drawable.bg_cancel_button_elder)
         }
     }
 
@@ -197,7 +196,10 @@ class MainActivity : AppCompatActivity() {
                 AppState.IDLE -> {
                     binding.btnHoldToTalk.isEnabled = true
                     binding.btnHoldToTalk.alpha = 1f
-                    binding.btnCancel.visibility = View.GONE
+                    binding.btnHoldToTalk.setImageResource(R.drawable.ic_mic_custom)
+                    binding.btnHoldToTalk.setBackgroundResource(
+                        if (isTabletDevice) R.drawable.bg_hold_button_tablet else R.drawable.bg_hold_button
+                    )
                     isMicGestureActive = false
                     isMicTapFallbackActive = false
                     characterAnimator.playIdle()
@@ -207,7 +209,10 @@ class MainActivity : AppCompatActivity() {
                 AppState.RECORDING -> {
                     binding.btnHoldToTalk.isEnabled = true
                     binding.btnHoldToTalk.alpha = 0.75f
-                    binding.btnCancel.visibility = View.GONE
+                    binding.btnHoldToTalk.setImageResource(R.drawable.ic_mic_custom)
+                    binding.btnHoldToTalk.setBackgroundResource(
+                        if (isTabletDevice) R.drawable.bg_hold_button_tablet else R.drawable.bg_hold_button
+                    )
                     characterAnimator.playRecording()
                     waveformView.setStateRecording()
                 }
@@ -215,7 +220,10 @@ class MainActivity : AppCompatActivity() {
                 AppState.UPLOADING -> {
                     binding.btnHoldToTalk.isEnabled = false
                     binding.btnHoldToTalk.alpha = 0.5f
-                    binding.btnCancel.visibility = View.GONE
+                    binding.btnHoldToTalk.setImageResource(R.drawable.ic_mic_custom)
+                    binding.btnHoldToTalk.setBackgroundResource(
+                        if (isTabletDevice) R.drawable.bg_hold_button_tablet else R.drawable.bg_hold_button
+                    )
                     isMicGestureActive = false
                     isMicTapFallbackActive = false
                     characterAnimator.playUploading()
@@ -223,19 +231,26 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 AppState.PLAYING -> {
-                    binding.btnHoldToTalk.isEnabled = false
-                    binding.btnHoldToTalk.alpha = 0.5f
-                    binding.btnCancel.visibility = View.VISIBLE
+                    binding.btnHoldToTalk.isEnabled = true
+                    binding.btnHoldToTalk.alpha = 1f
+                    binding.btnHoldToTalk.setImageResource(R.drawable.ic_close)
+                    binding.btnHoldToTalk.setBackgroundResource(
+                        if (isTabletDevice) R.drawable.bg_hold_button_tablet_cancel else R.drawable.bg_hold_button_cancel
+                    )
                     isMicGestureActive = false
                     isMicTapFallbackActive = false
                     characterAnimator.playPlaying()
                     waveformView.setStatePlaying()
+                    viewModel.statusText.value = "Chạm để dừng"
                 }
 
                 AppState.ERROR -> {
                     binding.btnHoldToTalk.isEnabled = true
                     binding.btnHoldToTalk.alpha = 1f
-                    binding.btnCancel.visibility = View.GONE
+                    binding.btnHoldToTalk.setImageResource(R.drawable.ic_mic_custom)
+                    binding.btnHoldToTalk.setBackgroundResource(
+                        if (isTabletDevice) R.drawable.bg_hold_button_tablet else R.drawable.bg_hold_button
+                    )
                     isMicGestureActive = false
                     isMicTapFallbackActive = false
                     characterAnimator.playError()
@@ -255,10 +270,39 @@ class MainActivity : AppCompatActivity() {
         binding.btnHoldToTalk.setOnTouchListener { view, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
+                    // Đang phát tiếng -> chạm nút X để huỷ phát
+                    if (viewModel.state.value == AppState.PLAYING) {
+                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                        cancelCurrentPlayback()
+                        return@setOnTouchListener true
+                    }
                     view.parent?.requestDisallowInterceptTouchEvent(true)
                     val started = startMicCapture(fromTouch = true)
                     if (started) {
                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                    }
+                    true
+                }
+
+                MotionEvent.ACTION_MOVE -> {
+                    if (isMicGestureActive) {
+                        val centerX = view.width / 2f
+                        val centerY = view.height / 2f
+                        val distance = Math.hypot((event.x - centerX).toDouble(), (event.y - centerY).toDouble()).toFloat()
+                        val threshold = 100 * resources.displayMetrics.density
+                        val cancelZoneShadow = findViewById<android.view.View>(R.id.cancelZoneShadow)
+                        if (distance > threshold) {
+                            // Vuốt ra ngoài ngưỡng -> Huỷ ghi âm
+                            view.parent?.requestDisallowInterceptTouchEvent(false)
+                            finishMicCaptureAndSend(wasCancelled = true)
+                            suppressFallbackClickUntilMs = SystemClock.elapsedRealtime() + 350L
+                            cancelZoneShadow?.animate()?.alpha(0f)?.setDuration(200)?.start()
+                        } else {
+                            if (cancelZoneShadow?.visibility != android.view.View.VISIBLE) {
+                                cancelZoneShadow?.visibility = android.view.View.VISIBLE
+                            }
+                            cancelZoneShadow?.alpha = (distance / threshold).coerceIn(0f, 1f) * 0.8f
+                        }
                     }
                     true
                 }
@@ -269,6 +313,7 @@ class MainActivity : AppCompatActivity() {
                         finishMicCaptureAndSend(wasCancelled = event.action == MotionEvent.ACTION_CANCEL)
                         suppressFallbackClickUntilMs = SystemClock.elapsedRealtime() + 350L
                     }
+                    findViewById<android.view.View>(R.id.cancelZoneShadow)?.animate()?.alpha(0f)?.setDuration(200)?.start()
                     true
                 }
 
@@ -284,6 +329,10 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 when (viewModel.state.value) {
+                    AppState.PLAYING -> {
+                        cancelCurrentPlayback()
+                    }
+
                     AppState.RECORDING -> {
                         if (isMicTapFallbackActive) {
                             finishMicCaptureAndSend(wasCancelled = false)
@@ -304,21 +353,22 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
 
-        binding.btnCancel.setOnClickListener {
-            clearAllStreamingTimeouts()
-            waitingForFirstStreamingChunk = false
-            if (activeTransport == ActiveVoiceTransport.STREAMING) {
-                streamingVoiceClient.cancelPlaybackAndReset(notifyIdle = false)
-            } else {
-                audioPlayer.stop()
-            }
-            wsSessionPhase = WsSessionPhase.IDLE
-            viewModel.onCancelPlayback()
-            isMicGestureActive = false
-            isMicTapFallbackActive = false
-            activeTransport = ActiveVoiceTransport.NONE
+    /** Huỷ phát tiếng đang chạy (chạm nút X khi đang phát). Mirror KidMentor. */
+    private fun cancelCurrentPlayback() {
+        clearAllStreamingTimeouts()
+        waitingForFirstStreamingChunk = false
+        if (activeTransport == ActiveVoiceTransport.STREAMING) {
+            streamingVoiceClient.cancelPlaybackAndReset(notifyIdle = false)
+        } else {
+            audioPlayer.stop()
         }
+        wsSessionPhase = WsSessionPhase.IDLE
+        viewModel.onCancelPlayback()
+        isMicGestureActive = false
+        isMicTapFallbackActive = false
+        activeTransport = ActiveVoiceTransport.NONE
     }
 
     private fun hasMicPermission(): Boolean {
