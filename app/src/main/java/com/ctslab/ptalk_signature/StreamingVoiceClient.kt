@@ -197,7 +197,8 @@ class StreamingVoiceClient(
         webSocket = okHttpClient.newWebSocket(request, object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
                 Log.d("StreamingVoiceClient", "WebSocket connected: ${response.code}")
-                webSocket.send("""{"device_id":"android_app","firmware_version":"2.0.0"}""")
+                val deviceId = TokenManager.getEmail() ?: TokenManager.getUsername() ?: "android_app"
+                webSocket.send("""{"device_id":"$deviceId","firmware_version":"2.0.0"}""")
                 isConnected.set(true)
                 unavailableUntilMs = 0L
                 setReachability(WsReachability.ONLINE, "WebSocket connected")

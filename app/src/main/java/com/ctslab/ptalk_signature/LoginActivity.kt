@@ -51,7 +51,8 @@ class LoginActivity : AppCompatActivity() {
                     refreshToken = authResult.refreshToken,
                     expiresIn = authResult.expiresIn,
                     username = authResult.name,
-                    userType = authResult.userType
+                    userType = authResult.userType,
+                    email = authResult.email
                 )
                 goToModeSelect(isGuest = false)
             },
