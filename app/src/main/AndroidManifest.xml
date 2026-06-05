@@ -66,6 +66,19 @@
             android:name=".HomeProfileActivity"
             android:exported="false" />
 
+        <!-- Parent ↔ child profiles -->
+        <activity
+            android:name=".ParentProfileActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ChildrenActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChildInfoActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
         <!-- Tự động lưu và khôi phục ngôn ngữ đã chọn qua AndroidX AppCompat -->
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"

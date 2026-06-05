@@ -3,6 +3,7 @@
     <string name="yes">Có</string>
     <string name="no">Không</string>
     <string name="ok">Đồng ý</string>
+    <string name="back">Quay lại</string>
 
     <!-- Login Screen -->
     <string name="login_headline">CHÀO MỪNG\nBẠN TRỞ LẠI</string>
@@ -124,4 +125,94 @@
     <string name="profile_tier_pro">Pro Member</string>
     <string name="profile_tier_basic">Thành viên miễn phí</string>
     <string name="profile_upgrade_coming_soon">Tính năng thanh toán đang phát triển</string>
+
+    <!-- Profile → Student info entry card -->
+    <string name="profile_student_info_title">THÔNG TIN HỌC SINH</string>
+    <string name="profile_student_info_hint">Cập nhật lớp &amp; bộ sách để học đúng chương trình</string>
+
+    <!-- Student Info Screen -->
+    <string name="student_header">THÔNG TIN HỌC SINH</string>
+    <string name="student_subtitle">Giúp gia sư AI dạy đúng lớp và bộ sách của con</string>
+    <string name="student_name_label">HỌ VÀ TÊN</string>
+    <string name="student_name_hint">Nhập họ và tên...</string>
+    <string name="student_grade_label">LỚP</string>
+    <string name="student_grade_hint">Chọn lớp...</string>
+    <string name="student_grade_fmt">Lớp %1$s</string>
+    <string name="student_grade_dialog_title">Chọn lớp</string>
+    <string name="student_dob_label">NGÀY SINH</string>
+    <string name="student_dob_hint">Chọn ngày sinh...</string>
+    <string name="student_hometown_label">QUÊ QUÁN</string>
+    <string name="student_hometown_hint">Nhập quê quán...</string>
+    <string name="student_phone_label">SỐ ĐIỆN THOẠI</string>
+    <string name="student_phone_hint">Nhập số điện thoại...</string>
+    <string name="student_email_label">EMAIL</string>
+    <string name="student_email_readonly_hint">Email tài khoản</string>
+    <string name="student_curriculum_label">BỘ SÁCH</string>
+    <string name="student_curriculum_hint">Chọn bộ sách...</string>
+    <string name="student_curriculum_dialog_title">Chọn bộ sách</string>
+    <string name="student_save">LƯU THÔNG TIN</string>
+    <string name="student_saving">Đang lưu...</string>
+    <string name="student_skip">Để sau</string>
+    <string name="student_saved">Đã lưu thông tin!</string>
+    <string name="student_load_error">Không tải được thông tin, bé thử lại nhé</string>
+    <string name="student_save_error">Không lưu được thông tin, bé thử lại nhé</string>
+    <string name="student_err_name">Vui lòng nhập họ và tên</string>
+    <string name="student_login_required">Vui lòng đăng nhập để dùng tính năng này</string>
+
+    <!-- Bộ sách (giữ nguyên tên tiếng Việt ở cả 2 ngôn ngữ) -->
+    <string-array name="student_curriculum_options">
+        <item>Chân trời sáng tạo</item>
+        <item>Cánh diều</item>
+        <item>Kết nối tri thức</item>
+    </string-array>
+
+    <!-- Parent ↔ child profile cards (profile screen) -->
+    <string name="profile_parent_title">THÔNG TIN PHỤ HUYNH</string>
+    <string name="profile_parent_hint">Họ tên, số điện thoại liên hệ</string>
+    <string name="profile_children_title">HỒ SƠ CÁC BÉ</string>
+    <string name="profile_children_hint">Thêm bé, chọn lớp &amp; bộ sách cho từng bé</string>
+
+    <!-- Parent profile screen -->
+    <string name="parent_header">THÔNG TIN PHỤ HUYNH</string>
+    <string name="parent_subtitle">Thông tin liên hệ của phụ huynh/người giám hộ</string>
+    <string name="parent_name_label">HỌ VÀ TÊN PHỤ HUYNH</string>
+    <string name="parent_name_hint">Nhập họ và tên...</string>
+
+    <!-- Child info screen -->
+    <string name="child_header">THÊM BÉ</string>
+    <string name="child_header_edit">THÔNG TIN BÉ</string>
+    <string name="child_subtitle">Giúp gia sư AI dạy đúng lớp và bộ sách của bé</string>
+    <string name="child_name_label">TÊN BÉ</string>
+    <string name="child_name_hint">Nhập tên bé...</string>
+    <string name="child_relationship_label">QUAN HỆ VỚI BÉ</string>
+    <string name="child_relationship_hint">Chọn quan hệ...</string>
+    <string name="child_relationship_dialog_title">Quan hệ với bé</string>
+    <string name="child_save">LƯU</string>
+    <string name="child_err_name">Vui lòng nhập tên bé</string>
+
+    <!-- Children list screen -->
+    <string name="children_header">HỒ SƠ CÁC BÉ</string>
+    <string name="children_subtitle">Chọn bé đang dùng app để AI dạy đúng chương trình</string>
+    <string name="children_add">THÊM BÉ</string>
+    <string name="children_empty">Chưa có bé nào. Nhấn \"Thêm bé\" để bắt đầu.</string>
+    <string name="children_unnamed">Bé</string>
+    <string name="children_no_class">Chưa đặt lớp/bộ sách</string>
+    <string name="children_active_badge">✓ Đang dùng</string>
+    <string name="children_edit">Sửa</string>
+    <string name="children_delete">Xoá</string>
+    <string name="children_delete_title">Xoá hồ sơ bé?</string>
+    <string name="children_delete_message">Xoá hồ sơ của %1$s? Lịch sử trò chuyện của bé cũng sẽ bị xoá.</string>
+    <string name="children_now_active">Đang học cùng %1$s</string>
+
+    <!-- Main screen active-child -->
+    <string name="main_active_child_fmt">Bé %1$s đang học · chạm để đổi bé</string>
+    <string name="main_pick_child_title">Chọn bé đang dùng app</string>
+
+    <string-array name="child_relationship_options">
+        <item>Bố</item>
+        <item>Mẹ</item>
+        <item>Ông/Bà</item>
+        <item>Người giám hộ</item>
+        <item>Khác</item>
+    </string-array>
 </resources>

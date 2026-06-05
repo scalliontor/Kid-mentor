@@ -91,7 +91,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         TokenManager.init(this)
+        ActiveChild.init(this)
         DashboardChatApi.startNewSession()
+        maybePromptAddChild()
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -114,9 +116,74 @@ class MainActivity : AppCompatActivity() {
         runHttpHealthDiagnostic()
     }
 
-    override fun onResume() {0
+    override fun onResume() {
         super.onResume()
         streamingVoiceClient.preconnect()
+        refreshActiveChildUi()
+    }
+
+    /** Show the active child's name in the sub-greeting; tap to switch child. */
+    private fun refreshActiveChildUi() {
+        if (!TokenManager.isLoggedIn()) return
+        val name = ActiveChild.getName()
+        binding.tvSubGreeting.text =
+            if (!name.isNullOrBlank()) getString(R.string.main_active_child_fmt, name)
+            else getString(R.string.main_sub_greeting)
+        binding.tvSubGreeting.setOnClickListener { showChildPicker() }
+    }
+
+    /** Pick which child is currently using the app (drives RAG + chat history). */
+    private fun showChildPicker() {
+        lifecycleScope.launch {
+            val children = ChildrenApiService.list()
+            if (children == null) return@launch
+            if (children.isEmpty()) {
+                startActivity(android.content.Intent(this@MainActivity, ChildInfoActivity::class.java))
+                return@launch
+            }
+            val names = children.map { it.fullName ?: getString(R.string.children_unnamed) }.toTypedArray()
+            val checked = children.indexOfFirst { it.id != null && it.id == ActiveChild.getId() }
+            androidx.appcompat.app.AlertDialog.Builder(this@MainActivity)
+                .setTitle(R.string.main_pick_child_title)
+                .setSingleChoiceItems(names, checked) { dialog, which ->
+                    val c = children[which]
+                    if (c.id != null && c.username != null) {
+                        ActiveChild.set(c.id, c.username, c.fullName)
+                        refreshActiveChildUi()
+                    }
+                    dialog.dismiss()
+                }
+                .setNegativeButton(R.string.profile_close, null)
+                .show()
+        }
+    }
+
+    /**
+     * After first login, prompt the parent once to add a child if they have none.
+     * A transient network failure leaves the flag unset so it's retried next launch.
+     */
+    private fun maybePromptAddChild() {
+        if (!TokenManager.isLoggedIn()) return
+        val prefs = getSharedPreferences("ptalk_student_info", MODE_PRIVATE)
+        if (prefs.getBoolean("prompted", false)) return
+        lifecycleScope.launch {
+            val children = ChildrenApiService.list() ?: return@launch
+            prefs.edit().putBoolean("prompted", true).apply()
+            // Auto-select the only child so the AI is personalized immediately.
+            if (children.size == 1) {
+                val c = children[0]
+                if (c.id != null && c.username != null && !ActiveChild.isSet()) {
+                    ActiveChild.set(c.id, c.username, c.fullName)
+                    refreshActiveChildUi()
+                }
+            }
+            if (children.isEmpty()) {
+                startActivity(
+                    android.content.Intent(this@MainActivity, ChildInfoActivity::class.java)
+                        .putExtra(ChildInfoActivity.EXTRA_ONBOARDING, true)
+                )
+            }
+        }
     }
 
     private fun runHttpHealthDiagnostic() {

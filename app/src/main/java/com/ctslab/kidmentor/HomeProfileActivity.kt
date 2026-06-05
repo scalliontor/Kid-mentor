@@ -30,6 +30,7 @@ class HomeProfileActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home_profile)
 
         TokenManager.init(this)
+        ActiveChild.init(this)
 
         setupClickListeners()
         setupPlans()
@@ -54,6 +55,10 @@ class HomeProfileActivity : AppCompatActivity() {
             if (TokenManager.isLoggedIn()) {
                 TokenManager.clearTokens()
             }
+            // Clear the active child so the next account doesn't inherit it as device_id.
+            ActiveChild.clear()
+            // First-login add-child prompt should fire again for the next account.
+            getSharedPreferences("ptalk_student_info", MODE_PRIVATE).edit().clear().apply()
             val intent = Intent(this, LoginActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
@@ -64,6 +69,20 @@ class HomeProfileActivity : AppCompatActivity() {
         // Buy device
         findViewById<Button>(R.id.btnBuyDevice).setOnClickListener {
             Toast.makeText(this, getString(R.string.profile_upgrade_coming_soon), Toast.LENGTH_SHORT).show()
+        }
+
+        // Parent info + children management — logged-in only. Null-safe in case a
+        // layout variant omits a card.
+        val loggedIn = TokenManager.isLoggedIn()
+        findViewById<androidx.cardview.widget.CardView?>(R.id.cardParentInfo)?.let { card ->
+            if (loggedIn) card.setOnClickListener {
+                startActivity(Intent(this, ParentProfileActivity::class.java))
+            } else card.visibility = View.GONE
+        }
+        findViewById<androidx.cardview.widget.CardView?>(R.id.cardChildren)?.let { card ->
+            if (loggedIn) card.setOnClickListener {
+                startActivity(Intent(this, ChildrenActivity::class.java))
+            } else card.visibility = View.GONE
         }
     }
 

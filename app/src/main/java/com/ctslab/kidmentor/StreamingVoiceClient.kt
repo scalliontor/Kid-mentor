@@ -196,10 +196,11 @@ class StreamingVoiceClient(
         webSocket = okHttpClient.newWebSocket(request, object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
                 Log.d("StreamingVoiceClient", "WebSocket connected: ${response.code}")
-                // Send the logged-in username as device_id so the server can attribute
-                // this conversation to the right user (chat history / sessions). Falls
-                // back to a constant only when no user is logged in.
-                val deviceId = TokenManager.getEmail() ?: TokenManager.getUsername() ?: "android_app"
+                // device_id attributes this conversation (chat history + RAG personalization).
+                // Prefer the ACTIVE CHILD's username so the AI tutor follows that child's
+                // grade + bộ sách; fall back to the parent account, then a constant.
+                val deviceId = ActiveChild.getUsername()
+                    ?: TokenManager.getEmail() ?: TokenManager.getUsername() ?: "android_app"
                 webSocket.send("""{"device_id":"$deviceId","firmware_version":"2.0.0"}""")
                 isConnected.set(true)
                 unavailableUntilMs = 0L

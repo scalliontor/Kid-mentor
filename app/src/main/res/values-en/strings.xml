@@ -3,6 +3,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="ok">OK</string>
+    <string name="back">Back</string>
 
     <!-- Login Screen -->
     <string name="login_headline">WELCOME\nBACK</string>
@@ -68,4 +69,94 @@
     <string name="profile_physical_desc">Smart speaker &amp; Robot supporting child communication</string>
     <string name="profile_physical_price">4,800,000 VND</string>
     <string name="profile_physical_btn_buy">Order Now</string>
+
+    <!-- Profile → Student info entry card -->
+    <string name="profile_student_info_title">STUDENT INFO</string>
+    <string name="profile_student_info_hint">Update grade &amp; textbooks for the right curriculum</string>
+
+    <!-- Student Info Screen -->
+    <string name="student_header">STUDENT INFO</string>
+    <string name="student_subtitle">Helps the AI tutor match your child\'s grade &amp; textbooks</string>
+    <string name="student_name_label">FULL NAME</string>
+    <string name="student_name_hint">Enter full name...</string>
+    <string name="student_grade_label">GRADE</string>
+    <string name="student_grade_hint">Select grade...</string>
+    <string name="student_grade_fmt">Grade %1$s</string>
+    <string name="student_grade_dialog_title">Select grade</string>
+    <string name="student_dob_label">DATE OF BIRTH</string>
+    <string name="student_dob_hint">Select date of birth...</string>
+    <string name="student_hometown_label">HOMETOWN</string>
+    <string name="student_hometown_hint">Enter hometown...</string>
+    <string name="student_phone_label">PHONE</string>
+    <string name="student_phone_hint">Enter phone number...</string>
+    <string name="student_email_label">EMAIL</string>
+    <string name="student_email_readonly_hint">Account email</string>
+    <string name="student_curriculum_label">CURRICULUM</string>
+    <string name="student_curriculum_hint">Select textbook series...</string>
+    <string name="student_curriculum_dialog_title">Select textbook series</string>
+    <string name="student_save">SAVE</string>
+    <string name="student_saving">Saving...</string>
+    <string name="student_skip">Later</string>
+    <string name="student_saved">Saved!</string>
+    <string name="student_load_error">Couldn\'t load your info, please try again</string>
+    <string name="student_save_error">Couldn\'t save your info, please try again</string>
+    <string name="student_err_name">Please enter the full name</string>
+    <string name="student_login_required">Please log in to use this feature</string>
+
+    <!-- Textbook series (kept in Vietnamese in both locales) -->
+    <string-array name="student_curriculum_options">
+        <item>Chân trời sáng tạo</item>
+        <item>Cánh diều</item>
+        <item>Kết nối tri thức</item>
+    </string-array>
+
+    <!-- Parent ↔ child profile cards (profile screen) -->
+    <string name="profile_parent_title">PARENT INFO</string>
+    <string name="profile_parent_hint">Name, contact phone number</string>
+    <string name="profile_children_title">CHILDREN</string>
+    <string name="profile_children_hint">Add children, set each child\'s grade &amp; textbooks</string>
+
+    <!-- Parent profile screen -->
+    <string name="parent_header">PARENT INFO</string>
+    <string name="parent_subtitle">Parent/guardian contact details</string>
+    <string name="parent_name_label">PARENT FULL NAME</string>
+    <string name="parent_name_hint">Enter full name...</string>
+
+    <!-- Child info screen -->
+    <string name="child_header">ADD CHILD</string>
+    <string name="child_header_edit">CHILD INFO</string>
+    <string name="child_subtitle">Helps the AI tutor match the child\'s grade &amp; textbooks</string>
+    <string name="child_name_label">CHILD\'S NAME</string>
+    <string name="child_name_hint">Enter child\'s name...</string>
+    <string name="child_relationship_label">RELATIONSHIP</string>
+    <string name="child_relationship_hint">Select relationship...</string>
+    <string name="child_relationship_dialog_title">Relationship to the child</string>
+    <string name="child_save">SAVE</string>
+    <string name="child_err_name">Please enter the child\'s name</string>
+
+    <!-- Children list screen -->
+    <string name="children_header">CHILDREN</string>
+    <string name="children_subtitle">Pick the child using the app so the AI uses the right curriculum</string>
+    <string name="children_add">ADD CHILD</string>
+    <string name="children_empty">No children yet. Tap \"Add child\" to start.</string>
+    <string name="children_unnamed">Child</string>
+    <string name="children_no_class">No grade/textbook set</string>
+    <string name="children_active_badge">✓ Active</string>
+    <string name="children_edit">Edit</string>
+    <string name="children_delete">Delete</string>
+    <string name="children_delete_title">Delete child profile?</string>
+    <string name="children_delete_message">Delete %1$s\'s profile? Their chat history will also be removed.</string>
+    <string name="children_now_active">Learning with %1$s</string>
+
+    <!-- Main screen active-child -->
+    <string name="main_active_child_fmt">%1$s is learning · tap to switch child</string>
+    <string name="main_pick_child_title">Pick the child using the app</string>
+
+    <string-array name="child_relationship_options">
+        <item>Father</item>
+        <item>Mother</item>
+        <item>Grandparent</item>
+        <item>Guardian</item>
+        <item>Other</item>
+    </string-array>
 </resources>
