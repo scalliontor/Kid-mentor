@@ -15,6 +15,7 @@ object TokenManager {
     private const val KEY_ACCESS_TOKEN = "access_token"
     private const val KEY_REFRESH_TOKEN = "refresh_token"
     private const val KEY_USERNAME = "username"
+    private const val KEY_EMAIL = "email"
     private const val KEY_USER_TYPE = "user_type"
     private const val KEY_EXPIRES_AT = "expires_at"
 
@@ -41,7 +42,8 @@ object TokenManager {
         refreshToken: String,
         expiresIn: Int,
         username: String? = null,
-        userType: String? = null
+        userType: String? = null,
+        email: String? = null
     ) {
         val expiresAt = System.currentTimeMillis() + (expiresIn * 1000L)
         prefs?.edit()?.apply {
@@ -50,6 +52,7 @@ object TokenManager {
             putLong(KEY_EXPIRES_AT, expiresAt)
             username?.let { putString(KEY_USERNAME, it) }
             userType?.let { putString(KEY_USER_TYPE, it) }
+            email?.let { putString(KEY_EMAIL, it) }
             apply()
         }
     }
@@ -59,6 +62,8 @@ object TokenManager {
     fun getRefreshToken(): String? = prefs?.getString(KEY_REFRESH_TOKEN, null)
 
     fun getUsername(): String? = prefs?.getString(KEY_USERNAME, null)
+
+    fun getEmail(): String? = prefs?.getString(KEY_EMAIL, null)
 
     fun getUserType(): String? = prefs?.getString(KEY_USER_TYPE, null)
 
