@@ -11,6 +11,7 @@ import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -113,6 +114,10 @@ class MainActivity : AppCompatActivity() {
                 putExtra(ModeSelectActivity.EXTRA_APP_MODE, appMode.name)
             })
         }
+
+        // Quay lại màn chọn chế độ (nút trên màn hình + phím back hệ thống).
+        binding.btnBackHome?.setOnClickListener { goToModeSelect() }
+        onBackPressedDispatcher.addCallback(this) { goToModeSelect() }
         if (isTabletDevice) {
             binding.btnHoldToTalk.bringToFront()
         }
@@ -155,6 +160,18 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (appMode != AppMode.ELDER_CARE) streamingVoiceClient.preconnect()
+    }
+
+    /** Quay về màn chọn chế độ Kid/Elder (giữ nguyên phiên đăng nhập). */
+    private fun goToModeSelect() {
+        val isGuest = intent.getBooleanExtra(LoginActivity.EXTRA_IS_GUEST, false)
+        val target = Intent(this, ModeSelectActivity::class.java).apply {
+            putExtra(LoginActivity.EXTRA_IS_GUEST, isGuest)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        startActivity(target)
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        finish()
     }
 
     private fun runHttpHealthDiagnostic() {

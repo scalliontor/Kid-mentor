@@ -55,4 +55,7 @@
     <string name="scanner_hint">Hướng camera vào vỉ/lọ thuốc rồi bấm chụp</string>
     <string name="scanner_capture">Chụp &amp; phân tích</string>
     <string name="scanner_close">Đóng</string>
+
+    <!-- Quay lại màn chọn chế độ từ màn hình chính -->
+    <string name="back_to_mode_select">Quay lại chọn chế độ</string>
 </resources>
