@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Dark mode (charcoal/neutral). Brand accents stay vivid; neutrals flip. -->
+<resources>
+    <!-- Login text/lines reused across screens -->
+    <color name="color_login_bg">#121212</color>
+    <color name="color_login_headline">#ECECEC</color>
+    <color name="color_login_subheadline">#A8A8AA</color>
+    <color name="color_login_label">#A8A8AA</color>
+    <color name="color_login_input_text">#ECECEC</color>
+    <color name="color_login_input_hint">#7E7E82</color>
+    <color name="color_login_guest_text">#ECECEC</color>
+    <color name="color_login_divider_text">#7E7E82</color>
+    <color name="color_login_divider_line">#333333</color>
+    <color name="color_login_footer">#7E7E82</color>
+    <color name="color_link_blue">#5B9BFF</color>
+
+    <!-- Semantic palette -->
+    <color name="surface_card">#1E1E1E</color>
+    <color name="surface_input">#262626</color>
+    <color name="screen_bg">#121212</color>
+    <color name="text_primary">#ECECEC</color>
+    <color name="text_secondary">#A8A8AA</color>
+    <color name="text_body">#C4C4C6</color>
+    <color name="text_muted">#7E7E82</color>
+    <color name="divider_subtle">#2C2C2C</color>
+    <color name="outline_soft">#3A3A3C</color>
+    <color name="icon_neutral">#C4C4C6</color>
+
+    <!-- Main-screen action icons (call + settings) — dark theme already reads well, kept as-is -->
+    <color name="icon_main_settings">#C4C4C6</color>
+    <color name="icon_main_emergency">#C0392B</color>
+    <!-- Soft circular chip (subtle on charcoal) -->
+    <color name="icon_btn_soft_bg">#1FFFFFFF</color>
+    <color name="icon_btn_soft_stroke">#33FFFFFF</color>
+    <color name="icon_btn_soft_press">#33FFFFFF</color>
+
+    <!-- Accents: keep brand identity (read well on charcoal) -->
+    <color name="accent_kid">#5DC264</color>
+    <color name="accent_kid_dark">#7FD79A</color>
+    <color name="accent_elder">#F08A3C</color>
+    <color name="accent_elder_dark">#F0A868</color>
+
+    <!-- Theme picker -->
+    <color name="theme_pick_selected_bg">#2A2A2A</color>
+    <color name="theme_pick_selected_text">#ECECEC</color>
+
+    <!-- Drawable-support colors (charcoal) -->
+    <color name="card_stroke">#2E2E2E</color>
+    <color name="glass_top">#FF2C2C2C</color>
+    <color name="glass_mid">#FF262626</color>
+    <color name="glass_bottom">#FF1F1F1F</color>
+    <color name="glass_stroke">#3A3A3C</color>
+    <color name="screen_grad_top">#15211B</color>
+    <color name="screen_grad_mid">#131A17</color>
+    <color name="screen_grad_bottom">#121212</color>
+    <color name="card_kid_grad">#1E241F</color>
+    <color name="card_elder_grad">#241E18</color>
+    <color name="badge_kid_bg">#20302A</color>
+    <color name="badge_elder_bg">#2E2418</color>
+    <color name="halo_kid">#213029</color>
+    <color name="halo_elder">#2E2418</color>
+    <color name="hero_halo_center">#1AFFFFFF</color>
+    <color name="logout_stroke">#5A2E2E</color>
+    <color name="logout_press">#2A1C1C</color>
+    <color name="camera_ring">#2E2418</color>
+    <color name="camera_edge">#6A4A2A</color>
+    <color name="plan_pill">#2E2E2E</color>
+
+    <!-- Main-screen greeting/status (brightened for dark) + elder gradient -->
+    <color name="greeting_kid">#8FD9B5</color>
+    <color name="greeting_elder">#F0A868</color>
+    <color name="subgreeting_elder">#E89A5C</color>
+    <color name="status_kid">#9CC3B0</color>
+    <color name="elder_grad_top">#241C16</color>
+    <color name="elder_grad_mid">#1B1714</color>
+    <color name="elder_grad_bottom">#121212</color>
+
+    <!-- Primary pill button — lighter charcoal so it reads on the dark background -->
+    <color name="btn_primary_bg">#3A3A3A</color>
+    <color name="btn_primary_pressed">#4D4D4D</color>
+    <color name="btn_primary_disabled">#2A2A2A</color>
+
+    <!-- Frosted greeting card + splash logo card (dark) -->
+    <color name="greeting_card_top">#2EFFFFFF</color>
+    <color name="greeting_card_bottom">#1AFFFFFF</color>
+    <color name="greeting_card_stroke">#33FFFFFF</color>
+    <color name="splash_logo_card">#1E1E1E</color>
+</resources>

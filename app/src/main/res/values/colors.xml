@@ -19,4 +19,80 @@
 
     <!-- Standard hyperlink color — used for consent Privacy/Terms links (both apps) -->
     <color name="color_link_blue">#0066CC</color>
+
+    <!-- ══ SEMANTIC PALETTE (flips in values-night) ═══════════════════ -->
+    <!-- Surfaces -->
+    <color name="surface_card">#FFFFFF</color>        <!-- cards, glass header face -->
+    <color name="surface_input">#F5F5F5</color>      <!-- input fields, avatar circle -->
+    <color name="screen_bg">#FFFFFF</color>          <!-- plain screen background -->
+    <!-- Text -->
+    <color name="text_primary">#111111</color>
+    <color name="text_secondary">#707072</color>
+    <color name="text_body">#4A4A4A</color>         <!-- feature rows, paragraphs -->
+    <color name="text_muted">#9E9EA0</color>        <!-- footers, hints -->
+    <!-- Lines / outlines -->
+    <color name="divider_subtle">#ECECEC</color>
+    <color name="outline_soft">#CACACB</color>
+    <!-- Neutral icon tint (back arrow, gear) -->
+    <color name="icon_neutral">#37474F</color>
+
+    <!-- Main-screen action icons (call + settings) — strong on light bg; night variants kept readable -->
+    <color name="icon_main_settings">#263238</color>
+    <color name="icon_main_emergency">#D32F2F</color>
+    <!-- Soft circular chip drawn behind the call/settings icons so they read as buttons -->
+    <color name="icon_btn_soft_bg">#CCFFFFFF</color>
+    <color name="icon_btn_soft_stroke">#26000000</color>
+    <color name="icon_btn_soft_press">#F2FFFFFF</color>
+
+    <!-- Brand accents — intentionally constant across light/dark -->
+    <color name="accent_kid">#4CAF50</color>
+    <color name="accent_kid_dark">#2E7D52</color>
+    <color name="accent_elder">#E67E22</color>
+    <color name="accent_elder_dark">#D35400</color>
+
+    <!-- Theme picker (Settings) -->
+    <color name="theme_pick_selected_bg">#EEF1F0</color>
+    <color name="theme_pick_selected_text">#111111</color>
+
+    <!-- ══ DRAWABLE-SUPPORT COLORS (referenced by shapes; flip in night) ═══ -->
+    <color name="card_stroke">#1A000000</color>
+    <color name="glass_top">#FFFFFFFF</color>
+    <color name="glass_mid">#F2FFFFFF</color>
+    <color name="glass_bottom">#E6FFFFFF</color>
+    <color name="glass_stroke">#80FFFFFF</color>
+    <color name="screen_grad_top">#E8F5E9</color>
+    <color name="screen_grad_mid">#C8E6C9</color>
+    <color name="screen_grad_bottom">#B2DFDB</color>
+    <color name="card_kid_grad">#EFF8F1</color>
+    <color name="card_elder_grad">#FCF1E8</color>
+    <color name="badge_kid_bg">#E3F4E8</color>
+    <color name="badge_elder_bg">#FBE7D5</color>
+    <color name="halo_kid">#E6F5EB</color>
+    <color name="halo_elder">#FCEBDB</color>
+    <color name="hero_halo_center">#F2FFFFFF</color>
+    <color name="logout_stroke">#E5B4B4</color>
+    <color name="logout_press">#FCE8E8</color>
+    <color name="camera_ring">#FBE7D5</color>
+    <color name="camera_edge">#F2D2B6</color>
+    <color name="plan_pill">#111111</color>
+
+    <!-- Main-screen greeting/status (per mode) + elder gradient -->
+    <color name="greeting_kid">#6BAF8A</color>
+    <color name="greeting_elder">#D35400</color>
+    <color name="subgreeting_elder">#BF6516</color>
+    <color name="status_kid">#8BAF9A</color>
+    <color name="elder_grad_top">#F0D8C8</color>
+    <color name="elder_grad_mid">#F5E8E0</color>
+    <color name="elder_grad_bottom">#FFF3E8</color>
+
+    <!-- Primary (black) pill button — stays visible on dark bg -->
+    <color name="btn_primary_bg">#111111</color>
+    <color name="btn_primary_pressed">#707072</color>
+    <color name="btn_primary_disabled">#E5E5E5</color>
+
+    <!-- Frosted greeting card (main screen) + splash logo card -->
+    <color name="greeting_card_top">#F2FFFFFF</color>
+    <color name="greeting_card_bottom">#E0FFFFFF</color>
+    <color name="greeting_card_stroke">#99FFFFFF</color>
+    <color name="splash_logo_card">#FFFFFF</color>
 </resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Rounded outline so the logo image clips to rounded corners + casts a soft 3D shadow. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <corners android:radius="32dp" />
+    <solid android:color="@color/splash_logo_card" />
+    <stroke android:width="1dp" android:color="@color/card_stroke" />
+</shape>

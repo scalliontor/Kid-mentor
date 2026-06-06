@@ -12,8 +12,9 @@
     <string name="login_username_hint">Nhập tên đăng nhập...</string>
     <string name="login_password_label">MẬT KHẨU</string>
     <string name="login_password_hint">Nhập mật khẩu...</string>
-    <string name="login_btn_text">ĐĂNG NHẬP</string>
+    <string name="login_btn_text">ĐĂNG NHẬP VỚI SSO</string>
     <string name="login_guest_btn_text">VÀO XEM THỬ</string>
+    <string name="login_or">hoặc</string>
     <string name="login_footer">© 2025 Lab CTS · Học viện Bưu chính Viễn thông PTIT\nMọi quyền được bảo lưu.</string>
     <string name="login_err_empty">Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.</string>
     <string name="login_err_wrong">Tên đăng nhập hoặc mật khẩu không đúng.</string>
@@ -58,4 +59,29 @@
 
     <!-- Quay lại màn chọn chế độ từ màn hình chính -->
     <string name="back_to_mode_select">Quay lại chọn chế độ</string>
+
+    <!-- ══ SETTINGS (shared screen for both modes) ═══════════════════════ -->
+    <string name="settings_title">Cài đặt</string>
+    <string name="cd_settings">Cài đặt</string>
+    <string name="settings_section_account">TÀI KHOẢN</string>
+    <string name="settings_section_about">VỀ ỨNG DỤNG</string>
+    <string name="settings_guest_name">Khách</string>
+    <string name="settings_guest_sub">Bạn đang dùng thử · đăng nhập để lưu tiến trình</string>
+    <string name="settings_login">ĐĂNG NHẬP</string>
+    <string name="settings_logout">ĐĂNG XUẤT</string>
+    <string name="settings_subscription">Gói cước &amp; hạn mức</string>
+    <string name="settings_privacy">Chính sách bảo mật</string>
+    <string name="settings_terms">Điều khoản sử dụng</string>
+    <string name="settings_version">Phiên bản</string>
+    <string name="settings_section_elder">CHẾ ĐỘ ELDER CARE</string>
+    <string name="settings_emergency_label">Số gọi khẩn cấp</string>
+    <string name="settings_emergency_hint">Nút gọi khẩn cấp trên màn hình chính sẽ quay số này.</string>
+    <string name="settings_emergency_saved">Đã lưu số khẩn cấp</string>
+    <string name="settings_section_theme">GIAO DIỆN</string>
+    <string name="theme_light">Sáng</string>
+    <string name="theme_dark">Tối</string>
+    <string name="theme_system">Theo hệ thống</string>
+    <string name="settings_logout_title">Đăng xuất?</string>
+    <string name="settings_logout_message">Bạn sẽ cần đăng nhập lại để sử dụng tài khoản.</string>
+    <string name="settings_cancel">Huỷ</string>
 </resources>

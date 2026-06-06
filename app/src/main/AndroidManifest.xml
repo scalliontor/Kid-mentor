@@ -9,6 +9,7 @@
     <uses-feature android:name="android.hardware.camera.any" android:required="false" />
 
     <application
+        android:name=".PtalkApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -33,10 +34,10 @@
         </activity>
 
         <!-- ModeSelectActivity — chọn Kid Mentor / Elder Care -->
+        <!-- noHistory bỏ đi để có thể mở Settings rồi back lại; vào Main luôn CLEAR_TASK. -->
         <activity
             android:name=".ModeSelectActivity"
             android:exported="false"
-            android:noHistory="true"
             android:theme="@style/Theme.Ptalk_child" />
 
         <!-- LoginActivity — màn hình đăng nhập giả -->
@@ -60,6 +61,12 @@
         <activity
             android:name=".SubscriptionActivity"
             android:exported="false" />
+
+        <!-- SettingsActivity — cài đặt dùng chung cho cả hai chế độ -->
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
 
     </application>
 

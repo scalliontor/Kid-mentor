@@ -45,26 +45,29 @@
             <View
                 android:layout_width="1dp"
                 android:layout_height="@dimen/login_header_separator_height"
-                android:background="#CACACB"
+                android:background="@color/outline_soft"
                 android:layout_marginStart="@dimen/login_header_separator_margin"
                 android:layout_marginEnd="@dimen/login_header_separator_margin" />
 
-            <!-- App name block -->
-            <LinearLayout
+            <!-- App name block — centered between two separators (KidMentor style) -->
+            <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:text="PTALK"
+                android:gravity="center"
+                android:textSize="@dimen/text_login_header_title"
+                android:textColor="@color/color_login_headline"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="0.06" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="PTALK"
-                    android:textSize="@dimen/text_login_header_title"
-                    android:textColor="@color/color_login_headline"
-                    android:fontFamily="sans-serif-medium"
-                    android:letterSpacing="0.06" />
-            </LinearLayout>
+            <!-- Separator -->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="@dimen/login_header_separator_height"
+                android:background="@color/outline_soft"
+                android:layout_marginStart="@dimen/login_header_separator_margin"
+                android:layout_marginEnd="@dimen/login_header_separator_margin" />
 
             <!-- CTS Logo right -->
             <ImageView
@@ -79,6 +82,17 @@
         <!-- Removed loginHeaderDivider -->
 
         <!-- ══ HERO SECTION ════════════════════════════════════════════════ -->
+        <!-- Soft circular halo ring behind the mascot (matches KidMentor avatar) -->
+        <View
+            android:id="@+id/viewHeroHalo"
+            android:layout_width="@dimen/login_hero_halo_size"
+            android:layout_height="@dimen/login_hero_halo_size"
+            android:background="@drawable/bg_hero_halo"
+            android:layout_marginTop="@dimen/space_hero_top"
+            app:layout_constraintTop_toBottomOf="@id/loginBrandHeader"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <!-- Friendly mascot hero -->
         <ImageView
             android:id="@+id/ivLoginHero"
@@ -87,10 +101,10 @@
             android:src="@drawable/char_idle"
             android:scaleType="fitCenter"
             android:contentDescription="@string/app_name"
-            android:layout_marginTop="@dimen/space_hero_top"
-            app:layout_constraintTop_toBottomOf="@id/loginBrandHeader"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/viewHeroHalo"
+            app:layout_constraintBottom_toBottomOf="@id/viewHeroHalo"
+            app:layout_constraintStart_toStartOf="@id/viewHeroHalo"
+            app:layout_constraintEnd_toEndOf="@id/viewHeroHalo" />
 
         <!-- Display headline (Nike Futura style) -->
         <TextView
@@ -105,7 +119,7 @@
             android:lineSpacingMultiplier="1.05"
             android:letterSpacing="0.02"
             android:layout_marginTop="@dimen/space_l"
-            app:layout_constraintTop_toBottomOf="@id/ivLoginHero"
+            app:layout_constraintTop_toBottomOf="@id/viewHeroHalo"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -193,7 +207,7 @@
                 android:layout_marginTop="@dimen/space_xs"
                 android:visibility="gone" />
 
-            <!-- Login button (Nike Black pill) -->
+            <!-- SSO login button (black pill with key icon) -->
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
@@ -204,6 +218,8 @@
                 android:fontFamily="sans-serif-medium"
                 android:letterSpacing="0.08"
                 android:background="@drawable/bg_login_button"
+                android:drawableStart="@drawable/ic_key"
+                android:drawablePadding="8dp"
                 android:layout_marginTop="@dimen/space_xl"
                 android:elevation="2dp" />
 
@@ -219,12 +235,14 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_weight="1"
-                    android:background="#E5E5E5" />
+                    android:background="@color/color_login_divider_line" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="  hoặc  "
+                    android:text="@string/login_or"
+                    android:paddingStart="@dimen/space_m"
+                    android:paddingEnd="@dimen/space_m"
                     android:textSize="@dimen/text_login_footer"
                     android:textColor="@color/color_login_footer"
                     android:fontFamily="sans-serif" />
@@ -233,7 +251,7 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_weight="1"
-                    android:background="#E5E5E5" />
+                    android:background="@color/color_login_divider_line" />
             </LinearLayout>
 
             <!-- Guest button (outlined pill) -->

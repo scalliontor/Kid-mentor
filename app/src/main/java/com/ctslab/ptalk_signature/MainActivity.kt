@@ -108,9 +108,9 @@ class MainActivity : AppCompatActivity() {
         observeState()
         setupButtons()
 
-        // Account / subscription screen (carries the active mode through for theming).
+        // Shared settings screen (carries the active mode through for theming + mode section).
         binding.btnAccount?.setOnClickListener {
-            startActivity(Intent(this, SubscriptionActivity::class.java).apply {
+            startActivity(Intent(this, SettingsActivity::class.java).apply {
                 putExtra(ModeSelectActivity.EXTRA_APP_MODE, appMode.name)
             })
         }
@@ -150,9 +150,9 @@ class MainActivity : AppCompatActivity() {
         // Background gradient
         if (appMode == AppMode.ELDER_CARE) {
             binding.main.setBackgroundResource(R.drawable.bg_gradient_eldercare)
-            binding.tvGreeting.setTextColor(0xFFD35400.toInt())
-            binding.tvSubGreeting.setTextColor(0xFFBF6516.toInt())
-            binding.tvStatus.setTextColor(0xFFBF6516.toInt())
+            binding.tvGreeting.setTextColor(ContextCompat.getColor(this, R.color.greeting_elder))
+            binding.tvSubGreeting.setTextColor(ContextCompat.getColor(this, R.color.subgreeting_elder))
+            binding.tvStatus.setTextColor(ContextCompat.getColor(this, R.color.subgreeting_elder))
         }
     }
 
@@ -747,7 +747,8 @@ class MainActivity : AppCompatActivity() {
             })
         }
         binding.btnEmergency?.setOnClickListener {
-            startActivity(Intent(Intent.ACTION_DIAL, android.net.Uri.parse("tel:$EMERGENCY_NUMBER")))
+            val number = AppSettings.getEmergencyNumber(this)
+            startActivity(Intent(Intent.ACTION_DIAL, android.net.Uri.parse("tel:$number")))
         }
     }
 

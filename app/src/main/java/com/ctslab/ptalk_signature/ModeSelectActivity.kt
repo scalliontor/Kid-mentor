@@ -38,6 +38,11 @@ class ModeSelectActivity : AppCompatActivity() {
         binding.cardElderCare.setOnClickListener {
             selectMode(AppMode.ELDER_CARE)
         }
+
+        // Shared settings (global — no mode passed, so mode-specific section stays hidden).
+        binding.btnModeSettings.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
     }
 
     private fun selectMode(mode: AppMode) {
@@ -103,6 +108,14 @@ class ModeSelectActivity : AppCompatActivity() {
             .alpha(1f)
             .setDuration(400)
             .setStartDelay(150)
+            .start()
+
+        // Helper note fades in last
+        binding.tvModeHelper.alpha = 0f
+        binding.tvModeHelper.animate()
+            .alpha(1f)
+            .setDuration(400)
+            .setStartDelay(420)
             .start()
     }
 

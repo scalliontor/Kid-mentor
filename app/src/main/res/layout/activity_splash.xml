@@ -5,77 +5,57 @@
     android:id="@+id/splashRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="@drawable/bg_gradient">
 
-    <!-- Top promotional bar (Nike style) -->
-    <View
-        android:id="@+id/topBar"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/splash_top_bar_height"
-        android:background="#111111"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
-        android:id="@+id/topBarText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="P-TALK SIGNATURE"
-        android:textSize="@dimen/text_splash_topbar"
-        android:textColor="#FFFFFF"
-        android:letterSpacing="0.12"
-        android:fontFamily="sans-serif-medium"
-        app:layout_constraintTop_toTopOf="@id/topBar"
-        app:layout_constraintBottom_toBottomOf="@id/topBar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- PTIT Logo - center, will be animated in code -->
+    <!-- ══ HERO LOGO (new P-Talk Signature badge, rounded floating card) ═══ -->
     <ImageView
         android:id="@+id/ivSplashLogo"
-        android:layout_width="@dimen/splash_logo_size"
-        android:layout_height="@dimen/splash_logo_size"
-        android:src="@drawable/logo_ptit"
-        android:scaleType="fitCenter"
+        android:layout_width="280dp"
+        android:layout_height="280dp"
+        android:src="@drawable/logo_ptalk_signature"
+        android:background="@drawable/bg_splash_logo"
+        android:clipToOutline="true"
+        android:scaleType="centerCrop"
+        android:elevation="14dp"
         android:alpha="0"
+        android:contentDescription="@string/app_name"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.40"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="@dimen/space_bottom_divider_margin" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- App name below logo -->
+    <!-- Tagline (logo already carries the name) -->
     <TextView
         android:id="@+id/tvSplashTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="P-Talk Signature"
-        android:textSize="@dimen/text_splash_title"
-        android:textColor="#111111"
-        android:fontFamily="sans-serif-medium"
-        android:letterSpacing="0.08"
+        android:text="Đồng hành cùng trẻ em &amp; người cao tuổi"
+        android:textSize="@dimen/text_splash_subtitle"
+        android:textColor="@color/text_secondary"
+        android:fontFamily="sans-serif"
+        android:letterSpacing="0.03"
+        android:gravity="center"
         android:alpha="0"
+        android:layout_marginTop="@dimen/space_xl"
+        android:paddingStart="@dimen/space_xl"
+        android:paddingEnd="@dimen/space_xl"
         app:layout_constraintTop_toBottomOf="@id/ivSplashLogo"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="@dimen/space_l" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Kept for animation compatibility (hidden) -->
     <TextView
         android:id="@+id/tvMadeBy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Interactive Learning for Kids &amp; Elderly"
-        android:textSize="@dimen/text_splash_subtitle"
-        android:textColor="#707072"
-        android:fontFamily="sans-serif"
-        android:letterSpacing="0.04"
-        android:alpha="0"
+        android:text=""
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/tvSplashTitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="@dimen/space_xs" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- CTS co-brand logo -->
     <ImageView
         android:id="@+id/ivSplashLogoCts"
         android:layout_width="@dimen/splash_cts_logo_width"
@@ -83,19 +63,21 @@
         android:src="@drawable/logo_cts_flashscreen"
         android:scaleType="fitCenter"
         android:alpha="0"
-        app:layout_constraintTop_toBottomOf="@id/tvMadeBy"
+        android:layout_marginTop="@dimen/space_l"
+        app:layout_constraintTop_toBottomOf="@id/tvSplashTitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="@dimen/space_xs" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Bottom divider line (Nike style) -->
+    <!-- Bottom divider -->
     <View
         android:id="@+id/bottomDivider"
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:background="#E5E5E5"
+        android:background="@color/color_login_divider_line"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="48dp"
         android:layout_marginBottom="@dimen/space_bottom_divider_margin"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tvSplashFooter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -105,7 +87,7 @@
         android:layout_height="wrap_content"
         android:text="Học viện Công nghệ Bưu chính Viễn thông"
         android:textSize="@dimen/text_splash_footer"
-        android:textColor="#9E9EA0"
+        android:textColor="@color/text_muted"
         android:fontFamily="sans-serif"
         android:layout_marginBottom="@dimen/space_footer_margin_bottom"
         app:layout_constraintBottom_toBottomOf="parent"
