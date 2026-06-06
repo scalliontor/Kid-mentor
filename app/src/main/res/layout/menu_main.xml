@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Kid Mentor — friendly hamburger popup: account + theme switcher. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minWidth="268dp"
+    android:orientation="vertical"
+    android:background="@drawable/bg_menu_card"
+    android:padding="8dp">
+
+    <!-- Account -->
+    <LinearLayout
+        android:id="@+id/rowAccount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="14dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_account"
+            android:contentDescription="@string/menu_account" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="14dp"
+            android:text="@string/menu_account"
+            android:fontFamily="@font/nunito"
+            android:textFontWeight="700"
+            android:textSize="16sp"
+            android:textColor="@color/km_menu_text" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_chevron_right"
+            android:contentDescription="@null" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="4dp"
+        android:background="@color/km_menu_divider" />
+
+    <!-- Section label -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="4dp"
+        android:text="@string/menu_theme"
+        android:textAllCaps="true"
+        android:letterSpacing="0.08"
+        android:fontFamily="@font/nunito"
+        android:textFontWeight="800"
+        android:textSize="12sp"
+        android:textColor="@color/km_menu_muted" />
+
+    <!-- Sáng -->
+    <LinearLayout
+        android:id="@+id/rowLight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="12dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_sun"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/labelLight"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="14dp"
+            android:text="@string/menu_theme_light"
+            android:fontFamily="@font/nunito"
+            android:textFontWeight="700"
+            android:textSize="16sp"
+            android:textColor="@color/km_menu_text" />
+
+        <ImageView
+            android:id="@+id/checkLight"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_check"
+            android:visibility="invisible"
+            android:contentDescription="@null" />
+    </LinearLayout>
+
+    <!-- Tối -->
+    <LinearLayout
+        android:id="@+id/rowDark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="12dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_moon"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/labelDark"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="14dp"
+            android:text="@string/menu_theme_dark"
+            android:fontFamily="@font/nunito"
+            android:textFontWeight="700"
+            android:textSize="16sp"
+            android:textColor="@color/km_menu_text" />
+
+        <ImageView
+            android:id="@+id/checkDark"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_check"
+            android:visibility="invisible"
+            android:contentDescription="@null" />
+    </LinearLayout>
+
+    <!-- Theo hệ thống -->
+    <LinearLayout
+        android:id="@+id/rowSystem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="12dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_theme_auto"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/labelSystem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="14dp"
+            android:text="@string/menu_theme_system"
+            android:fontFamily="@font/nunito"
+            android:textFontWeight="700"
+            android:textSize="16sp"
+            android:textColor="@color/km_menu_text" />
+
+        <ImageView
+            android:id="@+id/checkSystem"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_check"
+            android:visibility="invisible"
+            android:contentDescription="@null" />
+    </LinearLayout>
+
+</LinearLayout>

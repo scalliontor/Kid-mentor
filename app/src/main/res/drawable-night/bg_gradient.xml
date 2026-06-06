@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Dark mode: Gradient tím vũ trụ Twilight Cosmic -->
+    <!-- Dark mode: production voice-screen purple "night" gradient.
+         Matches Kid Mentor Design System token gradient-night
+         (#3D2A8E to #6E3FBE to #9E54CE). -->
     <gradient
         android:type="linear"
-        android:angle="45"
-        android:startColor="#1B1947"
-        android:centerColor="#3D225B"
-        android:endColor="#5E2E42" />
+        android:angle="135"
+        android:startColor="#3D2A8E"
+        android:centerColor="#6E3FBE"
+        android:endColor="#9E54CE" />
 </shape>

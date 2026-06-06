@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Kid Mentor — grade-1 handwriting block on ô-ly (grid) paper -->
+    <declare-styleable name="NotebookView">
+        <attr name="km_glyph" format="string" />
+        <attr name="km_hint" format="string" />
+        <attr name="km_strokeOrder" format="boolean" />
+    </declare-styleable>
+
+    <!-- Kid Mentor — KaTeX math worksheet block -->
+    <declare-styleable name="MathView">
+        <attr name="km_latex" format="string" />
+        <attr name="km_label" format="string" />
+    </declare-styleable>
+</resources>

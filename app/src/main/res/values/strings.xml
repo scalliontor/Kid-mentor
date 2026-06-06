@@ -1,5 +1,13 @@
 <resources>
     <string name="app_name">Kid Mentor</string>
+
+    <!-- Hamburger menu -->
+    <string name="menu_account">Tài khoản</string>
+    <string name="menu_theme">Giao diện</string>
+    <string name="menu_theme_light">Sáng</string>
+    <string name="menu_theme_dark">Tối</string>
+    <string name="menu_theme_system">Theo hệ thống</string>
+
     <string name="yes">Có</string>
     <string name="no">Không</string>
     <string name="ok">Đồng ý</string>

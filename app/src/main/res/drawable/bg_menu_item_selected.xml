@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Highlight pill behind the currently-selected theme row. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="@dimen/km_radius_md" />
+    <solid android:color="@color/km_menu_selected_bg" />
+</shape>

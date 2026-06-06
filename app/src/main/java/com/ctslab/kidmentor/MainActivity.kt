@@ -289,12 +289,61 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Friendly hamburger popup: a rounded card with an Account row and a
+     * Sáng / Tối / Theo hệ thống theme switcher (the current mode is pilled + ticked).
+     */
+    private fun showMainMenu(anchor: android.view.View) {
+        val content = layoutInflater.inflate(R.layout.menu_main, null)
+        val popup = android.widget.PopupWindow(
+            content,
+            android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+            android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        )
+        popup.elevation = 24f
+        popup.isOutsideTouchable = true
+        popup.setBackgroundDrawable(
+            android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT)
+        )
+
+        val selColor = ContextCompat.getColor(this, R.color.km_menu_selected_text)
+        val normColor = ContextCompat.getColor(this, R.color.km_menu_text)
+        val current = ThemePrefs.read(this)
+
+        // (rowId, labelId, checkId, mode)
+        val rows = listOf(
+            arrayOf(R.id.rowLight, R.id.labelLight, R.id.checkLight) to ThemePrefs.LIGHT,
+            arrayOf(R.id.rowDark, R.id.labelDark, R.id.checkDark) to ThemePrefs.DARK,
+            arrayOf(R.id.rowSystem, R.id.labelSystem, R.id.checkSystem) to ThemePrefs.SYSTEM
+        )
+        for ((ids, mode) in rows) {
+            val row = content.findViewById<View>(ids[0])
+            val label = content.findViewById<android.widget.TextView>(ids[1])
+            val check = content.findViewById<View>(ids[2])
+            val selected = current == mode
+            row.setBackgroundResource(if (selected) R.drawable.bg_menu_item_selected else 0)
+            label.setTextColor(if (selected) selColor else normColor)
+            check.visibility = if (selected) View.VISIBLE else View.INVISIBLE
+            row.setOnClickListener {
+                popup.dismiss()
+                if (mode != current) ThemePrefs.set(this, mode)
+            }
+        }
+
+        content.findViewById<View>(R.id.rowAccount).setOnClickListener {
+            popup.dismiss()
+            startActivity(android.content.Intent(this, HomeProfileActivity::class.java))
+        }
+
+        popup.showAsDropDown(anchor, 0, 8, android.view.Gravity.END)
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     private fun setupButtons() {
-        // Hamburger menu - open profile/settings
-        findViewById<android.widget.ImageView>(R.id.btnHamburger)?.setOnClickListener {
-            val intent = android.content.Intent(this, HomeProfileActivity::class.java)
-            startActivity(intent)
+        // Hamburger menu - account + theme (Sáng/Tối/Theo hệ thống)
+        findViewById<android.widget.ImageView>(R.id.btnHamburger)?.setOnClickListener { anchor ->
+            showMainMenu(anchor)
         }
 
         binding.btnHoldToTalk.setOnTouchListener { view, event ->

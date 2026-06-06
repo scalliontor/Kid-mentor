@@ -71,18 +71,16 @@ class HomeProfileActivity : AppCompatActivity() {
             Toast.makeText(this, getString(R.string.profile_upgrade_coming_soon), Toast.LENGTH_SHORT).show()
         }
 
-        // Parent info + children management — logged-in only. Null-safe in case a
-        // layout variant omits a card.
+        // Parent info + children management. Logged-in → open; guest → prompt to log in
+        // (kept visible so the account features are discoverable). Null-safe per layout variant.
         val loggedIn = TokenManager.isLoggedIn()
-        findViewById<androidx.cardview.widget.CardView?>(R.id.cardParentInfo)?.let { card ->
-            if (loggedIn) card.setOnClickListener {
-                startActivity(Intent(this, ParentProfileActivity::class.java))
-            } else card.visibility = View.GONE
+        findViewById<androidx.cardview.widget.CardView?>(R.id.cardParentInfo)?.setOnClickListener {
+            if (loggedIn) startActivity(Intent(this, ParentProfileActivity::class.java))
+            else Toast.makeText(this, getString(R.string.student_login_required), Toast.LENGTH_SHORT).show()
         }
-        findViewById<androidx.cardview.widget.CardView?>(R.id.cardChildren)?.let { card ->
-            if (loggedIn) card.setOnClickListener {
-                startActivity(Intent(this, ChildrenActivity::class.java))
-            } else card.visibility = View.GONE
+        findViewById<androidx.cardview.widget.CardView?>(R.id.cardChildren)?.setOnClickListener {
+            if (loggedIn) startActivity(Intent(this, ChildrenActivity::class.java))
+            else Toast.makeText(this, getString(R.string.student_login_required), Toast.LENGTH_SHORT).show()
         }
     }
 

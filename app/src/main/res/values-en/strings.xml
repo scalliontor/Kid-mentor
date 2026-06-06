@@ -1,5 +1,13 @@
 <resources>
     <string name="app_name">Kid Mentor</string>
+
+    <!-- Hamburger menu -->
+    <string name="menu_account">Account</string>
+    <string name="menu_theme">Appearance</string>
+    <string name="menu_theme_light">Light</string>
+    <string name="menu_theme_dark">Dark</string>
+    <string name="menu_theme_system">Follow system</string>
+
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="ok">OK</string>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Math worksheet card — white page with a dashed mint border (KaTeX renders inside). -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/km_math_bg" />
+    <corners android:radius="@dimen/km_radius_sm" />
+    <stroke
+        android:width="1.5dp"
+        android:color="@color/km_math_border"
+        android:dashWidth="6dp"
+        android:dashGap="4dp" />
+</shape>

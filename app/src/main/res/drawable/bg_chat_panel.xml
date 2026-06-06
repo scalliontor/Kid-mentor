@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Kid Mentor ChatPanel — the frosted, scrollable "mini-notebook" frame that
+     sits above the centered mascot. Semi-transparent surface + light glass edge,
+     radius 28. Surface/edge colors swap automatically in values-night. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="@dimen/km_radius_xl" />
+    <solid android:color="@color/km_panel_surface" />
+    <stroke
+        android:width="1dp"
+        android:color="@color/km_panel_edge" />
+</shape>

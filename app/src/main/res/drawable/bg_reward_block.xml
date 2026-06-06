@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Reward / encouragement block — peach gradient card behind the StarBurst. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="@dimen/km_radius_lg" />
+    <gradient
+        android:angle="135"
+        android:startColor="#FFF3E0"
+        android:endColor="#FFE7D1"
+        android:type="linear" />
+    <stroke
+        android:width="1dp"
+        android:color="@color/km_peach" />
+</shape>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Kid Mentor display/wordmark font (design token font-display). Rounded & friendly. -->
+<font-family xmlns:app="http://schemas.android.com/apk/res-auto">
+    <font app:fontStyle="normal" app:fontWeight="400" app:font="@font/baloo2_regular" />
+    <font app:fontStyle="normal" app:fontWeight="700" app:font="@font/baloo2_bold" />
+    <font app:fontStyle="normal" app:fontWeight="800" app:font="@font/baloo2_extrabold" />
+</font-family>

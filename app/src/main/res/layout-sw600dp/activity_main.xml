@@ -19,7 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Removed brandAccentLine to use glassy header with margins -->
+    <!-- ══ GLASS HEADER ══════════════════════════════════════════════ -->
     <View
         android:id="@+id/brandBarBg"
         android:layout_width="0dp"
@@ -46,8 +46,6 @@
         app:layout_constraintStart_toStartOf="@id/brandBarBg"
         app:layout_constraintTop_toTopOf="@id/brandBarBg" />
 
-    <!-- Vertical separator removed -->
-
     <LinearLayout
         android:id="@+id/brandTextBlock"
         android:layout_width="wrap_content"
@@ -63,8 +61,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:letterSpacing="0.06"
+            android:fontFamily="@font/baloo2"
+            android:textFontWeight="700"
+            android:letterSpacing="0.12"
             android:text="KID MENTOR"
             android:textColor="@color/color_text_brand"
             android:textSize="@dimen/text_brand_title" />
@@ -83,7 +82,7 @@
         app:layout_constraintEnd_toEndOf="@id/brandBarBg"
         app:layout_constraintTop_toTopOf="@id/brandBarBg" />
 
-    <!-- ══ NAVIGATION BUTTON (below brand bar) ══════════════════════ -->
+    <!-- ══ NAVIGATION BUTTON ══════════════════════════════════════════ -->
     <ImageView
         android:id="@+id/btnHamburger"
         android:layout_width="80dp"
@@ -95,37 +94,57 @@
         android:tint="@color/color_hamburger_tint"
         android:layout_marginEnd="32dp"
         android:layout_marginTop="16dp"
+        android:contentDescription="Menu"
         app:layout_constraintTop_toBottomOf="@id/brandBarBg"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <TextView
-        android:id="@+id/tvGreeting"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/main_greeting"
-        android:textColor="@color/color_text_greeting"
-        android:textSize="@dimen/text_greeting"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnHamburger" />
-
-    <TextView
-        android:id="@+id/tvSubGreeting"
+    <!-- ══ WELCOME CARD — frosted glass panel, greeting only (demo-safe) ══ -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/chatPanelScroll"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/tablet_main_sub_greeting_top_margin"
-        android:layout_marginStart="@dimen/tablet_main_sub_greeting_side_margin"
-        android:layout_marginEnd="@dimen/tablet_main_sub_greeting_side_margin"
-        android:gravity="center"
-        android:text="@string/main_sub_greeting"
-        android:textColor="@color/color_text_sub_greeting"
-        android:textSize="@dimen/text_sub_greeting"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/space_xl"
+        android:layout_marginEnd="@dimen/space_xl"
+        android:layout_marginTop="@dimen/space_m"
+        android:background="@drawable/bg_chat_panel"
+        android:elevation="6dp"
+        app:layout_constraintTop_toBottomOf="@id/btnHamburger"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvGreeting" />
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/km_chat_panel_padding"
+            android:paddingVertical="24dp">
+
+            <TextView
+                android:id="@+id/tvGreeting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/main_greeting"
+                android:gravity="center"
+                android:fontFamily="@font/baloo2"
+                android:textFontWeight="600"
+                android:textSize="@dimen/text_greeting"
+                android:textColor="@color/km_panel_hello" />
+
+            <TextView
+                android:id="@+id/tvSubGreeting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/main_sub_greeting"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/space_xs"
+                android:fontFamily="@font/baloo2"
+                android:textFontWeight="700"
+                android:textSize="@dimen/text_sub_greeting"
+                android:textColor="@color/km_panel_hello_sub" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- ══ MASCOT + WAVEFORM (large, centered below the card) ════════ -->
     <com.ctslab.kidmentor.WaveformView
         android:id="@+id/waveformView"
         android:layout_width="0dp"
@@ -141,7 +160,7 @@
         app:layout_constraintBottom_toTopOf="@id/tvStatus"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvSubGreeting" />
+        app:layout_constraintTop_toBottomOf="@id/chatPanelScroll" />
 
     <ImageView
         android:id="@+id/ivCharacter"
@@ -172,6 +191,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/space_s"
         android:text="@string/status_idle_tablet"
+        android:fontFamily="@font/nunito"
         android:textColor="@color/color_text_status"
         android:textSize="@dimen/text_status"
         app:layout_constraintBottom_toTopOf="@id/micTouchContainer"
@@ -193,7 +213,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <!-- Vùng tròn bóng mờ báo hiệu huỷ (mặc định ẩn) -->
         <View
             android:id="@+id/cancelZoneShadow"
             android:layout_width="380dp"
@@ -203,7 +222,7 @@
             android:background="@drawable/bg_circle_orange_pastel"
             android:visibility="gone" />
 
-    <ImageButton
+        <ImageButton
             android:id="@+id/btnHoldToTalk"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- ══ MAIN SCREEN SEMANTIC COLORS (DARK MODE — Twilight Cosmic) ══ -->
-    <color name="color_text_greeting">#7CE7C4</color>
-    <color name="color_text_sub_greeting">#FFFFFF</color>
-    <color name="color_text_status">#A2D1B8</color>
-    <color name="color_text_brand">#C8B6E2</color>
-    <color name="color_hamburger_tint">#FFFFFF</color>
+    <!-- ══ MAIN SCREEN SEMANTIC COLORS (DARK MODE — purple "night") ══ -->
+    <!-- Tuned for strong contrast on the brighter purple night gradient. -->
+    <color name="color_text_greeting">#FF8FF0C6</color>
+    <color name="color_text_sub_greeting">#FFFFFFFF</color>
+    <color name="color_text_status">#FFEDE7FF</color>   <!-- light lilac on purple -->
+    <color name="color_text_brand">#FF2E7D52</color>    <!-- forest green on frosted header -->
+    <color name="color_hamburger_tint">#FFFFFFFF</color>
 
     <!-- ══ SPLASH SCREEN ══════════════════════════════════════════════ -->
     <color name="color_splash_bg">#1B1947</color>
@@ -34,4 +35,37 @@
     <color name="color_profile_bg">#1B1947</color>
     <color name="color_profile_header_text">#FFFFFF</color>
     <color name="color_profile_back_tint">#FFFFFF</color>
+
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <!--  KID MENTOR — DARK / "night" semantic overrides                     -->
+    <!--  Frosted panel frosts over the purple night gradient.              -->
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <color name="km_panel_surface">#73140E28</color>   <!-- #140E28 @ 45% (darker for contrast) -->
+    <color name="km_panel_edge">#3DFFFFFF</color>      <!-- white @ 24% -->
+    <!-- Chat bubbles — assistant stays a solid white card (per design) so dark
+         body text reads with full contrast even on the night panel. -->
+    <color name="km_bubble_assistant">#FFFFFFFF</color>
+    <color name="km_bubble_assistant_text">#FF2E2A40</color>
+    <color name="km_bubble_assistant_border">#1F000000</color>
+    <color name="km_bubble_user">#FF4CAF82</color>
+    <color name="km_bubble_user_text">#FFFFFFFF</color>
+    <!-- Math worksheet card — stays a light worksheet for legibility -->
+    <color name="km_math_bg">#FFF6F3FF</color>
+    <color name="km_math_border">#804CAF82</color>
+    <color name="km_math_text">#FF1B1340</color>
+    <!-- Notebook (ô-ly) card — stays a light page -->
+    <color name="km_notebook_bg">#FFFCFCFF</color>
+    <color name="km_notebook_glyph">#FF2E7D52</color>
+    <!-- In-panel greeting -->
+    <color name="km_panel_hello">#FF8FF0C6</color>
+    <color name="km_panel_hello_sub">#FFFFFFFF</color>
+
+    <!-- ══ Friendly popup menu (dark) ════════════════════════════════ -->
+    <color name="km_menu_card_bg">#FF241B45</color>
+    <color name="km_menu_text">#FFF0ECFF</color>
+    <color name="km_menu_muted">#FFB6ADD6</color>
+    <color name="km_menu_icon">#FF8FF0C6</color>
+    <color name="km_menu_selected_bg">#4D2E9E6A</color>
+    <color name="km_menu_selected_text">#FF8FF0C6</color>
+    <color name="km_menu_divider">#22FFFFFF</color>
 </resources>

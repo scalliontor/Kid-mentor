@@ -40,4 +40,59 @@
     <color name="color_profile_bg">#F5F7FA</color>
     <color name="color_profile_header_text">#111111</color>
     <color name="color_profile_back_tint">#222222</color>
+
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <!--  KID MENTOR DESIGN SYSTEM TOKENS  (from Claude Design handoff)      -->
+    <!--  Brand palette — identical in light & dark (raw hues).             -->
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <color name="km_green_50">#E8F5E9</color>
+    <color name="km_green_100">#C8E6C9</color>
+    <color name="km_green_150">#B2DFDB</color>
+    <color name="km_green_200">#A8D5BE</color>
+    <color name="km_green_400">#4CAF82</color>
+    <color name="km_green_500">#2E9E6A</color>
+    <color name="km_green_600">#2E7D52</color>
+    <color name="km_green_700">#1B5E3F</color>
+    <color name="km_sun">#FFB300</color>
+    <color name="km_peach">#FFD8B1</color>
+    <color name="km_orange">#FB8C00</color>
+    <color name="km_orange_bg">#FFF3E0</color>
+    <color name="km_pink">#F48FB1</color>
+    <color name="km_sky">#2D9CDB</color>
+    <color name="km_blue">#2563EB</color>
+    <color name="km_danger">#FA5252</color>
+    <color name="km_ink">#111111</color>
+    <color name="km_slate">#707072</color>
+    <color name="km_notebook_grid">#CFE3F2</color>
+    <color name="km_notebook_baseline">#E57373</color>
+
+    <!-- ══ SEMANTIC (LIGHT / "garden") — overridden by values-night ══════ -->
+    <!-- Frosted chat-display frame (ChatPanel) over the mint background -->
+    <color name="km_panel_surface">#8CFFFFFF</color>
+    <color name="km_panel_edge">#B3FFFFFF</color>
+    <!-- Chat bubbles -->
+    <color name="km_bubble_assistant">#FFFFFFFF</color>
+    <color name="km_bubble_assistant_text">#FF333333</color>
+    <color name="km_bubble_assistant_border">#1A000000</color>
+    <color name="km_bubble_user">#FF4CAF82</color>
+    <color name="km_bubble_user_text">#FFFFFFFF</color>
+    <!-- Math worksheet card -->
+    <color name="km_math_bg">#FFFFFFFF</color>
+    <color name="km_math_border">#FFA8D5BE</color>
+    <color name="km_math_text">#FF111111</color>
+    <!-- Notebook (ô-ly) card -->
+    <color name="km_notebook_bg">#FFFFFFFF</color>
+    <color name="km_notebook_glyph">#FF2E7D52</color>
+    <!-- In-panel greeting -->
+    <color name="km_panel_hello">#FF2E7D52</color>
+    <color name="km_panel_hello_sub">#FF111111</color>
+
+    <!-- ══ Friendly popup menu (light) ═══════════════════════════════ -->
+    <color name="km_menu_card_bg">#FFFFFFFF</color>
+    <color name="km_menu_text">#FF2E3A33</color>
+    <color name="km_menu_muted">#FF6B8576</color>
+    <color name="km_menu_icon">#FF4CAF82</color>
+    <color name="km_menu_selected_bg">#FFE8F5E9</color>
+    <color name="km_menu_selected_text">#FF2E7D52</color>
+    <color name="km_menu_divider">#1A000000</color>
 </resources>

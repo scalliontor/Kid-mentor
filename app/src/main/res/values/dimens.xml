@@ -81,4 +81,31 @@
     <dimen name="tablet_login_form_side_margin">12dp</dimen>
     <dimen name="tablet_login_subheadline_side_padding">24dp</dimen>
     <dimen name="tablet_login_footer_side_padding">24dp</dimen>
+
+    <!-- ══ KID MENTOR DESIGN SYSTEM — radii / chat surfaces ══════════════ -->
+    <dimen name="km_radius_sm">12dp</dimen>
+    <dimen name="km_radius_md">18dp</dimen>
+    <dimen name="km_radius_lg">24dp</dimen>
+    <dimen name="km_radius_xl">28dp</dimen>
+    <dimen name="km_radius_pill">30dp</dimen>
+    <dimen name="km_radius_bubble_tail">8dp</dimen>
+
+    <!-- Chat-display frame (ChatPanel) -->
+    <dimen name="km_chat_panel_min_height">160dp</dimen>
+    <dimen name="km_chat_panel_padding">16dp</dimen>
+    <dimen name="km_chat_gap">14dp</dimen>
+    <dimen name="km_bubble_padding_h">18dp</dimen>
+    <dimen name="km_bubble_padding_v">14dp</dimen>
+    <dimen name="km_avatar_size">40dp</dimen>
+    <dimen name="km_notebook_height">132dp</dimen>
+
+    <!-- Voice screen — mascot is slightly smaller to give the frame room -->
+    <dimen name="km_character_size_voice">300dp</dimen>
+
+    <!-- Chat typography -->
+    <dimen name="km_text_bubble">17sp</dimen>
+    <dimen name="km_text_panel_hello">19sp</dimen>
+    <dimen name="km_text_panel_hello_sub">24sp</dimen>
+    <dimen name="text_lg">22sp</dimen>
+    <dimen name="text_xl">28sp</dimen>
 </resources>
