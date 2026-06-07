@@ -30,6 +30,8 @@
     <!-- Main Screen -->
     <string name="main_greeting">Hello!</string>
     <string name="main_sub_greeting">How can I help you today?</string>
+    <string name="main_greeting_child">Hi %1$s,</string>
+    <string name="main_sub_greeting_child">what shall we learn today?</string>
     <string name="status_idle">Tap to record</string>
     <string name="status_idle_tablet">Hold button to talk</string>
     <string name="status_listening">Listening...</string>

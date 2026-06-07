@@ -122,44 +122,13 @@ class MainActivity : AppCompatActivity() {
         refreshActiveChildUi()
     }
 
-    /** Show the active child's name in the sub-greeting; tap to switch child. */
+    /** Greet the active child by name on the home screen (no in-app switching). */
     private fun refreshActiveChildUi() {
         if (!TokenManager.isLoggedIn()) return
         val name = ActiveChild.getName()
-        binding.tvSubGreeting.text =
-            if (!name.isNullOrBlank()) getString(R.string.main_active_child_fmt, name)
-            else getString(R.string.main_sub_greeting)
-        binding.tvSubGreeting.setOnClickListener { showChildPicker() }
-    }
-
-    /** Pick which child is currently using the app (drives RAG + chat history). */
-    private fun showChildPicker() {
-        lifecycleScope.launch {
-            val children = ChildrenApiService.list()
-            if (children == null) return@launch
-            if (children.isEmpty()) {
-                // Children are added on the Dashboard, not in the app.
-                android.widget.Toast.makeText(
-                    this@MainActivity,
-                    getString(R.string.children_add_on_dashboard),
-                    android.widget.Toast.LENGTH_LONG
-                ).show()
-                return@launch
-            }
-            val names = children.map { it.fullName ?: getString(R.string.children_unnamed) }.toTypedArray()
-            val checked = children.indexOfFirst { it.id != null && it.id == ActiveChild.getId() }
-            androidx.appcompat.app.AlertDialog.Builder(this@MainActivity)
-                .setTitle(R.string.main_pick_child_title)
-                .setSingleChoiceItems(names, checked) { dialog, which ->
-                    val c = children[which]
-                    if (c.id != null && c.username != null) {
-                        ActiveChild.set(c.id, c.username, c.fullName)
-                        refreshActiveChildUi()
-                    }
-                    dialog.dismiss()
-                }
-                .setNegativeButton(R.string.profile_close, null)
-                .show()
+        if (!name.isNullOrBlank()) {
+            binding.tvGreeting.text = getString(R.string.main_greeting_child, name)
+            binding.tvSubGreeting.text = getString(R.string.main_sub_greeting_child)
         }
     }
 
@@ -176,8 +145,8 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val children = ChildrenApiService.list() ?: return@launch
             prefs.edit().putBoolean("prompted", true).apply()
-            // Auto-select the only child so the AI is personalized immediately.
-            if (children.size == 1) {
+            // Auto-select the first child so the AI is personalized immediately (no in-app switching).
+            if (children.isNotEmpty()) {
                 val c = children[0]
                 if (c.id != null && c.username != null && !ActiveChild.isSet()) {
                     ActiveChild.set(c.id, c.username, c.fullName)

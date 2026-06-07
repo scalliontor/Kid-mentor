@@ -75,18 +75,8 @@ class ChildrenActivity : AppCompatActivity() {
         val row = LayoutInflater.from(this).inflate(R.layout.item_child, container, false)
         row.findViewById<TextView>(R.id.tvChildName).text = child.fullName ?: getString(R.string.children_unnamed)
         row.findViewById<TextView>(R.id.tvChildMeta).text = metaFor(child)
+        row.findViewById<TextView>(R.id.tvChildActiveBadge).visibility = View.GONE
 
-        val isActive = child.id != null && child.id == ActiveChild.getId()
-        row.findViewById<TextView>(R.id.tvChildActiveBadge).visibility = if (isActive) View.VISIBLE else View.GONE
-
-        // Tap row → SELECT this child as the active one (selection only, not editing data).
-        row.setOnClickListener {
-            if (child.id != null && child.username != null) {
-                ActiveChild.set(child.id, child.username, child.fullName)
-                loadChildren()
-                Toast.makeText(this, getString(R.string.children_now_active, child.fullName ?: ""), Toast.LENGTH_SHORT).show()
-            }
-        }
         // Tap the detail icon → open the READ-ONLY child detail.
         row.findViewById<ImageView>(R.id.btnViewChild).setOnClickListener {
             child.id?.let {

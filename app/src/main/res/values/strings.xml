@@ -60,6 +60,8 @@
     <!-- Main Screen -->
     <string name="main_greeting">Xin chào!</string>
     <string name="main_sub_greeting">Hôm nay, tớ có thể giúp gì cho cậu?</string>
+    <string name="main_greeting_child">%1$s ơi,</string>
+    <string name="main_sub_greeting_child">Hôm nay chúng mình học gì nào?</string>
     <string name="status_idle">Chạm để ghi âm</string>
     <string name="status_idle_tablet">Giữ nút để nói chuyện</string>
     <string name="status_listening">Đang nghe...</string>
