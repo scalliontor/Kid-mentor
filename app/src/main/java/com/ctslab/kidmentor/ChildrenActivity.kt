@@ -4,21 +4,21 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 
 /**
- * "Hồ sơ các bé" — manage the parent's children: list, add, edit, delete, and pick the
- * ACTIVE child. The active child's username is sent as device_id in the WS handshake so
- * the AI tutor + chat history follow that child ([ActiveChild]).
+ * "Hồ sơ các bé" — READ-ONLY list of the parent's children plus picking the ACTIVE child.
+ * The parent adds/edits/deletes children on the Dashboard, not in the app: there is no
+ * "thêm bé", edit, or delete action here. Tapping a row only SELECTS that child (it does
+ * not modify any data); the active child's username is sent as device_id in the WS
+ * handshake so the AI tutor + chat history follow that child ([ActiveChild]).
  */
 class ChildrenActivity : AppCompatActivity() {
 
@@ -47,14 +47,11 @@ class ChildrenActivity : AppCompatActivity() {
         progress = findViewById(R.id.progressChildren)
 
         findViewById<ImageView>(R.id.btnBack).setOnClickListener { finish() }
-        findViewById<Button>(R.id.btnAddChild).setOnClickListener {
-            startActivity(Intent(this, ChildInfoActivity::class.java))
-        }
     }
 
     override fun onResume() {
         super.onResume()
-        loadChildren() // refresh after returning from add/edit
+        loadChildren() // refresh in case the Dashboard data changed
     }
 
     private fun loadChildren() {
@@ -82,7 +79,7 @@ class ChildrenActivity : AppCompatActivity() {
         val isActive = child.id != null && child.id == ActiveChild.getId()
         row.findViewById<TextView>(R.id.tvChildActiveBadge).visibility = if (isActive) View.VISIBLE else View.GONE
 
-        // Tap row → make this child the active one.
+        // Tap row → SELECT this child as the active one (selection only, not editing data).
         row.setOnClickListener {
             if (child.id != null && child.username != null) {
                 ActiveChild.set(child.id, child.username, child.fullName)
@@ -90,12 +87,12 @@ class ChildrenActivity : AppCompatActivity() {
                 Toast.makeText(this, getString(R.string.children_now_active, child.fullName ?: ""), Toast.LENGTH_SHORT).show()
             }
         }
-        row.findViewById<ImageView>(R.id.btnEditChild).setOnClickListener {
+        // Tap the detail icon → open the READ-ONLY child detail.
+        row.findViewById<ImageView>(R.id.btnViewChild).setOnClickListener {
             child.id?.let {
                 startActivity(Intent(this, ChildInfoActivity::class.java).putExtra(ChildInfoActivity.EXTRA_CHILD_ID, it))
             }
         }
-        row.findViewById<ImageView>(R.id.btnDeleteChild).setOnClickListener { confirmDelete(child) }
         container.addView(row)
     }
 
@@ -107,25 +104,5 @@ class ChildrenActivity : AppCompatActivity() {
             if (idx >= 0) parts.add(resources.getStringArray(R.array.student_curriculum_options)[idx])
         }
         return if (parts.isEmpty()) getString(R.string.children_no_class) else parts.joinToString(" · ")
-    }
-
-    private fun confirmDelete(child: ChildProfile) {
-        val id = child.id ?: return
-        AlertDialog.Builder(this)
-            .setTitle(R.string.children_delete_title)
-            .setMessage(getString(R.string.children_delete_message, child.fullName ?: ""))
-            .setPositiveButton(R.string.children_delete) { _, _ ->
-                lifecycleScope.launch {
-                    val ok = ChildrenApiService.delete(id)
-                    if (ok) {
-                        if (ActiveChild.getId() == id) ActiveChild.clear()
-                        loadChildren()
-                    } else {
-                        Toast.makeText(this@ChildrenActivity, getString(R.string.student_save_error), Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-            .setNegativeButton(R.string.profile_close, null)
-            .show()
     }
 }

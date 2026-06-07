@@ -85,7 +85,7 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <!-- Họ tên phụ huynh -->
+                    <!-- Họ tên phụ huynh (read-only) -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -96,24 +96,16 @@
                         android:letterSpacing="0.10"
                         android:layout_marginBottom="@dimen/space_xs" />
 
-                    <EditText
-                        android:id="@+id/etParentName"
+                    <TextView
+                        android:id="@+id/tvParentName"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/input_height"
-                        android:hint="@string/parent_name_hint"
+                        android:layout_height="wrap_content"
+                        android:text="@string/family_value_placeholder"
                         android:textSize="@dimen/text_input"
                         android:textColor="#111111"
-                        android:textColorHint="#9E9EA0"
-                        android:fontFamily="sans-serif"
-                        android:background="@drawable/bg_input_field"
-                        android:paddingStart="@dimen/input_padding_h"
-                        android:paddingEnd="@dimen/input_padding_h"
-                        android:inputType="textPersonName|textCapWords"
-                        android:importantForAutofill="no"
-                        android:imeOptions="actionNext"
-                        android:singleLine="true" />
+                        android:fontFamily="sans-serif" />
 
-                    <!-- Số điện thoại -->
+                    <!-- Số điện thoại (read-only) -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -125,22 +117,14 @@
                         android:layout_marginTop="@dimen/space_l"
                         android:layout_marginBottom="@dimen/space_xs" />
 
-                    <EditText
-                        android:id="@+id/etParentPhone"
+                    <TextView
+                        android:id="@+id/tvParentPhone"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/input_height"
-                        android:hint="@string/student_phone_hint"
+                        android:layout_height="wrap_content"
+                        android:text="@string/family_value_placeholder"
                         android:textSize="@dimen/text_input"
                         android:textColor="#111111"
-                        android:textColorHint="#9E9EA0"
-                        android:fontFamily="sans-serif"
-                        android:background="@drawable/bg_input_field"
-                        android:paddingStart="@dimen/input_padding_h"
-                        android:paddingEnd="@dimen/input_padding_h"
-                        android:inputType="phone"
-                        android:importantForAutofill="no"
-                        android:imeOptions="actionDone"
-                        android:singleLine="true" />
+                        android:fontFamily="sans-serif" />
 
                     <!-- Email (read-only, account email) -->
                     <TextView
@@ -154,25 +138,14 @@
                         android:layout_marginTop="@dimen/space_l"
                         android:layout_marginBottom="@dimen/space_xs" />
 
-                    <EditText
-                        android:id="@+id/etParentEmail"
+                    <TextView
+                        android:id="@+id/tvParentEmail"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/input_height"
-                        android:hint="@string/student_email_readonly_hint"
+                        android:layout_height="wrap_content"
+                        android:text="@string/family_value_placeholder"
                         android:textSize="@dimen/text_input"
                         android:textColor="#111111"
-                        android:textColorHint="#9E9EA0"
-                        android:fontFamily="sans-serif"
-                        android:background="@drawable/bg_input_field"
-                        android:paddingStart="@dimen/input_padding_h"
-                        android:paddingEnd="@dimen/input_padding_h"
-                        android:focusable="false"
-                        android:clickable="false"
-                        android:cursorVisible="false"
-                        android:alpha="0.6"
-                        android:inputType="none"
-                        android:importantForAutofill="no"
-                        android:singleLine="true" />
+                        android:fontFamily="sans-serif" />
 
                     <TextView
                         android:id="@+id/tvParentError"
@@ -187,18 +160,17 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnParentSave"
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/input_height"
-                android:text="@string/child_save"
-                android:textSize="@dimen/text_login_button"
-                android:textColor="#FFFFFF"
-                android:fontFamily="sans-serif-medium"
-                android:letterSpacing="0.08"
-                android:background="@drawable/bg_login_button"
-                android:layout_marginTop="@dimen/space_xl"
-                android:elevation="2dp" />
+                android:layout_height="wrap_content"
+                android:text="@string/profile_edit_on_dashboard"
+                android:textSize="@dimen/text_login_label"
+                android:textColor="#9E9EA0"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/space_l"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" />
 
             <ProgressBar
                 android:id="@+id/progressParent"

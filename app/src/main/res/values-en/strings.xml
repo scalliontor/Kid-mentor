@@ -156,6 +156,13 @@
     <string name="children_delete_message">Delete %1$s\'s profile? Their chat history will also be removed.</string>
     <string name="children_now_active">Learning with %1$s</string>
 
+    <!-- Read-only: profiles are managed on the Dashboard, not in the app -->
+    <string name="family_value_placeholder">—</string>
+    <string name="children_view_detail">View details</string>
+    <string name="children_edit_on_dashboard">Add or edit child profiles on the management page (Dashboard).</string>
+    <string name="children_add_on_dashboard">No child profiles yet. Please add a child on the management page (Dashboard).</string>
+    <string name="profile_edit_on_dashboard">View only. Update this information on the management page (Dashboard).</string>
+
     <!-- Main screen active-child -->
     <string name="main_active_child_fmt">%1$s is learning · tap to switch child</string>
     <string name="main_pick_child_title">Pick the child using the app</string>

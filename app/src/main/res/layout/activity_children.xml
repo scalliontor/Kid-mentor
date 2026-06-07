@@ -91,18 +91,17 @@
                 android:paddingBottom="24dp"
                 android:visibility="gone" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnAddChild"
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/input_height"
-                android:text="@string/children_add"
-                android:textSize="@dimen/text_login_button"
-                android:textColor="#FFFFFF"
-                android:fontFamily="sans-serif-medium"
-                android:letterSpacing="0.08"
-                android:background="@drawable/bg_login_button"
+                android:layout_height="wrap_content"
+                android:text="@string/children_edit_on_dashboard"
+                android:textSize="@dimen/text_login_label"
+                android:textColor="#9E9EA0"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
                 android:layout_marginTop="@dimen/space_l"
-                android:elevation="2dp" />
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" />
 
             <ProgressBar
                 android:id="@+id/progressChildren"

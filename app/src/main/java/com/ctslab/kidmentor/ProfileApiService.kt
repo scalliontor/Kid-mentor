@@ -8,9 +8,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.PUT
 import java.util.concurrent.TimeUnit
 
 // ── Data classes ──────────────────────────────────────────────────────────────
@@ -34,11 +32,9 @@ data class ParentProfileEnvelope(
 // ── Retrofit interface ────────────────────────────────────────────────────────
 
 interface DashboardProfileApi {
+    // READ-ONLY: the parent profile is edited on the Dashboard, not in the app.
     @GET("api/v1/profile")
     suspend fun getProfile(): Response<ParentProfileEnvelope>
-
-    @PUT("api/v1/profile")
-    suspend fun updateProfile(@Body body: ParentProfile): Response<ParentProfileEnvelope>
 }
 
 // ── Service ──────────────────────────────────────────────────────────────────
@@ -56,12 +52,7 @@ object ProfileApiService {
             .create(DashboardProfileApi::class.java)
     }
 
-    sealed class Result {
-        data class Success(val profile: ParentProfile?) : Result()
-        data class Error(val message: String) : Result()
-    }
-
-    /** Fetch the logged-in parent's profile (null on any failure). */
+    /** Fetch the logged-in parent's profile (null on any failure). Display-only. */
     suspend fun getProfile(): ParentProfile? = withContext(Dispatchers.IO) {
         try {
             val response = api.getProfile()
@@ -70,18 +61,6 @@ object ProfileApiService {
             }
         } catch (e: Exception) {
             Log.e(TAG, "getProfile error: ${e.message}"); null
-        }
-    }
-
-    /** Save the parent profile. */
-    suspend fun updateProfile(body: ParentProfile): Result = withContext(Dispatchers.IO) {
-        try {
-            val response = api.updateProfile(body)
-            if (response.isSuccessful) Result.Success(response.body()?.profile)
-            else Result.Error("HTTP ${response.code()}")
-        } catch (e: Exception) {
-            Log.e(TAG, "updateProfile error: ${e.message}")
-            Result.Error(e.message ?: "network error")
         }
     }
 }

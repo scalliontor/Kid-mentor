@@ -54,27 +54,15 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/btnEditChild"
+            android:id="@+id/btnViewChild"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:padding="8dp"
-            android:src="@android:drawable/ic_menu_edit"
+            android:src="@android:drawable/ic_menu_info_details"
             android:tint="#707072"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"
-            android:contentDescription="@string/children_edit" />
-
-        <ImageView
-            android:id="@+id/btnDeleteChild"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:padding="8dp"
-            android:src="@android:drawable/ic_menu_delete"
-            android:tint="#D30005"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
-            android:contentDescription="@string/children_delete" />
+            android:contentDescription="@string/children_view_detail" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

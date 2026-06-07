@@ -7,11 +7,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.DELETE
 import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.PUT
 import retrofit2.http.Path
 
 // ── Data classes ──────────────────────────────────────────────────────────────
@@ -38,20 +34,12 @@ data class ChildEnvelope(@SerializedName("child") val child: ChildProfile?)
 // ── Retrofit interface ────────────────────────────────────────────────────────
 
 interface DashboardChildrenApi {
+    // READ-ONLY: children are added/edited/deleted on the Dashboard, not in the app.
     @GET("api/v1/children")
     suspend fun list(): Response<ChildrenEnvelope>
 
-    @POST("api/v1/children")
-    suspend fun create(@Body body: ChildProfile): Response<ChildEnvelope>
-
     @GET("api/v1/children/{id}")
     suspend fun get(@Path("id") id: String): Response<ChildEnvelope>
-
-    @PUT("api/v1/children/{id}")
-    suspend fun update(@Path("id") id: String, @Body body: ChildProfile): Response<ChildEnvelope>
-
-    @DELETE("api/v1/children/{id}")
-    suspend fun delete(@Path("id") id: String): Response<Unit>
 }
 
 // ── Service ──────────────────────────────────────────────────────────────────
@@ -69,12 +57,7 @@ object ChildrenApiService {
             .create(DashboardChildrenApi::class.java)
     }
 
-    sealed class Result {
-        data class Success(val child: ChildProfile?) : Result()
-        data class Error(val message: String) : Result()
-    }
-
-    /** List the parent's children (null on failure). */
+    /** List the parent's children (null on failure). Display-only. */
     suspend fun list(): List<ChildProfile>? = withContext(Dispatchers.IO) {
         try {
             val response = api.list()
@@ -86,40 +69,13 @@ object ChildrenApiService {
         }
     }
 
+    /** Fetch one child for the read-only detail screen (null on failure). */
     suspend fun get(id: String): ChildProfile? = withContext(Dispatchers.IO) {
         try {
             val response = api.get(id)
             if (response.isSuccessful) response.body()?.child else null
         } catch (e: Exception) {
             Log.e(TAG, "get error: ${e.message}"); null
-        }
-    }
-
-    suspend fun create(body: ChildProfile): Result = withContext(Dispatchers.IO) {
-        try {
-            val response = api.create(body)
-            if (response.isSuccessful) Result.Success(response.body()?.child)
-            else Result.Error("HTTP ${response.code()}")
-        } catch (e: Exception) {
-            Log.e(TAG, "create error: ${e.message}"); Result.Error(e.message ?: "network error")
-        }
-    }
-
-    suspend fun update(id: String, body: ChildProfile): Result = withContext(Dispatchers.IO) {
-        try {
-            val response = api.update(id, body)
-            if (response.isSuccessful) Result.Success(response.body()?.child)
-            else Result.Error("HTTP ${response.code()}")
-        } catch (e: Exception) {
-            Log.e(TAG, "update error: ${e.message}"); Result.Error(e.message ?: "network error")
-        }
-    }
-
-    suspend fun delete(id: String): Boolean = withContext(Dispatchers.IO) {
-        try {
-            api.delete(id).isSuccessful
-        } catch (e: Exception) {
-            Log.e(TAG, "delete error: ${e.message}"); false
         }
     }
 }

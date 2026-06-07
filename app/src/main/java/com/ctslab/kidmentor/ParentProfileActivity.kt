@@ -2,8 +2,6 @@ package com.ctslab.kidmentor
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -13,18 +11,18 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 
 /**
- * "Thông tin phụ huynh" — the account owner's own profile (Họ tên, SĐT; email read-only).
- * Reads/writes Dashboard /api/v1/profile. Student info lives on children ([ChildrenActivity]).
+ * "Thông tin phụ huynh" — READ-ONLY view of the account owner's own profile
+ * (Họ tên, SĐT, Email), fetched from Dashboard /api/v1/profile and displayed as plain
+ * text. The parent edits this information on the Dashboard, not in the app — there is no
+ * EditText and no save button here. Student info lives on children ([ChildrenActivity]).
  */
 class ParentProfileActivity : AppCompatActivity() {
 
-    private lateinit var etName: EditText
-    private lateinit var etPhone: EditText
-    private lateinit var etEmail: EditText
-    private lateinit var btnSave: Button
+    private lateinit var tvName: TextView
+    private lateinit var tvPhone: TextView
+    private lateinit var tvEmail: TextView
     private lateinit var tvError: TextView
     private lateinit var progress: ProgressBar
-    private var saving = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,59 +35,41 @@ class ParentProfileActivity : AppCompatActivity() {
             return
         }
 
-        etName = findViewById(R.id.etParentName)
-        etPhone = findViewById(R.id.etParentPhone)
-        etEmail = findViewById(R.id.etParentEmail)
-        btnSave = findViewById(R.id.btnParentSave)
+        tvName = findViewById(R.id.tvParentName)
+        tvPhone = findViewById(R.id.tvParentPhone)
+        tvEmail = findViewById(R.id.tvParentEmail)
         tvError = findViewById(R.id.tvParentError)
         progress = findViewById(R.id.progressParent)
 
         findViewById<ImageView>(R.id.btnBack).setOnClickListener { finish() }
-        btnSave.setOnClickListener { attemptSave() }
 
-        etEmail.setText(TokenManager.getEmail() ?: "")
+        // Pre-fill the account email from the stored token while the network call runs.
+        tvEmail.text = TokenManager.getEmail()?.takeIf { it.isNotBlank() }
+            ?: getString(R.string.family_value_placeholder)
+
         loadProfile()
     }
 
     private fun loadProfile() {
         progress.visibility = View.VISIBLE
+        hideError()
         lifecycleScope.launch {
             val p = ProfileApiService.getProfile()
             progress.visibility = View.GONE
             if (p != null) {
-                etName.setText(p.fullName ?: "")
-                etPhone.setText(p.phone ?: "")
-                if (!p.email.isNullOrBlank()) etEmail.setText(p.email)
+                tvName.text = p.fullName?.takeIf { it.isNotBlank() }
+                    ?: p.displayName?.takeIf { it.isNotBlank() }
+                    ?: p.username?.takeIf { it.isNotBlank() }
+                    ?: getString(R.string.family_value_placeholder)
+                tvPhone.text = p.phone?.takeIf { it.isNotBlank() }
+                    ?: getString(R.string.family_value_placeholder)
+                val email = p.email?.takeIf { it.isNotBlank() } ?: TokenManager.getEmail()
+                tvEmail.text = email?.takeIf { it.isNotBlank() }
+                    ?: getString(R.string.family_value_placeholder)
+            } else {
+                showError(getString(R.string.student_load_error))
             }
         }
-    }
-
-    private fun attemptSave() {
-        if (saving) return
-        hideError()
-        setSaving(true)
-        val body = ParentProfile(
-            fullName = etName.text.toString().trim(),
-            phone = etPhone.text.toString().trim()
-        )
-        lifecycleScope.launch {
-            when (ProfileApiService.updateProfile(body)) {
-                is ProfileApiService.Result.Success -> {
-                    Toast.makeText(this@ParentProfileActivity, getString(R.string.student_saved), Toast.LENGTH_SHORT).show()
-                    finish()
-                }
-                is ProfileApiService.Result.Error -> {
-                    setSaving(false); showError(getString(R.string.student_save_error))
-                }
-            }
-        }
-    }
-
-    private fun setSaving(value: Boolean) {
-        saving = value
-        btnSave.isEnabled = !value
-        btnSave.text = if (value) getString(R.string.student_saving) else getString(R.string.child_save)
-        progress.visibility = if (value) View.VISIBLE else View.GONE
     }
 
     private fun showError(message: String) { tvError.text = message; tvError.visibility = View.VISIBLE }

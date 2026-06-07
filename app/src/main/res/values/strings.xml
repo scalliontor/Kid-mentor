@@ -206,11 +206,14 @@
     <string name="children_unnamed">Bé</string>
     <string name="children_no_class">Chưa đặt lớp/bộ sách</string>
     <string name="children_active_badge">✓ Đang dùng</string>
-    <string name="children_edit">Sửa</string>
-    <string name="children_delete">Xoá</string>
-    <string name="children_delete_title">Xoá hồ sơ bé?</string>
-    <string name="children_delete_message">Xoá hồ sơ của %1$s? Lịch sử trò chuyện của bé cũng sẽ bị xoá.</string>
+    <string name="children_view_detail">Xem chi tiết</string>
     <string name="children_now_active">Đang học cùng %1$s</string>
+
+    <!-- Read-only: hồ sơ được quản lý trên Dashboard, không sửa trong app -->
+    <string name="family_value_placeholder">—</string>
+    <string name="children_edit_on_dashboard">Thêm hoặc chỉnh sửa hồ sơ bé trên trang quản lý (Dashboard).</string>
+    <string name="children_add_on_dashboard">Chưa có hồ sơ bé nào. Vui lòng thêm bé trên trang quản lý (Dashboard).</string>
+    <string name="profile_edit_on_dashboard">Thông tin chỉ để xem. Cập nhật trên trang quản lý (Dashboard).</string>
 
     <!-- Main screen active-child -->
     <string name="main_active_child_fmt">Bé %1$s đang học · chạm để đổi bé</string>

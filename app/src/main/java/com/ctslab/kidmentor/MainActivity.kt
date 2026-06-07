@@ -138,7 +138,12 @@ class MainActivity : AppCompatActivity() {
             val children = ChildrenApiService.list()
             if (children == null) return@launch
             if (children.isEmpty()) {
-                startActivity(android.content.Intent(this@MainActivity, ChildInfoActivity::class.java))
+                // Children are added on the Dashboard, not in the app.
+                android.widget.Toast.makeText(
+                    this@MainActivity,
+                    getString(R.string.children_add_on_dashboard),
+                    android.widget.Toast.LENGTH_LONG
+                ).show()
                 return@launch
             }
             val names = children.map { it.fullName ?: getString(R.string.children_unnamed) }.toTypedArray()
@@ -159,7 +164,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * After first login, prompt the parent once to add a child if they have none.
+     * After first login, auto-select the parent's only child so the AI is personalized
+     * immediately. Children themselves are added/edited on the Dashboard, not in the app,
+     * so when there are none we just point the parent there (no in-app create screen).
      * A transient network failure leaves the flag unset so it's retried next launch.
      */
     private fun maybePromptAddChild() {
@@ -178,10 +185,11 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             if (children.isEmpty()) {
-                startActivity(
-                    android.content.Intent(this@MainActivity, ChildInfoActivity::class.java)
-                        .putExtra(ChildInfoActivity.EXTRA_ONBOARDING, true)
-                )
+                android.widget.Toast.makeText(
+                    this@MainActivity,
+                    getString(R.string.children_add_on_dashboard),
+                    android.widget.Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
