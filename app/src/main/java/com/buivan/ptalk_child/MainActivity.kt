@@ -92,9 +92,9 @@ class MainActivity : AppCompatActivity() {
 
         TokenManager.init(this)
         ActiveChild.init(this)
-        // Scope the Dashboard chat session to the active child (falls back to null →
-        // backend resolves the user from the auth token) so chat history follows the child.
-        DashboardChatApi.startNewSession(ActiveChild.getUsername())
+        // Auto-pick the (first) child as the active learner: greet them by name + scope
+        // chat/banned-words/RAG to that child (no in-app switching). Falls back to parent.
+        resolveActiveChildAndGreet()
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -115,6 +115,25 @@ class MainActivity : AppCompatActivity() {
 
         streamingVoiceClient.preconnect()
         runHttpHealthDiagnostic()
+    }
+
+    /**
+     * Fetch the parent's children, make the first one the active learner (so the backend
+     * scopes chat / banned-words / RAG per child) and personalise the home greeting by name.
+     * A single child is auto-selected — no in-app switching.
+     */
+    private fun resolveActiveChildAndGreet() {
+        lifecycleScope.launch {
+            val child = ChildrenApiService.list()?.firstOrNull()
+            if (child != null && !child.username.isNullOrBlank()) {
+                ActiveChild.set(child.id ?: "", child.username!!, child.fullName)
+                val name = child.fullName?.takeIf { it.isNotBlank() } ?: "Bé"
+                binding.tvGreeting.text = getString(R.string.main_greeting_child, name)
+                binding.tvSubGreeting.text = getString(R.string.main_sub_greeting_child)
+            }
+            // Start the chat session scoped to the resolved identity (child if set, else parent).
+            DashboardChatApi.startNewSession(ActiveChild.getUsername())
+        }
     }
 
     override fun onResume() {0
