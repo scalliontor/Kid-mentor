@@ -187,7 +187,7 @@
             <EditText android:id="@+id/etPassword" android:visibility="gone" android:layout_width="0dp" android:layout_height="0dp" />
             <androidx.appcompat.widget.AppCompatButton android:id="@+id/btnLogin" android:visibility="gone" android:layout_width="0dp" android:layout_height="0dp" />
 
-            <!-- Register link -->
+            <!-- Register link — gỡ khỏi UI (chỉ đăng nhập qua SSO) -->
             <TextView
                 android:id="@+id/tvRegisterLink"
                 android:layout_width="match_parent"
@@ -199,8 +199,9 @@
                 android:gravity="center"
                 android:paddingTop="16dp"
                 android:paddingBottom="8dp"
-                android:clickable="true"
-                android:focusable="true" />
+                android:clickable="false"
+                android:focusable="false"
+                android:visibility="gone" />
 
         </LinearLayout>
 

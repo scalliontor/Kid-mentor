@@ -36,6 +36,11 @@ class HomeProfileActivity : AppCompatActivity() {
             finish()
         }
 
+        // Family info (read-only parent + children)
+        findViewById<View>(R.id.cardFamilyInfo).setOnClickListener {
+            startActivity(Intent(this, FamilyInfoActivity::class.java))
+        }
+
         // Logout
         findViewById<Button>(R.id.btnLogout).setOnClickListener {
             if (TokenManager.isLoggedIn()) {

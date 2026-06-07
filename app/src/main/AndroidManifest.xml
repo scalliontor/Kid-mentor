@@ -66,6 +66,11 @@
             android:name=".HomeProfileActivity"
             android:exported="false" />
 
+        <!-- FamilyInfoActivity — màn hình xem (read-only) thông tin phụ huynh & con -->
+        <activity
+            android:name=".FamilyInfoActivity"
+            android:exported="false" />
+
         <!-- Tự động lưu và khôi phục ngôn ngữ đã chọn qua AndroidX AppCompat -->
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"

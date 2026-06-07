@@ -86,10 +86,7 @@ class LoginActivity : AppCompatActivity() {
             goToMain(isGuest = true)
         }
 
-        // Link đăng ký
-        binding.tvRegisterLink.setOnClickListener {
-            startActivity(Intent(this, RegisterActivity::class.java))
-        }
+        // Đăng ký đã bị gỡ khỏi luồng UI — chỉ đăng nhập qua SSO/Authentik.
 
         // Check for auth error from callback
         intent.getStringExtra("auth_error")?.let { error ->

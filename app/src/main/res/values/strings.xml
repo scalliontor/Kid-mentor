@@ -104,4 +104,23 @@
     <string name="profile_tier_pro">Pro Member</string>
     <string name="profile_tier_basic">Thành viên miễn phí</string>
     <string name="profile_upgrade_coming_soon">Tính năng thanh toán đang phát triển</string>
+
+    <!-- Family info (read-only) -->
+    <string name="profile_family_info">Thông tin gia đình</string>
+    <string name="profile_family_info_sub">Xem thông tin phụ huynh &amp; con</string>
+    <string name="family_header">THÔNG TIN GIA ĐÌNH</string>
+    <string name="family_parent_section">PHỤ HUYNH</string>
+    <string name="family_children_section">CON</string>
+    <string name="family_children_empty">Chưa có hồ sơ con nào.</string>
+    <string name="family_label_fullname">Họ tên</string>
+    <string name="family_label_dob">Ngày sinh</string>
+    <string name="family_label_phone">Số điện thoại</string>
+    <string name="family_label_email">Email</string>
+    <string name="family_label_child_name">Tên con</string>
+    <string name="family_label_grade">Lớp</string>
+    <string name="family_label_curriculum">Chương trình học</string>
+    <string name="family_grade_fmt">Lớp %1$s</string>
+    <string name="family_value_placeholder">—</string>
+    <string name="family_login_required">Vui lòng đăng nhập để xem thông tin gia đình.</string>
+    <string name="family_load_error">Không tải được thông tin gia đình. Kiểm tra mạng và thử lại.</string>
 </resources>

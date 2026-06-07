@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="14dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="3dp"
+    app:cardBackgroundColor="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Tên -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/family_label_child_name"
+            android:textSize="12sp"
+            android:textColor="#9E9EA0"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.05" />
+
+        <TextView
+            android:id="@+id/tvChildName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/family_value_placeholder"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#111111"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="14dp" />
+
+        <!-- Ngày sinh -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/family_label_dob"
+            android:textSize="12sp"
+            android:textColor="#9E9EA0"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.05" />
+
+        <TextView
+            android:id="@+id/tvChildDob"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/family_value_placeholder"
+            android:textSize="16sp"
+            android:textColor="#111111"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="14dp" />
+
+        <!-- Lớp -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/family_label_grade"
+            android:textSize="12sp"
+            android:textColor="#9E9EA0"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.05" />
+
+        <TextView
+            android:id="@+id/tvChildGrade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/family_value_placeholder"
+            android:textSize="16sp"
+            android:textColor="#111111"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="14dp" />
+
+        <!-- Chương trình học -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/family_label_curriculum"
+            android:textSize="12sp"
+            android:textColor="#9E9EA0"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.05" />
+
+        <TextView
+            android:id="@+id/tvChildCurriculum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/family_value_placeholder"
+            android:textSize="16sp"
+            android:textColor="#111111"
+            android:layout_marginTop="2dp" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
