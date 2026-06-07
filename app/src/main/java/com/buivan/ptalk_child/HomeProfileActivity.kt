@@ -18,6 +18,7 @@ class HomeProfileActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home_profile)
 
         TokenManager.init(this)
+        ActiveChild.init(this)
 
         setupClickListeners()
 
@@ -46,6 +47,8 @@ class HomeProfileActivity : AppCompatActivity() {
             if (TokenManager.isLoggedIn()) {
                 TokenManager.clearTokens()
             }
+            // Clear the active child so the next account doesn't inherit it as device_id.
+            ActiveChild.clear()
             val intent = Intent(this, LoginActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }

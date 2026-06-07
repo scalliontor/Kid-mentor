@@ -91,7 +91,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         TokenManager.init(this)
-        DashboardChatApi.startNewSession()
+        ActiveChild.init(this)
+        // Scope the Dashboard chat session to the active child (falls back to null →
+        // backend resolves the user from the auth token) so chat history follows the child.
+        DashboardChatApi.startNewSession(ActiveChild.getUsername())
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

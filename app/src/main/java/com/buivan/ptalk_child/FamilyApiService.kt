@@ -36,6 +36,7 @@ data class ParentProfileEnvelope(
  */
 data class ChildProfile(
     @SerializedName("id") val id: String? = null,
+    @SerializedName("username") val username: String? = null,       // "child_xxx" — sent as device_id to scope the backend to this child
     @SerializedName("fullName") val fullName: String? = null,
     @SerializedName("grade") val grade: String? = null,            // "1".."12"
     @SerializedName("dateOfBirth") val dateOfBirth: String? = null, // "YYYY-MM-DD"

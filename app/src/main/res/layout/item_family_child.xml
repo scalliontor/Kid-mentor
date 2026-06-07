@@ -15,6 +15,23 @@
         android:orientation="vertical"
         android:padding="20dp">
 
+        <!-- "Đang dùng" badge — visible only on the active child -->
+        <TextView
+            android:id="@+id/tvChildActiveBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/family_child_active_badge"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/bg_active_child_badge"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:layout_marginBottom="10dp"
+            android:visibility="gone" />
+
         <!-- Tên -->
         <TextView
             android:layout_width="wrap_content"

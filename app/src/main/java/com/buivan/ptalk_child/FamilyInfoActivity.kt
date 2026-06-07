@@ -44,6 +44,7 @@ class FamilyInfoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_family_info)
 
         TokenManager.init(this)
+        ActiveChild.init(this)
         if (!TokenManager.isLoggedIn()) {
             Toast.makeText(this, getString(R.string.family_login_required), Toast.LENGTH_SHORT).show()
             finish()
@@ -117,6 +118,27 @@ class FamilyInfoActivity : AppCompatActivity() {
             card.findViewById<TextView>(R.id.tvChildDob).text = displayDate(child.dateOfBirth)
             card.findViewById<TextView>(R.id.tvChildGrade).text = displayGrade(child.grade)
             card.findViewById<TextView>(R.id.tvChildCurriculum).text = displayCurriculum(child.curriculum)
+
+            // "Đang dùng" badge on the currently-selected child.
+            val isActive = !child.id.isNullOrBlank() && child.id == ActiveChild.getId()
+            card.findViewById<TextView>(R.id.tvChildActiveBadge).visibility =
+                if (isActive) View.VISIBLE else View.GONE
+
+            // Tap a card → make this child the active session identity. The username
+            // (child_xxx) is what gets sent as device_id so the backend scopes per child.
+            card.setOnClickListener {
+                val id = child.id
+                val username = child.username
+                if (!id.isNullOrBlank() && !username.isNullOrBlank()) {
+                    ActiveChild.set(id, username, child.fullName)
+                    Toast.makeText(
+                        this,
+                        getString(R.string.family_now_active, child.fullName ?: ""),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    load() // refresh so the badge moves to the newly-selected child
+                }
+            }
             containerChildren.addView(card)
         }
     }

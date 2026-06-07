@@ -123,4 +123,6 @@
     <string name="family_value_placeholder">—</string>
     <string name="family_login_required">Vui lòng đăng nhập để xem thông tin gia đình.</string>
     <string name="family_load_error">Không tải được thông tin gia đình. Kiểm tra mạng và thử lại.</string>
+    <string name="family_child_active_badge">✓ Đang dùng</string>
+    <string name="family_now_active">Đang học cùng %1$s</string>
 </resources>
