@@ -30,7 +30,11 @@ data class ParentProfile(
     @SerializedName("displayName") val displayName: String? = null,
     @SerializedName("fullName") val fullName: String? = null,
     @SerializedName("phone") val phone: String? = null,
-    @SerializedName("dateOfBirth") val dateOfBirth: String? = null   // "YYYY-MM-DD"
+    @SerializedName("dateOfBirth") val dateOfBirth: String? = null,  // "YYYY-MM-DD"
+    // Subscription tier is the DB source of truth (users.subscription_tier on the PARENT
+    // account) — NOT the JWT, which carries no subscription_tier claim. "basic"|"pro"|"ultra".
+    @SerializedName("subscriptionTier") val subscriptionTier: String? = null,
+    @SerializedName("isSuperuser") val isSuperuser: Boolean = false
 )
 
 data class ParentProfileEnvelope(

@@ -11,14 +11,18 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 /**
  * Standalone subscription / plans screen ("Gói Đăng Ký").
  *
- * The three plans differ only by daily question quota. The user's current tier is
- * resolved from the Authentik JWT access-token claims (subscription_tier /
- * is_superuser); if the user is a guest or the claim is absent it falls back to the
- * free "Cơ Bản" tier. Upgrades route to a contact email — there is no payment flow yet.
+ * The three plans differ only by daily question quota. The user's current tier is the
+ * DB source of truth — `users.subscription_tier` on the PARENT account, fetched from
+ * /api/v1/profile (subscriptionTier / isSuperuser). The Authentik JWT carries NO
+ * subscription_tier claim, so it can only be used as a guest/offline fallback to the
+ * free "Cơ Bản" tier when the profile API call fails. Upgrades route to a contact
+ * email — there is no payment flow yet.
  */
 class SubscriptionActivity : AppCompatActivity() {
 
@@ -29,7 +33,7 @@ class SubscriptionActivity : AppCompatActivity() {
     private lateinit var plans: List<Plan>
     private val tabIds = listOf(R.id.tabPlanBasic, R.id.tabPlanPro, R.id.tabPlanUltra)
     private var appMode: AppMode = AppMode.KID_MENTOR
-    private var currentTier = "basic"   // resolved from the signed-in user's JWT
+    private var currentTier = "basic"   // DB source of truth (/api/v1/profile); "basic" until resolved
     private var selectedIndex = 1       // showcase Pro first
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,8 +41,6 @@ class SubscriptionActivity : AppCompatActivity() {
         setContentView(R.layout.activity_subscription)
 
         TokenManager.init(this)
-        currentTier = resolveTier(TokenManager.getAccessToken())
-        selectedIndex = when (currentTier) { "pro" -> 1; "ultra", "admin" -> 2; else -> 1 }
 
         val modeName = intent.getStringExtra(ModeSelectActivity.EXTRA_APP_MODE)
         appMode = modeName?.let { AppMode.valueOf(it) } ?: AppMode.KID_MENTOR
@@ -60,7 +62,34 @@ class SubscriptionActivity : AppCompatActivity() {
         tabIds.forEachIndexed { i, id ->
             findViewById<TextView>(id).setOnClickListener { selectPlan(i) }
         }
+
+        // Render immediately with the fallback "basic" so the screen is never blank,
+        // then resolve the real tier from the DB (/api/v1/profile) and re-evaluate.
+        selectedIndex = 1
         selectPlan(selectedIndex)
+        resolveTierAsync()
+    }
+
+    /**
+     * Fetch the PARENT profile from /api/v1/profile and set [currentTier] from
+     * profile.subscriptionTier (isSuperuser → "admin", the highest tier). The JWT has
+     * no subscription_tier claim, so it is only a guest/offline fallback: if the API
+     * call fails (or returns no tier) we keep "basic". After resolving, rebuild the
+     * selected plan + re-evaluate which plan is "Đang dùng" vs upgradeable.
+     */
+    private fun resolveTierAsync() {
+        lifecycleScope.launch {
+            val profile = ProfileApiService.getProfile()
+            val resolved = when {
+                profile == null -> "basic"                       // API failed → guest/offline fallback
+                profile.isSuperuser -> "admin"
+                else -> profile.subscriptionTier?.ifBlank { null } ?: "basic"
+            }
+            currentTier = resolved
+            // Pre-select the user's current tier (or showcase Pro if they're on basic).
+            selectedIndex = when (currentTier) { "pro" -> 1; "ultra", "admin" -> 2; else -> 1 }
+            selectPlan(selectedIndex)
+        }
     }
 
     /** Mode-aware accent (green for Kid Mentor, orange for Elder Care). */
@@ -140,29 +169,5 @@ class SubscriptionActivity : AppCompatActivity() {
             }
             .setNegativeButton(R.string.plan_close, null)
             .show()
-    }
-
-    /**
-     * Resolve the subscription tier from the JWT access-token claims
-     * (subscription_tier / is_superuser). Any decode failure or missing token
-     * (e.g. guest mode) falls back to the free tier.
-     */
-    private fun resolveTier(token: String?): String {
-        if (token.isNullOrBlank()) return "basic"
-        return try {
-            val parts = token.split(".")
-            if (parts.size < 2) return "basic"
-            val payload = String(
-                android.util.Base64.decode(
-                    parts[1],
-                    android.util.Base64.URL_SAFE or android.util.Base64.NO_WRAP or android.util.Base64.NO_PADDING
-                )
-            )
-            val json = org.json.JSONObject(payload)
-            if (json.optBoolean("is_superuser", false)) "admin"
-            else json.optString("subscription_tier", "basic").ifBlank { "basic" }
-        } catch (e: Exception) {
-            "basic"
-        }
     }
 }
