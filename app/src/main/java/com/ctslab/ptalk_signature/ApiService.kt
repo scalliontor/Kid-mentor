@@ -105,24 +105,24 @@ class ApiService(private val context: Context) {
                             Log.d(TAG, "Nhận WAV thành công: ${outputFile.length()} bytes")
                             callback.onSuccess(outputFile)
                         } else {
-                            callback.onError("Không lưu được file audio trả về")
+                            callback.onError(context.getString(R.string.api_err_save_failed))
                         }
                     } else {
-                        callback.onError("Server trả về dữ liệu rỗng")
+                        callback.onError(context.getString(R.string.api_err_empty))
                     }
                 }
-                response.code() == 400 -> callback.onError("Có lỗi xảy ra khi đọc file thu âm.")
-                response.code() == 500 -> callback.onError("Hệ thống đang bận, bé thử lại sau nhé!")
-                response.code() == 504 -> callback.onError("Mạng bị chậm hoặc chờ quá lâu, bé thử lại nhé!")
-                else -> callback.onError("Lỗi không xác định: ${response.code()}")
+                response.code() == 400 -> callback.onError(context.getString(R.string.api_err_read_audio))
+                response.code() == 500 -> callback.onError(context.getString(R.string.api_err_busy))
+                response.code() == 504 -> callback.onError(context.getString(R.string.api_err_timeout))
+                else -> callback.onError(context.getString(R.string.api_err_unknown, response.code()))
             }
 
         } catch (e: java.net.SocketTimeoutException) {
             Log.e(TAG, "Timeout: ${e.message}")
-            callback.onError("Không kết nối được server. Kiểm tra server demo hoặc mạng.")
+            callback.onError(context.getString(R.string.error_no_server))
         } catch (e: Exception) {
             Log.e(TAG, "Lỗi: ${e.message}")
-            callback.onError("Không kết nối được server. Kiểm tra server demo hoặc mạng.")
+            callback.onError(context.getString(R.string.error_no_server))
         }
     }
 

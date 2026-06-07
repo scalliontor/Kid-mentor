@@ -100,7 +100,9 @@ class CharacterAnimator(private val imageView: ImageView) {
 //    }
     fun playUploading() {
         stopCurrent()
-        imageView.setImageResource(R.drawable.char_thinking_3)
+        // Dùng ảnh full-frame (1024×1536) giống idle/listening để kích thước nhân vật
+        // đồng nhất giữa các trạng thái (char_thinking_3 là bản crop sát nên trông to hơn).
+        imageView.setImageResource(R.drawable.char_thinking)
         imageView.rotation = 0f  // reset rotation từ state trước nếu có
 
         val scaleUp = ObjectAnimator.ofFloat(imageView, "scaleX", 1f, 1.08f).apply {
@@ -140,7 +142,9 @@ class CharacterAnimator(private val imageView: ImageView) {
     // ─── PLAYING: nảy → đang nói ──────────────────────────────────────────
     fun playPlaying() {
         stopCurrent()
-        imageView.setImageResource(R.drawable.char_talking_2)    // ← đổi ảnh
+        // Dùng ảnh full-frame (1024×1536) cùng khung với idle để khi "đang nói" nhân vật
+        // không bị phóng to hơn các trạng thái khác (char_talking_2 là bản crop sát).
+        imageView.setImageResource(R.drawable.char_talking)    // ← đổi ảnh
 
         // Reset rotation về 0 từ state trước (UPLOADING có xoay)
         imageView.rotation = 0f

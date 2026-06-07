@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- READ-ONLY child card, inflated into containerChildren of activity_parent_child_info. -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/SettingsCard"
+    android:layout_marginTop="@dimen/space_s"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp">
+
+    <!-- Tên -->
+    <LinearLayout style="@style/InfoFieldRow">
+        <TextView
+            style="@style/InfoFieldLabel"
+            android:text="@string/info_child_name" />
+        <TextView
+            android:id="@+id/tvChildNameValue"
+            style="@style/InfoFieldValue" />
+    </LinearLayout>
+
+    <View style="@style/SettingsDivider" />
+
+    <!-- Ngày sinh -->
+    <LinearLayout style="@style/InfoFieldRow">
+        <TextView
+            style="@style/InfoFieldLabel"
+            android:text="@string/info_child_dob" />
+        <TextView
+            android:id="@+id/tvChildDobValue"
+            style="@style/InfoFieldValue" />
+    </LinearLayout>
+
+    <View style="@style/SettingsDivider" />
+
+    <!-- Lớp -->
+    <LinearLayout style="@style/InfoFieldRow">
+        <TextView
+            style="@style/InfoFieldLabel"
+            android:text="@string/info_child_grade" />
+        <TextView
+            android:id="@+id/tvChildGradeValue"
+            style="@style/InfoFieldValue" />
+    </LinearLayout>
+
+    <View style="@style/SettingsDivider" />
+
+    <!-- Chương trình học -->
+    <LinearLayout style="@style/InfoFieldRow">
+        <TextView
+            style="@style/InfoFieldLabel"
+            android:text="@string/info_child_curriculum" />
+        <TextView
+            android:id="@+id/tvChildCurriculumValue"
+            style="@style/InfoFieldValue" />
+    </LinearLayout>
+</LinearLayout>

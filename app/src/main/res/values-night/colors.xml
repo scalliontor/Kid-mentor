@@ -1,88 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Dark mode (charcoal/neutral). Brand accents stay vivid; neutrals flip. -->
+<!-- Dark mode — "purple night" palette (inspired by KidMentor #1B1947).
+     Mềm mắt & thân thiện hơn charcoal đen, vẫn đủ tối. Tên màu giữ nguyên để
+     không phải sửa layout/drawable; chỉ thay giá trị. -->
 <resources>
     <!-- Login text/lines reused across screens -->
-    <color name="color_login_bg">#121212</color>
-    <color name="color_login_headline">#ECECEC</color>
-    <color name="color_login_subheadline">#A8A8AA</color>
-    <color name="color_login_label">#A8A8AA</color>
-    <color name="color_login_input_text">#ECECEC</color>
-    <color name="color_login_input_hint">#7E7E82</color>
-    <color name="color_login_guest_text">#ECECEC</color>
-    <color name="color_login_divider_text">#7E7E82</color>
-    <color name="color_login_divider_line">#333333</color>
-    <color name="color_login_footer">#7E7E82</color>
-    <color name="color_link_blue">#5B9BFF</color>
+    <color name="color_login_bg">#1B1947</color>
+    <color name="color_login_headline">#FFFFFF</color>
+    <color name="color_login_subheadline">#B7AFD6</color>
+    <color name="color_login_label">#B7AFD6</color>
+    <color name="color_login_input_text">#F2EFFB</color>
+    <color name="color_login_input_hint">#8579B0</color>
+    <color name="color_login_guest_text">#ECE7FA</color>
+    <color name="color_login_divider_text">#8579B0</color>
+    <color name="color_login_divider_line">#34306A</color>
+    <color name="color_login_footer">#8579B0</color>
+    <color name="color_link_blue">#8FA8FF</color>
 
     <!-- Semantic palette -->
-    <color name="surface_card">#1E1E1E</color>
-    <color name="surface_input">#262626</color>
-    <color name="screen_bg">#121212</color>
-    <color name="text_primary">#ECECEC</color>
-    <color name="text_secondary">#A8A8AA</color>
-    <color name="text_body">#C4C4C6</color>
-    <color name="text_muted">#7E7E82</color>
-    <color name="divider_subtle">#2C2C2C</color>
-    <color name="outline_soft">#3A3A3C</color>
-    <color name="icon_neutral">#C4C4C6</color>
+    <color name="surface_card">#241F4E</color>
+    <color name="surface_input">#2B2658</color>
+    <color name="screen_bg">#1B1947</color>
+    <color name="text_primary">#F2EFFB</color>
+    <color name="text_secondary">#B7AFD6</color>
+    <color name="text_body">#D2CBEC</color>
+    <color name="text_muted">#8579B0</color>
+    <color name="divider_subtle">#2A2658</color>
+    <color name="outline_soft">#463F78</color>
+    <color name="icon_neutral">#D2CBEC</color>
 
-    <!-- Main-screen action icons (call + settings) — dark theme already reads well, kept as-is -->
-    <color name="icon_main_settings">#C4C4C6</color>
-    <color name="icon_main_emergency">#C0392B</color>
-    <!-- Soft circular chip (subtle on charcoal) -->
-    <color name="icon_btn_soft_bg">#1FFFFFFF</color>
-    <color name="icon_btn_soft_stroke">#33FFFFFF</color>
+    <!-- Main-screen action icons (call + settings) -->
+    <color name="icon_main_settings">#D2CBEC</color>
+    <color name="icon_main_emergency">#FF6B6B</color>
+    <!-- Soft circular chip (subtle on purple night) -->
+    <color name="icon_btn_soft_bg">#24FFFFFF</color>
+    <color name="icon_btn_soft_stroke">#3DFFFFFF</color>
     <color name="icon_btn_soft_press">#33FFFFFF</color>
 
-    <!-- Accents: keep brand identity (read well on charcoal) -->
+    <!-- Accents: keep brand identity; brighten so they pop on purple -->
     <color name="accent_kid">#5DC264</color>
-    <color name="accent_kid_dark">#7FD79A</color>
+    <color name="accent_kid_dark">#8FF0C6</color>
     <color name="accent_elder">#F08A3C</color>
-    <color name="accent_elder_dark">#F0A868</color>
+    <color name="accent_elder_dark">#F5B277</color>
 
     <!-- Theme picker -->
-    <color name="theme_pick_selected_bg">#2A2A2A</color>
-    <color name="theme_pick_selected_text">#ECECEC</color>
+    <color name="theme_pick_selected_bg">#2E2A66</color>
+    <color name="theme_pick_selected_text">#F2EFFB</color>
 
-    <!-- Drawable-support colors (charcoal) -->
-    <color name="card_stroke">#2E2E2E</color>
-    <color name="glass_top">#FF2C2C2C</color>
-    <color name="glass_mid">#FF262626</color>
-    <color name="glass_bottom">#FF1F1F1F</color>
-    <color name="glass_stroke">#3A3A3C</color>
-    <color name="screen_grad_top">#15211B</color>
-    <color name="screen_grad_mid">#131A17</color>
-    <color name="screen_grad_bottom">#121212</color>
-    <color name="card_kid_grad">#1E241F</color>
-    <color name="card_elder_grad">#241E18</color>
-    <color name="badge_kid_bg">#20302A</color>
-    <color name="badge_elder_bg">#2E2418</color>
-    <color name="halo_kid">#213029</color>
-    <color name="halo_elder">#2E2418</color>
-    <color name="hero_halo_center">#1AFFFFFF</color>
-    <color name="logout_stroke">#5A2E2E</color>
-    <color name="logout_press">#2A1C1C</color>
-    <color name="camera_ring">#2E2418</color>
-    <color name="camera_edge">#6A4A2A</color>
-    <color name="plan_pill">#2E2E2E</color>
+    <!-- Drawable-support colors (purple night) -->
+    <color name="card_stroke">#322C63</color>
+    <color name="glass_top">#FF2A2560</color>
+    <color name="glass_mid">#FF231E50</color>
+    <color name="glass_bottom">#FF1C1842</color>
+    <color name="glass_stroke">#40FFFFFF</color>
+    <color name="screen_grad_top">#252056</color>
+    <color name="screen_grad_mid">#1B1947</color>
+    <color name="screen_grad_bottom">#14122E</color>
+    <color name="card_kid_grad">#232A55</color>
+    <color name="card_elder_grad">#2A2350</color>
+    <color name="badge_kid_bg">#243352</color>
+    <color name="badge_elder_bg">#33284E</color>
+    <color name="halo_kid">#263151</color>
+    <color name="halo_elder">#322A52</color>
+    <color name="hero_halo_center">#1FFFFFFF</color>
+    <color name="logout_stroke">#6A3A52</color>
+    <color name="logout_press">#2A1C3A</color>
+    <color name="camera_ring">#322A52</color>
+    <color name="camera_edge">#6A4A8A</color>
+    <color name="plan_pill">#2E2A66</color>
 
-    <!-- Main-screen greeting/status (brightened for dark) + elder gradient -->
-    <color name="greeting_kid">#8FD9B5</color>
-    <color name="greeting_elder">#F0A868</color>
-    <color name="subgreeting_elder">#E89A5C</color>
-    <color name="status_kid">#9CC3B0</color>
-    <color name="elder_grad_top">#241C16</color>
-    <color name="elder_grad_mid">#1B1714</color>
-    <color name="elder_grad_bottom">#121212</color>
+    <!-- Main-screen greeting/status (brightened for purple) + elder gradient -->
+    <color name="greeting_kid">#8FF0C6</color>
+    <color name="greeting_elder">#F5B277</color>
+    <color name="subgreeting_elder">#EDA86A</color>
+    <color name="status_kid">#CFC6F0</color>
+    <color name="elder_grad_top">#2E2552</color>
+    <color name="elder_grad_mid">#221C46</color>
+    <color name="elder_grad_bottom">#161334</color>
 
-    <!-- Primary pill button — lighter charcoal so it reads on the dark background -->
-    <color name="btn_primary_bg">#3A3A3A</color>
-    <color name="btn_primary_pressed">#4D4D4D</color>
-    <color name="btn_primary_disabled">#2A2A2A</color>
+    <!-- Primary pill button — deep indigo so it reads on the purple background -->
+    <color name="btn_primary_bg">#3E3585</color>
+    <color name="btn_primary_pressed">#4C4299</color>
+    <color name="btn_primary_disabled">#2A2658</color>
 
     <!-- Frosted greeting card + splash logo card (dark) -->
-    <color name="greeting_card_top">#2EFFFFFF</color>
-    <color name="greeting_card_bottom">#1AFFFFFF</color>
-    <color name="greeting_card_stroke">#33FFFFFF</color>
-    <color name="splash_logo_card">#1E1E1E</color>
+    <color name="greeting_card_top">#33FFFFFF</color>
+    <color name="greeting_card_bottom">#1FFFFFFF</color>
+    <color name="greeting_card_stroke">#40FFFFFF</color>
+    <!-- Splash giữ thẻ sáng để logo PTIT (đỏ/vàng) luôn rõ trên nền tím -->
+    <color name="splash_logo_card">#F4F2FB</color>
 </resources>

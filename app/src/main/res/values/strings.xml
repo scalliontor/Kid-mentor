@@ -1,11 +1,20 @@
 <resources>
+    <!-- ══ APP / BRAND (proper nouns kept identical across languages) ═══════ -->
     <string name="app_name">P-Talk Signature</string>
-    <string name="app_tagline">Interactive Learning for Kids &amp; Elderly</string>
-    <string name="brand_institution">CTS Lab - PTIT</string>
+    <string name="app_tagline">Đồng hành cùng trẻ em &amp; người cao tuổi</string>
+    <string name="brand_institution">Lab CTS · PTIT</string>
+    <string name="brand_kid_mentor">KID MENTOR</string>
+    <string name="brand_elder_care">ELDER CARE</string>
     <string name="mode_kid_mentor">Kid Mentor</string>
     <string name="mode_elder_care">Elder Care</string>
+    <string name="footer_copyright">© 2025 Lab CTS · Học viện Bưu chính Viễn thông PTIT</string>
+    <string name="footer_rights">Mọi quyền được bảo lưu.</string>
 
-    <!-- Login Screen (extracted from hardcoded layout) -->
+    <!-- ══ SPLASH ══════════════════════════════════════════════════════════ -->
+    <string name="splash_tagline">Đồng hành cùng trẻ em &amp; người cao tuổi</string>
+    <string name="splash_footer">Học viện Công nghệ Bưu chính Viễn thông</string>
+
+    <!-- ══ LOGIN ═══════════════════════════════════════════════════════════ -->
     <string name="login_headline">CHÀO MỪNG\nBẠN TRỞ LẠI</string>
     <string name="login_subheadline">Đăng nhập để tiếp tục sử dụng PTalk</string>
     <string name="login_username_label">TÊN ĐĂNG NHẬP</string>
@@ -18,19 +27,101 @@
     <string name="login_footer">© 2025 Lab CTS · Học viện Bưu chính Viễn thông PTIT\nMọi quyền được bảo lưu.</string>
     <string name="login_err_empty">Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.</string>
     <string name="login_err_wrong">Tên đăng nhập hoặc mật khẩu không đúng.</string>
+    <string name="login_err_authentik">Lỗi đăng nhập: %1$s</string>
+    <string name="login_err_no_response">Không nhận được phản hồi từ máy chủ đăng nhập</string>
 
-    <!-- Privacy / Terms consent row (shared pattern with KidMentor) -->
+    <!-- Privacy / Terms consent row -->
     <string name="consent_prefix">Tôi đồng ý với </string>
     <string name="consent_privacy">Chính sách bảo mật</string>
     <string name="consent_and"> và </string>
     <string name="consent_terms">Điều khoản</string>
     <string name="consent_error">Vui lòng đồng ý Chính sách bảo mật và Điều khoản sử dụng</string>
 
-    <!-- Subscription / plans screen (Gói Đăng Ký) -->
+    <!-- ══ MODE SELECT ═════════════════════════════════════════════════════ -->
+    <string name="mode_select_headline">CHỌN CHẾ ĐỘ</string>
+    <string name="mode_select_subheadline">Mỗi chế độ là một trợ lý riêng — chọn để bắt đầu</string>
+    <string name="mode_select_helper">Bạn có thể đổi chế độ bất cứ lúc nào</string>
+    <string name="mode_kid_badge">TRẺ EM · 4–12 TUỔI</string>
+    <string name="mode_kid_desc">Trợ lý học tập cho trẻ em</string>
+    <string name="mode_kid_feat1">Học qua trò chuyện vui nhộn</string>
+    <string name="mode_kid_feat2">Kể chuyện, câu đố &amp; khám phá</string>
+    <string name="mode_kid_feat3">An toàn, thân thiện với trẻ</string>
+    <string name="mode_kid_cta">Bắt đầu học</string>
+    <string name="mode_elder_badge">NGƯỜI CAO TUỔI</string>
+    <string name="mode_elder_desc">Trợ lý sức khoẻ cho người cao tuổi</string>
+    <string name="mode_elder_feat1">Nhắc lịch uống thuốc đúng giờ</string>
+    <string name="mode_elder_feat2">Quét &amp; đọc thông tin thuốc</string>
+    <string name="mode_elder_feat3">Gọi khẩn cấp chỉ một chạm</string>
+    <string name="mode_elder_cta">Bắt đầu</string>
+
+    <!-- ══ MAIN SCREEN (greeting / status / errors) ════════════════════════ -->
+    <string name="greeting_hello">Xin chào!</string>
+    <string name="kid_sub_greeting">Hôm nay, tớ có thể giúp gì cho cậu?</string>
+    <string name="elder_sub_greeting">Hôm nay, tôi có thể giúp gì cho bác?</string>
+    <string name="cd_character">Nhân vật AI</string>
+    <string name="cd_record">Ghi âm</string>
+
+    <string name="status_idle">Giữ nút để nói chuyện</string>
+    <string name="status_listening">Đang nghe...</string>
+    <string name="status_listening_tap_again">Đang nghe... (nhấn lại để gửi)</string>
+    <string name="status_processing">Đang xử lý...</string>
+    <string name="status_thinking">Đang suy nghĩ...</string>
+    <string name="status_speaking">Đang nói...</string>
+    <string name="status_replying">Đang trả lời...</string>
+    <string name="status_tap_to_stop">Chạm để dừng</string>
+
+    <string name="status_ws_connecting">Đang kết nối WebSocket...</string>
+    <string name="status_ws_degraded">WebSocket không ổn định, app sẽ thử đường dự phòng</string>
+    <string name="status_ws_offline">WebSocket V2 chưa sẵn sàng</string>
+    <string name="status_ws_offline_fallback">WebSocket V2 chưa sẵn sàng, dùng HTTP dự phòng</string>
+    <string name="status_http_health_fail">WebSocket V2 là đường chính, health HTTP đang lỗi</string>
+    <string name="status_connecting_retry">Đang kết nối tới máy chủ, vui lòng chờ 1-2 giây rồi bấm lại...</string>
+
+    <string name="error_generic">Có lỗi xảy ra, thử lại nhé!</string>
+    <string name="error_generic_short">Có lỗi xảy ra</string>
+    <string name="error_ws_open">Không thể mở WebSocket streaming, thử lại sau.</string>
+    <string name="error_server_fmt">Lỗi máy chủ (%1$s): %2$s</string>
+    <string name="error_record_start">Không thể bắt đầu ghi âm, thử lại!</string>
+    <string name="error_record_interrupted">Ghi âm bị gián đoạn, giữ nút và thử lại.</string>
+    <string name="error_record_failed">Ghi âm thất bại, thử lại!</string>
+    <string name="error_no_server">Không kết nối được server. Kiểm tra server demo hoặc mạng.</string>
+    <string name="error_codec_fallback">Streaming V2 chưa tương thích codec, dùng HTTP dự phòng</string>
+    <string name="error_timeout_listening">Server chưa xác nhận nghe (LISTENING), thử lại nhé</string>
+    <string name="error_timeout_processing">Server chưa phản hồi PROCESSING, thử lại nhé</string>
+    <string name="error_timeout_audio">Server chưa trả audio, thử lại nhé</string>
+    <string name="error_timeout_stream">Luồng trả lời bị gián đoạn, thử lại nhé</string>
+    <string name="error_timeout_idle">Server chưa kết thúc phiên trả lời (IDLE), thử lại nhé</string>
+
+    <string name="mic_permission_needed">Cần cấp quyền micro để ghi âm</string>
+    <string name="mic_permission_prompt">Vui lòng cấp quyền micro để tiếp tục.</string>
+    <string name="mic_permission_toast">App cần quyền micro để hoạt động!</string>
+
+    <string name="net_no_internet">Không có kết nối Internet (không tìm thấy máy chủ). Kiểm tra Wi-Fi/4G rồi thử lại nhé.</string>
+    <string name="net_slow">Mạng chậm hoặc máy chủ bận, thử lại nhé.</string>
+    <string name="net_io">Lỗi kết nối, thử lại nhé.</string>
+    <string name="net_unknown">Có lỗi xảy ra, thử lại nhé.</string>
+
+    <!-- HTTP fallback (ApiService) + audio playback -->
+    <string name="api_err_save_failed">Không lưu được file âm thanh trả về</string>
+    <string name="api_err_empty">Server trả về dữ liệu rỗng</string>
+    <string name="api_err_read_audio">Có lỗi xảy ra khi đọc file thu âm.</string>
+    <string name="api_err_busy">Hệ thống đang bận, thử lại sau nhé!</string>
+    <string name="api_err_timeout">Mạng bị chậm hoặc chờ quá lâu, thử lại nhé!</string>
+    <string name="api_err_unknown">Lỗi không xác định: %1$d</string>
+    <string name="error_audio_playback">Không phát được âm thanh, thử lại nhé!</string>
+
+    <!-- ══ SUBSCRIPTION (Gói Đăng Ký) ══════════════════════════════════════ -->
     <string name="sub_account">Tài khoản &amp; gói cước</string>
     <string name="sub_title">Gói Đăng Ký</string>
     <string name="sub_intro">Các gói chỉ khác nhau ở số câu hỏi mỗi ngày.</string>
     <string name="sub_footer">Liên hệ ctslab@ptit.vn để được hỗ trợ nâng cấp.</string>
+    <string name="sub_email_subject">Nâng cấp gói P-Talk Signature</string>
+    <string name="sub_quota_label">Hạn mức mỗi ngày</string>
+    <string name="sub_benefits_label">QUYỀN LỢI</string>
+    <string name="sub_feat_voice">Trò chuyện bằng giọng nói tự nhiên</string>
+    <string name="sub_feat_fast">Phản hồi nhanh, giọng đọc truyền cảm</string>
+    <string name="sub_feat_history">Lưu lịch sử trò chuyện theo tài khoản</string>
+    <string name="sub_feat_modes">Dùng cho cả Kid Mentor &amp; Elder Care</string>
     <string name="plan_basic">Cơ Bản</string>
     <string name="plan_pro">Pro</string>
     <string name="plan_ultra">Ultra</string>
@@ -49,22 +140,35 @@
     <string name="plan_upgrade_send_email">Gửi email</string>
     <string name="plan_close">Đóng</string>
 
-    <!-- ELDER_CARE: quét thuốc & gọi khẩn cấp -->
+    <!-- ══ MEDICINE SCANNER (ELDER_CARE) ═══════════════════════════════════ -->
     <string name="scan_medicine">Quét thuốc</string>
     <string name="emergency_call">Gọi khẩn cấp</string>
     <string name="scanner_title">Quét thông tin thuốc</string>
     <string name="scanner_hint">Hướng camera vào vỉ/lọ thuốc rồi bấm chụp</string>
     <string name="scanner_capture">Chụp &amp; phân tích</string>
     <string name="scanner_close">Đóng</string>
+    <string name="scanner_perm_needed">Cần cấp quyền camera để quét thuốc</string>
+    <string name="scanner_perm_prompt">Vui lòng cấp quyền camera để tiếp tục.</string>
+    <string name="scanner_aim">Hướng camera vào thuốc rồi bấm chụp</string>
+    <string name="scanner_cam_fail">Không mở được camera</string>
+    <string name="scanner_capturing">Đang chụp...</string>
+    <string name="scanner_capture_fail">Chụp ảnh thất bại, thử lại</string>
+    <string name="scanner_analyzing">Đang phân tích thuốc…</string>
+    <string name="scanner_not_recognized">Không nhận diện được, thử chụp rõ hơn</string>
+    <string name="scanner_result">Kết quả phân tích:</string>
+    <string name="scanner_err_no_internet">Không có Internet (không tìm thấy máy chủ), kiểm tra mạng rồi thử lại</string>
+    <string name="scanner_err_slow">Mạng chậm, thử lại nhé</string>
+    <string name="scanner_err_generic">Lỗi phân tích, thử lại nhé</string>
 
     <!-- Quay lại màn chọn chế độ từ màn hình chính -->
     <string name="back_to_mode_select">Quay lại chọn chế độ</string>
 
-    <!-- ══ SETTINGS (shared screen for both modes) ═══════════════════════ -->
+    <!-- ══ SETTINGS (shared screen for both modes) ═════════════════════════ -->
     <string name="settings_title">Cài đặt</string>
     <string name="cd_settings">Cài đặt</string>
     <string name="settings_section_account">TÀI KHOẢN</string>
     <string name="settings_section_about">VỀ ỨNG DỤNG</string>
+    <string name="settings_user_default">Người dùng</string>
     <string name="settings_guest_name">Khách</string>
     <string name="settings_guest_sub">Bạn đang dùng thử · đăng nhập để lưu tiến trình</string>
     <string name="settings_login">ĐĂNG NHẬP</string>
@@ -81,7 +185,36 @@
     <string name="theme_light">Sáng</string>
     <string name="theme_dark">Tối</string>
     <string name="theme_system">Theo hệ thống</string>
+    <string name="settings_section_language">NGÔN NGỮ</string>
+    <string name="lang_system">Theo hệ thống</string>
+    <string name="lang_vietnamese">Tiếng Việt</string>
+    <string name="lang_english">English</string>
     <string name="settings_logout_title">Đăng xuất?</string>
     <string name="settings_logout_message">Bạn sẽ cần đăng nhập lại để sử dụng tài khoản.</string>
     <string name="settings_cancel">Huỷ</string>
+
+    <!-- ══ ACCOUNT INFO (read-only parent + children · KID_MENTOR only) ════ -->
+    <string name="settings_account_info">Thông tin tài khoản</string>
+    <string name="info_title">Thông tin tài khoản</string>
+    <string name="info_section_parent">PHỤ HUYNH</string>
+    <string name="info_section_children">CÁC CON</string>
+    <string name="info_parent_name">Họ tên</string>
+    <string name="info_parent_dob">Ngày sinh</string>
+    <string name="info_parent_phone">SĐT</string>
+    <string name="info_parent_email">Email</string>
+    <string name="info_child_name">Tên</string>
+    <string name="info_child_dob">Ngày sinh</string>
+    <string name="info_child_grade">Lớp</string>
+    <string name="info_child_curriculum">Chương trình học</string>
+    <string name="info_grade_fmt">Lớp %1$s</string>
+    <string name="info_value_empty">—</string>
+    <string name="info_children_empty">Chưa có hồ sơ con nào.</string>
+    <string name="info_login_required">Vui lòng đăng nhập để xem thông tin tài khoản</string>
+    <string name="info_load_error">Không tải được thông tin, vui lòng thử lại</string>
+
+    <string-array name="info_curriculum_options">
+        <item>Chân trời sáng tạo</item>
+        <item>Cánh diều</item>
+        <item>Kết nối tri thức</item>
+    </string-array>
 </resources>

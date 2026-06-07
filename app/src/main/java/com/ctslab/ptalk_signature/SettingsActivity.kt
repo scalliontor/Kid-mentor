@@ -39,9 +39,34 @@ class SettingsActivity : AppCompatActivity() {
         applyAccent()
         bindAccount()
         bindTheme()
+        bindLanguage()
         bindAbout()
         bindModeSection()
         wireActions()
+    }
+
+    // ── Language picker (Theo hệ thống / Tiếng Việt / English) ───────────
+    private fun bindLanguage() {
+        binding.rowLangSystem.setOnClickListener { selectLanguage(LocalePrefs.SYSTEM) }
+        binding.rowLangVietnamese.setOnClickListener { selectLanguage(LocalePrefs.VIETNAMESE) }
+        binding.rowLangEnglish.setOnClickListener { selectLanguage(LocalePrefs.ENGLISH) }
+        updateLanguageChecks(LocalePrefs.current())
+    }
+
+    private fun selectLanguage(value: String) {
+        if (LocalePrefs.current() == value) return
+        updateLanguageChecks(value)
+        // Applying the per-app locale recreates the activity in the new language.
+        LocalePrefs.set(value)
+    }
+
+    private fun updateLanguageChecks(current: String) {
+        binding.checkLangSystem.visibility =
+            if (current == LocalePrefs.SYSTEM) View.VISIBLE else View.INVISIBLE
+        binding.checkLangVietnamese.visibility =
+            if (current == LocalePrefs.VIETNAMESE) View.VISIBLE else View.INVISIBLE
+        binding.checkLangEnglish.visibility =
+            if (current == LocalePrefs.ENGLISH) View.VISIBLE else View.INVISIBLE
     }
 
     // ── Theme picker (Sáng / Tối / Theo hệ thống) ────────────────────────
@@ -90,7 +115,7 @@ class SettingsActivity : AppCompatActivity() {
         if (TokenManager.isLoggedIn()) {
             val name = TokenManager.getUsername()?.takeIf { it.isNotBlank() }
                 ?: TokenManager.getEmail()?.substringBefore("@")?.takeIf { it.isNotBlank() }
-                ?: "Người dùng"
+                ?: getString(R.string.settings_user_default)
             binding.tvAccountName.text = name
             binding.tvAccountSub.text = TokenManager.getEmail()?.takeIf { it.isNotBlank() }
                 ?: (TokenManager.getUserType() ?: "")
@@ -127,6 +152,14 @@ class SettingsActivity : AppCompatActivity() {
     private fun wireActions() {
         binding.btnSettingsBack.setOnClickListener { finish() }
 
+        // Read-only parent + children info — KID_MENTOR only (ELDER_CARE has no user info).
+        val showAccountInfo = mode == AppMode.KID_MENTOR && TokenManager.isLoggedIn()
+        binding.rowAccountInfo.visibility = if (showAccountInfo) View.VISIBLE else View.GONE
+        binding.dividerAccountInfo.visibility = if (showAccountInfo) View.VISIBLE else View.GONE
+        binding.rowAccountInfo.setOnClickListener {
+            startActivity(Intent(this, ParentChildInfoActivity::class.java))
+        }
+
         binding.rowSubscription.setOnClickListener {
             startActivity(Intent(this, SubscriptionActivity::class.java).apply {
                 putExtra(ModeSelectActivity.EXTRA_APP_MODE, (mode ?: AppMode.KID_MENTOR).name)
@@ -159,24 +192,32 @@ class SettingsActivity : AppCompatActivity() {
         finish()
     }
 
-    // ── Button styling (logout = red outline, login = black pill) ────────
+    // ── Button styling (logout = red outline, login = filled pill) ───────
+    // MaterialButton groups the icon next to the centered label (iconGravity=textStart),
+    // so the key/logout icon no longer floats at the far-left edge.
     private fun styleAuthAsLogout() {
+        val red = 0xFFD30005.toInt()
         binding.btnAuthAction.apply {
             text = getString(R.string.settings_logout)
-            setTextColor(0xFFD30005.toInt())
-            setBackgroundResource(R.drawable.bg_logout_button)
-            setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_logout, 0, 0, 0)
-            compoundDrawableTintList = ColorStateList.valueOf(0xFFD30005.toInt())
+            setTextColor(red)
+            backgroundTintList = ColorStateList.valueOf(0x14D30005)   // red @ ~8% fill
+            strokeColor = ColorStateList.valueOf(red)
+            strokeWidth = (1.5f * resources.displayMetrics.density).toInt()
+            setIconResource(R.drawable.ic_logout)
+            iconTint = ColorStateList.valueOf(red)
         }
     }
 
     private fun styleAuthAsLogin() {
+        val white = 0xFFFFFFFF.toInt()
         binding.btnAuthAction.apply {
             text = getString(R.string.settings_login)
-            setTextColor(0xFFFFFFFF.toInt())
-            setBackgroundResource(R.drawable.bg_login_button)
-            setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_key, 0, 0, 0)
-            compoundDrawableTintList = ColorStateList.valueOf(0xFFFFFFFF.toInt())
+            setTextColor(white)
+            backgroundTintList =
+                ColorStateList.valueOf(ContextCompat.getColor(this@SettingsActivity, R.color.btn_primary_bg))
+            strokeWidth = 0
+            setIconResource(R.drawable.ic_key)
+            iconTint = ColorStateList.valueOf(white)
         }
     }
 

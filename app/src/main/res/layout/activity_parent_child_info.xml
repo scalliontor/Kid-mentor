@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_mode_select"
+    android:fitsSystemWindows="true"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/space_xxl">
+
+        <!-- ══ HEADER (glass pill: back · title · CTS) ═══════════════════ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/brand_bar_height"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/space_s"
+            android:paddingEnd="@dimen/login_header_padding_h"
+            android:layout_marginStart="@dimen/space_l"
+            android:layout_marginEnd="@dimen/space_l"
+            android:layout_marginTop="@dimen/space_l"
+            android:background="@drawable/bg_glass_header"
+            android:elevation="4dp">
+
+            <ImageView
+                android:id="@+id/btnInfoBack"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:src="@drawable/ic_arrow_back"
+                android:scaleType="centerInside"
+                android:padding="9dp"
+                android:tint="@color/icon_neutral"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/back_to_mode_select" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/info_title"
+                android:textSize="18sp"
+                android:textColor="@color/text_primary"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="0.04"
+                android:layout_marginStart="@dimen/space_s" />
+
+            <ImageView
+                android:layout_width="@dimen/login_cts_logo_width"
+                android:layout_height="@dimen/login_cts_logo_height"
+                android:src="@drawable/logo_cts_main"
+                android:scaleType="fitCenter"
+                android:contentDescription="CTS" />
+        </LinearLayout>
+
+        <!-- ══ Loading / error ══════════════════════════════════════════ -->
+        <ProgressBar
+            android:id="@+id/progressInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/space_l"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tvInfoError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/form_margin_h"
+            android:layout_marginEnd="@dimen/form_margin_h"
+            android:layout_marginTop="@dimen/space_m"
+            android:textSize="13sp"
+            android:textColor="@color/accent_elder_dark"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:visibility="gone" />
+
+        <!-- ══ SECTION · PHỤ HUYNH ══════════════════════════════════════ -->
+        <TextView
+            android:id="@+id/tvSectionParent"
+            style="@style/SettingsSectionLabel"
+            android:text="@string/info_section_parent" />
+
+        <LinearLayout
+            style="@style/SettingsCard"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp">
+
+            <!-- Họ tên -->
+            <LinearLayout style="@style/InfoFieldRow">
+                <TextView
+                    style="@style/InfoFieldLabel"
+                    android:text="@string/info_parent_name" />
+                <TextView
+                    android:id="@+id/tvParentNameValue"
+                    style="@style/InfoFieldValue" />
+            </LinearLayout>
+
+            <View style="@style/SettingsDivider" />
+
+            <!-- Ngày sinh -->
+            <LinearLayout style="@style/InfoFieldRow">
+                <TextView
+                    style="@style/InfoFieldLabel"
+                    android:text="@string/info_parent_dob" />
+                <TextView
+                    android:id="@+id/tvParentDobValue"
+                    style="@style/InfoFieldValue" />
+            </LinearLayout>
+
+            <View style="@style/SettingsDivider" />
+
+            <!-- SĐT -->
+            <LinearLayout style="@style/InfoFieldRow">
+                <TextView
+                    style="@style/InfoFieldLabel"
+                    android:text="@string/info_parent_phone" />
+                <TextView
+                    android:id="@+id/tvParentPhoneValue"
+                    style="@style/InfoFieldValue" />
+            </LinearLayout>
+
+            <View style="@style/SettingsDivider" />
+
+            <!-- Email -->
+            <LinearLayout style="@style/InfoFieldRow">
+                <TextView
+                    style="@style/InfoFieldLabel"
+                    android:text="@string/info_parent_email" />
+                <TextView
+                    android:id="@+id/tvParentEmailValue"
+                    style="@style/InfoFieldValue" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- ══ SECTION · CÁC CON ════════════════════════════════════════ -->
+        <TextView
+            android:id="@+id/tvSectionChildren"
+            style="@style/SettingsSectionLabel"
+            android:text="@string/info_section_children" />
+
+        <TextView
+            android:id="@+id/tvChildrenEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/form_margin_h"
+            android:layout_marginEnd="@dimen/form_margin_h"
+            android:text="@string/info_children_empty"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:fontFamily="sans-serif"
+            android:visibility="gone" />
+
+        <!-- Each child card is added programmatically (item_child_info_readonly.xml). -->
+        <LinearLayout
+            android:id="@+id/containerChildren"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+    </LinearLayout>
+</ScrollView>

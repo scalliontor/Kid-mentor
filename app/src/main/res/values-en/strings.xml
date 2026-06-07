@@ -1,0 +1,220 @@
+<resources>
+    <!-- ══ APP / BRAND (proper nouns kept identical across languages) ═══════ -->
+    <string name="app_name">P-Talk Signature</string>
+    <string name="app_tagline">A companion for children &amp; the elderly</string>
+    <string name="brand_institution">CTS Lab · PTIT</string>
+    <string name="brand_kid_mentor">KID MENTOR</string>
+    <string name="brand_elder_care">ELDER CARE</string>
+    <string name="mode_kid_mentor">Kid Mentor</string>
+    <string name="mode_elder_care">Elder Care</string>
+    <string name="footer_copyright">© 2025 CTS Lab · Posts &amp; Telecommunications Institute of Technology (PTIT)</string>
+    <string name="footer_rights">All rights reserved.</string>
+
+    <!-- ══ SPLASH ══════════════════════════════════════════════════════════ -->
+    <string name="splash_tagline">A companion for children &amp; the elderly</string>
+    <string name="splash_footer">Posts and Telecommunications Institute of Technology</string>
+
+    <!-- ══ LOGIN ═══════════════════════════════════════════════════════════ -->
+    <string name="login_headline">WELCOME\nBACK</string>
+    <string name="login_subheadline">Sign in to continue using PTalk</string>
+    <string name="login_username_label">USERNAME</string>
+    <string name="login_username_hint">Enter your username...</string>
+    <string name="login_password_label">PASSWORD</string>
+    <string name="login_password_hint">Enter your password...</string>
+    <string name="login_btn_text">SIGN IN WITH SSO</string>
+    <string name="login_guest_btn_text">TRY AS GUEST</string>
+    <string name="login_or">or</string>
+    <string name="login_footer">© 2025 CTS Lab · Posts &amp; Telecommunications Institute of Technology (PTIT)\nAll rights reserved.</string>
+    <string name="login_err_empty">Please enter both your username and password.</string>
+    <string name="login_err_wrong">Incorrect username or password.</string>
+    <string name="login_err_authentik">Sign-in error: %1$s</string>
+    <string name="login_err_no_response">No response from the sign-in server</string>
+
+    <!-- Privacy / Terms consent row -->
+    <string name="consent_prefix">I agree to the </string>
+    <string name="consent_privacy">Privacy Policy</string>
+    <string name="consent_and"> and </string>
+    <string name="consent_terms">Terms</string>
+    <string name="consent_error">Please accept the Privacy Policy and Terms of Use</string>
+
+    <!-- ══ MODE SELECT ═════════════════════════════════════════════════════ -->
+    <string name="mode_select_headline">CHOOSE A MODE</string>
+    <string name="mode_select_subheadline">Each mode is its own assistant — pick one to begin</string>
+    <string name="mode_select_helper">You can switch modes anytime</string>
+    <string name="mode_kid_badge">KIDS · AGES 4–12</string>
+    <string name="mode_kid_desc">A learning buddy for children</string>
+    <string name="mode_kid_feat1">Learn through fun conversations</string>
+    <string name="mode_kid_feat2">Stories, quizzes &amp; discovery</string>
+    <string name="mode_kid_feat3">Safe and child-friendly</string>
+    <string name="mode_kid_cta">Start learning</string>
+    <string name="mode_elder_badge">FOR SENIORS</string>
+    <string name="mode_elder_desc">A health companion for seniors</string>
+    <string name="mode_elder_feat1">Timely medication reminders</string>
+    <string name="mode_elder_feat2">Scan &amp; read medicine information</string>
+    <string name="mode_elder_feat3">Emergency call in one tap</string>
+    <string name="mode_elder_cta">Get started</string>
+
+    <!-- ══ MAIN SCREEN (greeting / status / errors) ════════════════════════ -->
+    <string name="greeting_hello">Hello!</string>
+    <string name="kid_sub_greeting">How can I help you today?</string>
+    <string name="elder_sub_greeting">How can I help you today?</string>
+    <string name="cd_character">AI character</string>
+    <string name="cd_record">Record</string>
+
+    <string name="status_idle">Hold the button to talk</string>
+    <string name="status_listening">Listening...</string>
+    <string name="status_listening_tap_again">Listening... (tap again to send)</string>
+    <string name="status_processing">Processing...</string>
+    <string name="status_thinking">Thinking...</string>
+    <string name="status_speaking">Speaking...</string>
+    <string name="status_replying">Replying...</string>
+    <string name="status_tap_to_stop">Tap to stop</string>
+
+    <string name="status_ws_connecting">Connecting to WebSocket...</string>
+    <string name="status_ws_degraded">WebSocket is unstable; trying a fallback connection</string>
+    <string name="status_ws_offline">WebSocket V2 is not ready yet</string>
+    <string name="status_ws_offline_fallback">WebSocket V2 not ready; using HTTP fallback</string>
+    <string name="status_http_health_fail">WebSocket V2 is the main channel; HTTP health check is failing</string>
+    <string name="status_connecting_retry">Connecting to the server, please wait 1–2 seconds and tap again...</string>
+
+    <string name="error_generic">Something went wrong, please try again!</string>
+    <string name="error_generic_short">Something went wrong</string>
+    <string name="error_ws_open">Couldn\'t open WebSocket streaming, please try again later.</string>
+    <string name="error_server_fmt">Server error (%1$s): %2$s</string>
+    <string name="error_record_start">Couldn\'t start recording, please try again!</string>
+    <string name="error_record_interrupted">Recording was interrupted, hold the button and try again.</string>
+    <string name="error_record_failed">Recording failed, please try again!</string>
+    <string name="error_no_server">Couldn\'t reach the server. Check the demo server or your network.</string>
+    <string name="error_codec_fallback">Streaming V2 codec not supported; using HTTP fallback</string>
+    <string name="error_timeout_listening">The server hasn\'t confirmed LISTENING, please try again</string>
+    <string name="error_timeout_processing">The server hasn\'t responded with PROCESSING, please try again</string>
+    <string name="error_timeout_audio">The server hasn\'t returned any audio, please try again</string>
+    <string name="error_timeout_stream">The reply stream was interrupted, please try again</string>
+    <string name="error_timeout_idle">The server hasn\'t ended the session (IDLE), please try again</string>
+
+    <string name="mic_permission_needed">Microphone permission is required to record</string>
+    <string name="mic_permission_prompt">Please grant microphone permission to continue.</string>
+    <string name="mic_permission_toast">The app needs microphone permission to work!</string>
+
+    <string name="net_no_internet">No Internet connection (server not found). Check your Wi-Fi/mobile data and try again.</string>
+    <string name="net_slow">The network is slow or the server is busy, please try again.</string>
+    <string name="net_io">Connection error, please try again.</string>
+    <string name="net_unknown">Something went wrong, please try again.</string>
+
+    <!-- HTTP fallback (ApiService) + audio playback -->
+    <string name="api_err_save_failed">Couldn\'t save the returned audio file</string>
+    <string name="api_err_empty">The server returned empty data</string>
+    <string name="api_err_read_audio">Something went wrong reading the recording.</string>
+    <string name="api_err_busy">The system is busy, please try again later!</string>
+    <string name="api_err_timeout">The network is slow or timed out, please try again!</string>
+    <string name="api_err_unknown">Unknown error: %1$d</string>
+    <string name="error_audio_playback">Couldn\'t play the audio, please try again!</string>
+
+    <!-- ══ SUBSCRIPTION ════════════════════════════════════════════════════ -->
+    <string name="sub_account">Account &amp; plan</string>
+    <string name="sub_title">Subscription</string>
+    <string name="sub_intro">Plans differ only by the number of questions per day.</string>
+    <string name="sub_footer">Contact ctslab@ptit.vn for upgrade support.</string>
+    <string name="sub_email_subject">Upgrade P-Talk Signature plan</string>
+    <string name="sub_quota_label">Daily limit</string>
+    <string name="sub_benefits_label">WHAT\'S INCLUDED</string>
+    <string name="sub_feat_voice">Natural voice conversations</string>
+    <string name="sub_feat_fast">Fast replies with lifelike speech</string>
+    <string name="sub_feat_history">Chat history saved to your account</string>
+    <string name="sub_feat_modes">Works for both Kid Mentor &amp; Elder Care</string>
+    <string name="plan_basic">Basic</string>
+    <string name="plan_pro">Pro</string>
+    <string name="plan_ultra">Ultra</string>
+    <string name="plan_basic_quota">20 questions per day</string>
+    <string name="plan_pro_quota">500 questions per day</string>
+    <string name="plan_ultra_quota">Unlimited questions</string>
+    <string name="plan_basic_price">Free</string>
+    <string name="plan_pro_price">800,000₫/month</string>
+    <string name="plan_ultra_price">1,500,000₫/month</string>
+    <string name="plan_badge_popular">★ Best value</string>
+    <string name="plan_active">Current plan</string>
+    <string name="plan_have_higher">You\'re on a higher plan</string>
+    <string name="plan_btn_upgrade_fmt">Upgrade to %1$s</string>
+    <string name="plan_upgrade_title">Upgrade plan</string>
+    <string name="plan_upgrade_message">Payments are still being finalized.\n\nPlease contact ctslab@ptit.vn to upgrade your plan.</string>
+    <string name="plan_upgrade_send_email">Send email</string>
+    <string name="plan_close">Close</string>
+
+    <!-- ══ MEDICINE SCANNER (ELDER_CARE) ═══════════════════════════════════ -->
+    <string name="scan_medicine">Scan medicine</string>
+    <string name="emergency_call">Emergency call</string>
+    <string name="scanner_title">Scan medicine information</string>
+    <string name="scanner_hint">Point the camera at the blister/bottle and tap capture</string>
+    <string name="scanner_capture">Capture &amp; analyze</string>
+    <string name="scanner_close">Close</string>
+    <string name="scanner_perm_needed">Camera permission is required to scan medicine</string>
+    <string name="scanner_perm_prompt">Please grant camera permission to continue.</string>
+    <string name="scanner_aim">Point the camera at the medicine and tap capture</string>
+    <string name="scanner_cam_fail">Couldn\'t open the camera</string>
+    <string name="scanner_capturing">Capturing...</string>
+    <string name="scanner_capture_fail">Capture failed, please try again</string>
+    <string name="scanner_analyzing">Analyzing the medicine…</string>
+    <string name="scanner_not_recognized">Couldn\'t recognize it, try a clearer photo</string>
+    <string name="scanner_result">Analysis result:</string>
+    <string name="scanner_err_no_internet">No Internet (server not found), check your network and try again</string>
+    <string name="scanner_err_slow">The network is slow, please try again</string>
+    <string name="scanner_err_generic">Analysis error, please try again</string>
+
+    <!-- Back to mode select -->
+    <string name="back_to_mode_select">Back to mode selection</string>
+
+    <!-- ══ SETTINGS ════════════════════════════════════════════════════════ -->
+    <string name="settings_title">Settings</string>
+    <string name="cd_settings">Settings</string>
+    <string name="settings_section_account">ACCOUNT</string>
+    <string name="settings_section_about">ABOUT</string>
+    <string name="settings_user_default">User</string>
+    <string name="settings_guest_name">Guest</string>
+    <string name="settings_guest_sub">You\'re in trial mode · sign in to save your progress</string>
+    <string name="settings_login">SIGN IN</string>
+    <string name="settings_logout">SIGN OUT</string>
+    <string name="settings_subscription">Plan &amp; limits</string>
+    <string name="settings_privacy">Privacy Policy</string>
+    <string name="settings_terms">Terms of Use</string>
+    <string name="settings_version">Version</string>
+    <string name="settings_section_elder">ELDER CARE MODE</string>
+    <string name="settings_emergency_label">Emergency number</string>
+    <string name="settings_emergency_hint">The emergency button on the main screen will dial this number.</string>
+    <string name="settings_emergency_saved">Emergency number saved</string>
+    <string name="settings_section_theme">APPEARANCE</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_system">System default</string>
+    <string name="settings_section_language">LANGUAGE</string>
+    <string name="lang_system">System default</string>
+    <string name="lang_vietnamese">Tiếng Việt</string>
+    <string name="lang_english">English</string>
+    <string name="settings_logout_title">Sign out?</string>
+    <string name="settings_logout_message">You\'ll need to sign in again to use your account.</string>
+    <string name="settings_cancel">Cancel</string>
+
+    <!-- ══ ACCOUNT INFO (read-only parent + children · KID_MENTOR only) ════ -->
+    <string name="settings_account_info">Account info</string>
+    <string name="info_title">Account info</string>
+    <string name="info_section_parent">PARENT</string>
+    <string name="info_section_children">CHILDREN</string>
+    <string name="info_parent_name">Full name</string>
+    <string name="info_parent_dob">Date of birth</string>
+    <string name="info_parent_phone">Phone</string>
+    <string name="info_parent_email">Email</string>
+    <string name="info_child_name">Name</string>
+    <string name="info_child_dob">Date of birth</string>
+    <string name="info_child_grade">Grade</string>
+    <string name="info_child_curriculum">Curriculum</string>
+    <string name="info_grade_fmt">Grade %1$s</string>
+    <string name="info_value_empty">—</string>
+    <string name="info_children_empty">No child profiles yet.</string>
+    <string name="info_login_required">Please sign in to view account info</string>
+    <string name="info_load_error">Couldn\'t load info, please try again</string>
+
+    <string-array name="info_curriculum_options">
+        <item>Chân trời sáng tạo</item>
+        <item>Cánh diều</item>
+        <item>Kết nối tri thức</item>
+    </string-array>
+</resources>

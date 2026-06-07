@@ -17,7 +17,7 @@
     <dimen name="brand_separator_height">42dp</dimen>
     <dimen name="brand_separator_margin_start">12dp</dimen>
     <dimen name="brand_text_margin_start">14dp</dimen>
-    <dimen name="text_brand_title">20sp</dimen>
+    <dimen name="text_brand_title">24sp</dimen>
     <dimen name="text_brand_subtitle">16sp</dimen>
 
     <dimen name="space_xs">6dp</dimen>

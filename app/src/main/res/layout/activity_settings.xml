@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_mode_select"
+    android:fitsSystemWindows="true"
     android:fillViewport="true">
 
     <LinearLayout
@@ -117,6 +118,26 @@
 
             <View style="@style/SettingsDivider" />
 
+            <!-- Account info row (read-only parent + children) · KID_MENTOR only -->
+            <LinearLayout
+                android:id="@+id/rowAccountInfo"
+                style="@style/SettingsRow"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/SettingsRowLabel"
+                    android:text="@string/settings_account_info" />
+
+                <ImageView
+                    style="@style/SettingsChevron"
+                    android:src="@drawable/ic_chevron_right" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/dividerAccountInfo"
+                style="@style/SettingsDivider"
+                android:visibility="gone" />
+
             <!-- Subscription row -->
             <LinearLayout
                 android:id="@+id/rowSubscription"
@@ -211,6 +232,64 @@
                     android:tint="@color/accent_kid_dark"
                     android:visibility="invisible"
                     android:contentDescription="@string/theme_system" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- ══ SECTION · NGÔN NGỮ (Theo hệ thống / Tiếng Việt / English) ═ -->
+        <TextView
+            android:id="@+id/tvSectionLanguage"
+            style="@style/SettingsSectionLabel"
+            android:text="@string/settings_section_language" />
+
+        <LinearLayout style="@style/SettingsCard">
+
+            <LinearLayout
+                android:id="@+id/rowLangSystem"
+                style="@style/SettingsRow">
+                <TextView
+                    style="@style/SettingsRowLabel"
+                    android:text="@string/lang_system" />
+                <ImageView
+                    android:id="@+id/checkLangSystem"
+                    style="@style/SettingsChevron"
+                    android:src="@drawable/ic_check"
+                    android:tint="@color/accent_kid_dark"
+                    android:visibility="invisible"
+                    android:contentDescription="@string/lang_system" />
+            </LinearLayout>
+
+            <View style="@style/SettingsDivider" />
+
+            <LinearLayout
+                android:id="@+id/rowLangVietnamese"
+                style="@style/SettingsRow">
+                <TextView
+                    style="@style/SettingsRowLabel"
+                    android:text="@string/lang_vietnamese" />
+                <ImageView
+                    android:id="@+id/checkLangVietnamese"
+                    style="@style/SettingsChevron"
+                    android:src="@drawable/ic_check"
+                    android:tint="@color/accent_kid_dark"
+                    android:visibility="invisible"
+                    android:contentDescription="@string/lang_vietnamese" />
+            </LinearLayout>
+
+            <View style="@style/SettingsDivider" />
+
+            <LinearLayout
+                android:id="@+id/rowLangEnglish"
+                style="@style/SettingsRow">
+                <TextView
+                    style="@style/SettingsRowLabel"
+                    android:text="@string/lang_english" />
+                <ImageView
+                    android:id="@+id/checkLangEnglish"
+                    style="@style/SettingsChevron"
+                    android:src="@drawable/ic_check"
+                    android:tint="@color/accent_kid_dark"
+                    android:visibility="invisible"
+                    android:contentDescription="@string/lang_english" />
             </LinearLayout>
         </LinearLayout>
 
@@ -331,7 +410,7 @@
         </LinearLayout>
 
         <!-- ══ AUTH ACTION (Đăng xuất / Đăng nhập) ══════════════════════ -->
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAuthAction"
             android:layout_width="match_parent"
             android:layout_height="@dimen/input_height"
@@ -340,19 +419,23 @@
             android:textColor="#D30005"
             android:fontFamily="sans-serif-medium"
             android:letterSpacing="0.06"
-            android:background="@drawable/bg_logout_button"
-            android:drawableStart="@drawable/ic_logout"
-            android:drawableTint="#D30005"
-            android:drawablePadding="8dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:layout_marginStart="@dimen/form_margin_h"
             android:layout_marginEnd="@dimen/form_margin_h"
-            android:layout_marginTop="@dimen/space_xxl" />
+            android:layout_marginTop="@dimen/space_xxl"
+            app:cornerRadius="27dp"
+            app:icon="@drawable/ic_logout"
+            app:iconGravity="textStart"
+            app:iconPadding="10dp"
+            app:iconSize="20dp"
+            app:iconTint="#D30005" />
 
         <!-- ══ FOOTER ════════════════════════════════════════════════════ -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="© 2025 Lab CTS · Học viện Bưu chính Viễn thông PTIT"
+            android:text="@string/footer_copyright"
             android:textSize="@dimen/text_login_footer"
             android:textColor="@color/text_muted"
             android:fontFamily="sans-serif"

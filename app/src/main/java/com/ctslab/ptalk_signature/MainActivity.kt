@@ -138,14 +138,14 @@ class MainActivity : AppCompatActivity() {
      */
     private fun applyModeUI() {
         // Greeting texts
-        binding.tvGreeting.text = appMode.greetingText
-        binding.tvSubGreeting.text = appMode.subGreetingText
+        binding.tvGreeting.text = getString(appMode.greetingTextRes)
+        binding.tvSubGreeting.text = getString(appMode.subGreetingTextRes)
 
         // Brand title (center text in brand bar)
-        binding.tvBrandTitle.text = appMode.brandTitle
+        binding.tvBrandTitle.text = getString(appMode.brandTitleRes)
 
         // Status idle text
-        viewModel.statusText.value = appMode.statusIdleText
+        viewModel.statusText.value = getString(appMode.statusIdleTextRes)
 
         // Background gradient
         if (appMode == AppMode.ELDER_CARE) {
@@ -180,7 +180,7 @@ class MainActivity : AppCompatActivity() {
 
             if (!healthy && (viewModel.state.value == AppState.IDLE || viewModel.state.value == AppState.ERROR)) {
                 if (wsReachability != WsReachability.ONLINE) {
-                    viewModel.statusText.value = "WebSocket V2 là đường chính, health HTTP đang lỗi"
+                    viewModel.statusText.value = getString(R.string.status_http_health_fail)
                 }
             }
         }
@@ -241,7 +241,7 @@ class MainActivity : AppCompatActivity() {
                     isMicTapFallbackActive = false
                     characterAnimator.playPlaying()
                     waveformView.setStatePlaying()
-                    viewModel.statusText.value = "Chạm để dừng"
+                    viewModel.statusText.value = getString(R.string.status_tap_to_stop)
                 }
 
                 AppState.ERROR -> {
@@ -257,7 +257,7 @@ class MainActivity : AppCompatActivity() {
                     waveformView.setStateError()
                     Toast.makeText(
                         this,
-                        viewModel.statusText.value ?: "Có lỗi xảy ra",
+                        viewModel.statusText.value ?: getString(R.string.error_generic_short),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -345,7 +345,7 @@ class MainActivity : AppCompatActivity() {
                         if (started) {
                             isMicTapFallbackActive = true
                             view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                            viewModel.statusText.value = "Đang nghe... (nhấn lại để gửi)"
+                            viewModel.statusText.value = getString(R.string.status_listening_tap_again)
                         }
                     }
 
@@ -382,8 +382,8 @@ class MainActivity : AppCompatActivity() {
 
         if (!hasMicPermission()) {
             requestMicPermission()
-            viewModel.statusText.value = "Cần cấp quyền micro để ghi âm"
-            Toast.makeText(this, "Vui lòng cấp quyền micro để tiếp tục.", Toast.LENGTH_SHORT).show()
+            viewModel.statusText.value = getString(R.string.mic_permission_needed)
+            Toast.makeText(this, getString(R.string.mic_permission_prompt), Toast.LENGTH_SHORT).show()
             return false
         }
 
@@ -408,17 +408,17 @@ class MainActivity : AppCompatActivity() {
             }
             activeTransport = ActiveVoiceTransport.NONE
             if (ServerConfig.TRANSPORT_MODE == TransportMode.STREAMING_ONLY) {
-                viewModel.onError("Không thể mở WebSocket streaming, thử lại sau.")
+                viewModel.onError(getString(R.string.error_ws_open))
                 return false
             }
         }
 
         if (ServerConfig.TRANSPORT_MODE == TransportMode.STREAMING_ONLY) {
             if (wsReachability == WsReachability.CONNECTING) {
-                viewModel.statusText.value = "Đang kết nối tới máy chủ, vui lòng chờ 1-2 giây rồi bấm lại..."
+                viewModel.statusText.value = getString(R.string.status_connecting_retry)
             } else {
                 val currentStatus = viewModel.statusText.value ?: "Unknown"
-                viewModel.onError("Lỗi máy chủ ($wsReachability): $currentStatus")
+                viewModel.onError(getString(R.string.error_server_fmt, wsReachability.toString(), currentStatus))
                 streamingVoiceClient.preconnect() // Force retry
             }
             return false
@@ -439,7 +439,7 @@ class MainActivity : AppCompatActivity() {
             isMicGestureActive = false
             isMicTapFallbackActive = false
             activeTransport = ActiveVoiceTransport.NONE
-            viewModel.onError("Không thể bắt đầu ghi âm, thử lại!")
+            viewModel.onError(getString(R.string.error_record_start))
             false
         }
     }
@@ -477,9 +477,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (wasCancelled) {
-            viewModel.onError("Ghi âm bị gián đoạn, giữ nút và thử lại.")
+            viewModel.onError(getString(R.string.error_record_interrupted))
         } else {
-            viewModel.onError("Ghi âm thất bại, thử lại!")
+            viewModel.onError(getString(R.string.error_record_failed))
         }
     }
 
@@ -505,24 +505,24 @@ class MainActivity : AppCompatActivity() {
         when (reachability) {
             WsReachability.ONLINE -> {
                 if (viewModel.state.value == AppState.IDLE) {
-                    viewModel.statusText.value = "Giữ nút để nói chuyện"
+                    viewModel.statusText.value = getString(R.string.status_idle)
                 }
             }
 
             WsReachability.CONNECTING -> {
-                viewModel.statusText.value = "Đang kết nối WebSocket..."
+                viewModel.statusText.value = getString(R.string.status_ws_connecting)
             }
 
             WsReachability.DEGRADED -> {
-                viewModel.statusText.value = "WebSocket không ổn định, app sẽ thử đường dự phòng"
+                viewModel.statusText.value = getString(R.string.status_ws_degraded)
             }
 
             WsReachability.OFFLINE -> {
                 viewModel.statusText.value =
                     if (ServerConfig.TRANSPORT_MODE == TransportMode.STREAMING_ONLY) {
-                        "WebSocket V2 chưa sẵn sàng"
+                        getString(R.string.status_ws_offline)
                     } else {
-                        "WebSocket V2 chưa sẵn sàng, dùng HTTP dự phòng"
+                        getString(R.string.status_ws_offline_fallback)
                     }
             }
         }
@@ -548,7 +548,7 @@ class MainActivity : AppCompatActivity() {
                 if (viewModel.state.value == AppState.RECORDING) {
                     viewModel.onStopRecording()
                 } else {
-                    viewModel.statusText.value = "Đang xử lý..."
+                    viewModel.statusText.value = getString(R.string.status_processing)
                 }
                 armFirstAudioTimeout()
                 armIdleFinalTimeout()
@@ -556,7 +556,7 @@ class MainActivity : AppCompatActivity() {
 
             StreamingEvent.Thinking -> {
                 // Server is still processing (8s+ elapsed) — reset the first-audio timer
-                viewModel.statusText.value = "Đang suy nghĩ..."
+                viewModel.statusText.value = getString(R.string.status_thinking)
                 armFirstAudioTimeout()
             }
 
@@ -566,7 +566,7 @@ class MainActivity : AppCompatActivity() {
                 wsSessionPhase = WsSessionPhase.WAIT_AUDIO
                 waitingForFirstStreamingChunk = true
                 viewModel.onStartPlaying()  // Disable button immediately
-                viewModel.statusText.value = "Đang nói..."
+                viewModel.statusText.value = getString(R.string.status_speaking)
                 armFirstAudioTimeout()
                 armIdleFinalTimeout()
             }
@@ -622,7 +622,7 @@ class MainActivity : AppCompatActivity() {
 
         if (viewModel.state.value == AppState.IDLE || viewModel.state.value == AppState.ERROR) {
             viewModel.statusText.value = when (type) {
-                StreamingFailure.CodecUnavailable -> "Streaming V2 chưa tương thích codec, dùng HTTP dự phòng"
+                StreamingFailure.CodecUnavailable -> getString(R.string.error_codec_fallback)
                 StreamingFailure.WebSocketUnavailable -> message // Hiển thị nguyên văn lỗi (Timeout, Refused...)
                 StreamingFailure.ProtocolError,
                 StreamingFailure.NetworkLost,
@@ -665,10 +665,10 @@ class MainActivity : AppCompatActivity() {
                                         viewModel.onFinishPlaying()
                                     }
                                 },
-                                onError = { errorMsg ->
+                                onError = { _ ->
                                     runOnUiThread {
                                         activeTransport = ActiveVoiceTransport.NONE
-                                        viewModel.onError(errorMsg)
+                                        viewModel.onError(getString(R.string.error_audio_playback))
                                     }
                                 }
                             )
@@ -687,7 +687,7 @@ class MainActivity : AppCompatActivity() {
 
             if (completed != true) {
                 activeTransport = ActiveVoiceTransport.NONE
-                viewModel.onError("Không kết nối được server. Kiểm tra server demo hoặc mạng.")
+                viewModel.onError(getString(R.string.error_no_server))
             }
         }
     }
@@ -710,11 +710,11 @@ class MainActivity : AppCompatActivity() {
                             viewModel.onFinishPlaying()
                         }
                     },
-                    onError = { errorMsg ->
+                    onError = { _ ->
                         replyWav.delete()
                         runOnUiThread {
                             activeTransport = ActiveVoiceTransport.NONE
-                            viewModel.onError(errorMsg)
+                            viewModel.onError(getString(R.string.error_audio_playback))
                         }
                     }
                 )
@@ -728,12 +728,10 @@ class MainActivity : AppCompatActivity() {
 
     /** Đổi exception kỹ thuật thành thông báo dễ hiểu cho người lớn tuổi. */
     private fun friendlyNetworkMessage(e: Throwable): String = when (e) {
-        is java.net.UnknownHostException ->
-            "Không có kết nối Internet (không tìm thấy máy chủ). Kiểm tra Wi-Fi/4G rồi thử lại nhé."
-        is java.net.SocketTimeoutException ->
-            "Mạng chậm hoặc máy chủ bận, bác thử lại nhé."
-        is java.io.IOException -> e.message ?: "Lỗi kết nối, bác thử lại nhé."
-        else -> e.message ?: "Có lỗi xảy ra, bác thử lại nhé."
+        is java.net.UnknownHostException -> getString(R.string.net_no_internet)
+        is java.net.SocketTimeoutException -> getString(R.string.net_slow)
+        is java.io.IOException -> e.message ?: getString(R.string.net_io)
+        else -> e.message ?: getString(R.string.net_unknown)
     }
 
     /** Bật & nối các nút riêng của ELDER_CARE: quét thuốc + gọi khẩn cấp. */
@@ -762,7 +760,7 @@ class MainActivity : AppCompatActivity() {
             if (stillWaitingAck) {
                 onStreamingTimeout(
                     reachability = WsReachability.DEGRADED,
-                    message = "Server chưa xác nhận nghe (LISTENING), bé thử lại nhé"
+                    message = getString(R.string.error_timeout_listening)
                 )
             }
         }
@@ -778,7 +776,7 @@ class MainActivity : AppCompatActivity() {
             if (stillWaitingProcessing) {
                 onStreamingTimeout(
                     reachability = WsReachability.DEGRADED,
-                    message = "Server chưa phản hồi PROCESSING, bé thử lại nhé"
+                    message = getString(R.string.error_timeout_processing)
                 )
             }
         }
@@ -794,7 +792,7 @@ class MainActivity : AppCompatActivity() {
             if (stillWaitingAudio) {
                 onStreamingTimeout(
                     reachability = WsReachability.DEGRADED,
-                    message = "Server chưa trả audio, bé thử lại nhé"
+                    message = getString(R.string.error_timeout_audio)
                 )
             }
         }
@@ -810,7 +808,7 @@ class MainActivity : AppCompatActivity() {
             if (stalledPlayback) {
                 onStreamingTimeout(
                     reachability = WsReachability.DEGRADED,
-                    message = "Luồng trả lời bị gián đoạn, bé thử lại nhé"
+                    message = getString(R.string.error_timeout_stream)
                 )
             }
         }
@@ -826,7 +824,7 @@ class MainActivity : AppCompatActivity() {
             if (missingIdleFinal) {
                 onStreamingTimeout(
                     reachability = WsReachability.DEGRADED,
-                    message = "Server chưa kết thúc phiên trả lời (IDLE), bé thử lại nhé"
+                    message = getString(R.string.error_timeout_idle)
                 )
             }
         }
@@ -891,8 +889,8 @@ class MainActivity : AppCompatActivity() {
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (!isGranted) {
-                viewModel.statusText.value = "Cần cấp quyền micro để ghi âm"
-                Toast.makeText(this, "App cần quyền micro để hoạt động!", Toast.LENGTH_LONG).show()
+                viewModel.statusText.value = getString(R.string.mic_permission_needed)
+                Toast.makeText(this, getString(R.string.mic_permission_toast), Toast.LENGTH_LONG).show()
             }
         }
 

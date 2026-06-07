@@ -33,11 +33,11 @@ class LoginActivity : AppCompatActivity() {
         val resp = AuthorizationResponse.fromIntent(data)
 
         if (ex != null) {
-            showError("Lỗi Authentik: ${ex.errorDescription ?: ex.error}")
+            showError(getString(R.string.login_err_authentik, ex.errorDescription ?: ex.error ?: ""))
             return@registerForActivityResult
         }
         if (resp == null) {
-            showError("Không nhận được phản hồi từ Authentik")
+            showError(getString(R.string.login_err_no_response))
             return@registerForActivityResult
         }
 

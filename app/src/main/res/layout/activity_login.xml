@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_gradient"
+    android:fitsSystemWindows="true"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -90,6 +91,8 @@
             android:background="@drawable/bg_hero_halo"
             android:layout_marginTop="@dimen/space_hero_top"
             app:layout_constraintTop_toBottomOf="@id/loginBrandHeader"
+            app:layout_constraintBottom_toTopOf="@id/tvLoginHeadline"
+            app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -120,6 +123,7 @@
             android:letterSpacing="0.02"
             android:layout_marginTop="@dimen/space_l"
             app:layout_constraintTop_toBottomOf="@id/viewHeroHalo"
+            app:layout_constraintBottom_toTopOf="@id/tvLoginSubheadline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -136,6 +140,7 @@
             android:paddingStart="@dimen/subheadline_padding_h"
             android:paddingEnd="@dimen/subheadline_padding_h"
             app:layout_constraintTop_toBottomOf="@id/tvLoginHeadline"
+            app:layout_constraintBottom_toTopOf="@id/loginFormCard"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -152,6 +157,7 @@
             android:layout_marginStart="@dimen/form_margin_h"
             android:layout_marginEnd="@dimen/form_margin_h"
             app:layout_constraintTop_toBottomOf="@id/tvLoginSubheadline"
+            app:layout_constraintBottom_toTopOf="@id/tvLoginFooter"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -207,8 +213,8 @@
                 android:layout_marginTop="@dimen/space_xs"
                 android:visibility="gone" />
 
-            <!-- SSO login button (black pill with key icon) -->
-            <androidx.appcompat.widget.AppCompatButton
+            <!-- SSO login button (black pill, key icon grouped with the centered label) -->
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/input_height"
@@ -216,12 +222,17 @@
                 android:textSize="@dimen/text_login_button"
                 android:textColor="#FFFFFF"
                 android:fontFamily="sans-serif-medium"
-                android:letterSpacing="0.08"
-                android:background="@drawable/bg_login_button"
-                android:drawableStart="@drawable/ic_key"
-                android:drawablePadding="8dp"
+                android:letterSpacing="0.06"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
                 android:layout_marginTop="@dimen/space_xl"
-                android:elevation="2dp" />
+                app:backgroundTint="@color/btn_primary_bg"
+                app:cornerRadius="26dp"
+                app:icon="@drawable/ic_key"
+                app:iconGravity="textStart"
+                app:iconPadding="10dp"
+                app:iconSize="20dp"
+                app:iconTint="#FFFFFF" />
 
             <!-- Divider with text -->
             <LinearLayout
@@ -274,7 +285,7 @@
             android:id="@+id/tvLoginFooter"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="© 2025 Lab CTS · Học viện Bưu chính Viễn thông PTIT\nMọi quyền được bảo lưu."
+            android:text="@string/login_footer"
             android:textSize="@dimen/text_login_footer"
             android:textColor="@color/color_login_footer"
             android:fontFamily="sans-serif"
@@ -284,7 +295,7 @@
             android:layout_marginBottom="@dimen/space_footer_bottom"
             android:paddingStart="@dimen/login_header_padding_h"
             android:paddingEnd="@dimen/login_header_padding_h"
-            app:layout_constraintTop_toBottomOf="@id/loginFormCard"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

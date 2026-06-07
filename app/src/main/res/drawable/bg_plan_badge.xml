@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Rounded "Best value / Current plan" pill on the plan detail card. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/badge_elder_bg" />
+    <corners android:radius="100dp" />
+</shape>

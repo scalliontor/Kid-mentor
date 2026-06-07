@@ -130,7 +130,7 @@ class SubscriptionActivity : AppCompatActivity() {
             .setMessage(R.string.plan_upgrade_message)
             .setPositiveButton(R.string.plan_upgrade_send_email) { _, _ ->
                 val intent = Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:ctslab@ptit.vn")).apply {
-                    putExtra(Intent.EXTRA_SUBJECT, "Nâng cấp gói P-Talk Signature")
+                    putExtra(Intent.EXTRA_SUBJECT, getString(R.string.sub_email_subject))
                 }
                 try {
                     startActivity(intent)

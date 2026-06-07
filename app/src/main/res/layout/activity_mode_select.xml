@@ -5,6 +5,7 @@
     android:id="@+id/modeSelectRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:background="@drawable/bg_mode_select">
 
     <!-- ══ DECORATIVE ATMOSPHERE BLOBS (behind everything) ═══════════════ -->
@@ -79,7 +80,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Lab CTS · PTIT"
+                android:text="@string/brand_institution"
                 android:textSize="@dimen/text_brand_subtitle"
                 android:textColor="@color/text_secondary"
                 android:fontFamily="sans-serif" />
@@ -112,13 +113,15 @@
         android:id="@+id/tvModeHeadline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CHỌN CHẾ ĐỘ"
+        android:text="@string/mode_select_headline"
         android:textSize="28sp"
         android:textColor="@color/text_primary"
         android:fontFamily="sans-serif-medium"
         android:letterSpacing="0.04"
         android:layout_marginTop="@dimen/space_hero_top"
         app:layout_constraintTop_toBottomOf="@id/modeSelectHeader"
+        app:layout_constraintBottom_toTopOf="@id/tvModeSubheadline"
+        app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -126,13 +129,14 @@
         android:id="@+id/tvModeSubheadline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Mỗi chế độ là một trợ lý riêng — chọn để bắt đầu"
+        android:text="@string/mode_select_subheadline"
         android:textSize="14sp"
         android:textColor="@color/text_secondary"
         android:fontFamily="sans-serif"
         android:gravity="center"
         android:layout_marginTop="@dimen/space_s"
         app:layout_constraintTop_toBottomOf="@id/tvModeHeadline"
+        app:layout_constraintBottom_toTopOf="@id/modeCardsRow"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -147,6 +151,7 @@
         android:layout_marginEnd="@dimen/form_margin_h"
         android:layout_marginTop="@dimen/space_xl"
         app:layout_constraintTop_toBottomOf="@id/tvModeSubheadline"
+        app:layout_constraintBottom_toTopOf="@id/tvModeHelper"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -169,7 +174,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TRẺ EM · 4–12 TUỔI"
+                android:text="@string/mode_kid_badge"
                 android:textSize="10sp"
                 android:textColor="@color/accent_kid_dark"
                 android:fontFamily="sans-serif-medium"
@@ -194,7 +199,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="KID MENTOR"
+                android:text="@string/brand_kid_mentor"
                 android:textSize="17sp"
                 android:textColor="@color/accent_kid_dark"
                 android:fontFamily="sans-serif-medium"
@@ -204,7 +209,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Trợ lý học tập cho trẻ em"
+                android:text="@string/mode_kid_desc"
                 android:textSize="12sp"
                 android:textColor="@color/text_secondary"
                 android:fontFamily="sans-serif"
@@ -227,7 +232,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Học qua trò chuyện vui nhộn"
+                    android:text="@string/mode_kid_feat1"
                     android:textSize="12.5sp"
                     android:textColor="@color/text_body"
                     android:fontFamily="sans-serif"
@@ -239,7 +244,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Kể chuyện, câu đố &amp; khám phá"
+                    android:text="@string/mode_kid_feat2"
                     android:textSize="12.5sp"
                     android:textColor="@color/text_body"
                     android:fontFamily="sans-serif"
@@ -252,7 +257,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="An toàn, thân thiện với trẻ"
+                    android:text="@string/mode_kid_feat3"
                     android:textSize="12.5sp"
                     android:textColor="@color/text_body"
                     android:fontFamily="sans-serif"
@@ -273,7 +278,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Bắt đầu học"
+                android:text="@string/mode_kid_cta"
                 android:textSize="13sp"
                 android:textColor="#FFFFFF"
                 android:fontFamily="sans-serif-medium"
@@ -309,7 +314,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="NGƯỜI CAO TUỔI"
+                android:text="@string/mode_elder_badge"
                 android:textSize="10sp"
                 android:textColor="@color/accent_elder_dark"
                 android:fontFamily="sans-serif-medium"
@@ -334,7 +339,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ELDER CARE"
+                android:text="@string/brand_elder_care"
                 android:textSize="17sp"
                 android:textColor="@color/accent_elder_dark"
                 android:fontFamily="sans-serif-medium"
@@ -344,7 +349,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Trợ lý sức khoẻ cho người cao tuổi"
+                android:text="@string/mode_elder_desc"
                 android:textSize="12sp"
                 android:textColor="@color/text_secondary"
                 android:fontFamily="sans-serif"
@@ -367,7 +372,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Nhắc lịch uống thuốc đúng giờ"
+                    android:text="@string/mode_elder_feat1"
                     android:textSize="12.5sp"
                     android:textColor="@color/text_body"
                     android:fontFamily="sans-serif"
@@ -379,7 +384,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Quét &amp; đọc thông tin thuốc"
+                    android:text="@string/mode_elder_feat2"
                     android:textSize="12.5sp"
                     android:textColor="@color/text_body"
                     android:fontFamily="sans-serif"
@@ -392,7 +397,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Gọi khẩn cấp chỉ một chạm"
+                    android:text="@string/mode_elder_feat3"
                     android:textSize="12.5sp"
                     android:textColor="@color/text_body"
                     android:fontFamily="sans-serif"
@@ -412,7 +417,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Bắt đầu"
+                android:text="@string/mode_elder_cta"
                 android:textSize="13sp"
                 android:textColor="#FFFFFF"
                 android:fontFamily="sans-serif-medium"
@@ -435,13 +440,14 @@
         android:id="@+id/tvModeHelper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bạn có thể đổi chế độ bất cứ lúc nào"
+        android:text="@string/mode_select_helper"
         android:textSize="12sp"
         android:textColor="@color/text_muted"
         android:fontFamily="sans-serif"
         android:gravity="center"
         android:layout_marginTop="@dimen/space_l"
         app:layout_constraintTop_toBottomOf="@id/modeCardsRow"
+        app:layout_constraintBottom_toTopOf="@id/tvModeFooter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -450,7 +456,7 @@
         android:id="@+id/tvModeFooter"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="© 2025 Lab CTS · Học viện Bưu chính Viễn thông PTIT"
+        android:text="@string/footer_copyright"
         android:textSize="@dimen/text_login_footer"
         android:textColor="@color/text_muted"
         android:fontFamily="sans-serif"

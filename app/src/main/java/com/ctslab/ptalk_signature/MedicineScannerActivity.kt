@@ -48,8 +48,8 @@ class MedicineScannerActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             if (granted) startCamera()
             else {
-                statusText.text = "Cần cấp quyền camera để quét thuốc"
-                Toast.makeText(this, "Vui lòng cấp quyền camera để tiếp tục.", Toast.LENGTH_LONG).show()
+                statusText.text = getString(R.string.scanner_perm_needed)
+                Toast.makeText(this, getString(R.string.scanner_perm_prompt), Toast.LENGTH_LONG).show()
             }
         }
 
@@ -108,11 +108,11 @@ class MedicineScannerActivity : AppCompatActivity() {
                     preview,
                     imageCapture
                 )
-                statusText.text = "Hướng camera vào thuốc rồi bấm chụp"
+                statusText.text = getString(R.string.scanner_aim)
                 captureButton.isEnabled = true
             } catch (e: Exception) {
                 Log.e(TAG, "startCamera lỗi: ${e.message}")
-                statusText.text = "Không mở được camera"
+                statusText.text = getString(R.string.scanner_cam_fail)
             }
         }, ContextCompat.getMainExecutor(this))
     }
@@ -125,7 +125,7 @@ class MedicineScannerActivity : AppCompatActivity() {
         val options = ImageCapture.OutputFileOptions.Builder(photoFile).build()
 
         setBusy(true)
-        statusText.text = "Đang chụp..."
+        statusText.text = getString(R.string.scanner_capturing)
 
         capture.takePicture(
             options,
@@ -137,7 +137,7 @@ class MedicineScannerActivity : AppCompatActivity() {
 
                 override fun onError(exc: ImageCaptureException) {
                     Log.e(TAG, "Chụp lỗi: ${exc.message}")
-                    statusText.text = "Chụp ảnh thất bại, thử lại"
+                    statusText.text = getString(R.string.scanner_capture_fail)
                     setBusy(false)
                 }
             }
@@ -145,23 +145,23 @@ class MedicineScannerActivity : AppCompatActivity() {
     }
 
     private fun analyze(photoFile: File) {
-        statusText.text = "Đang phân tích thuốc…"
+        statusText.text = getString(R.string.scanner_analyzing)
         lifecycleScope.launch {
             try {
                 val text = holoboxApi.scanMedicine(photoFile)
                 if (text.isBlank()) {
-                    statusText.text = "Không nhận diện được, thử chụp rõ hơn"
+                    statusText.text = getString(R.string.scanner_not_recognized)
                 } else {
                     resultText.text = text
-                    statusText.text = "Kết quả phân tích:"
+                    statusText.text = getString(R.string.scanner_result)
                     speak(text)
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Phân tích lỗi", e)
                 statusText.text = when (e) {
-                    is java.net.UnknownHostException -> "Không có Internet (không tìm thấy máy chủ), kiểm tra mạng rồi thử lại"
-                    is java.net.SocketTimeoutException -> "Mạng chậm, thử lại nhé"
-                    else -> e.message ?: "Lỗi phân tích, thử lại nhé"
+                    is java.net.UnknownHostException -> getString(R.string.scanner_err_no_internet)
+                    is java.net.SocketTimeoutException -> getString(R.string.scanner_err_slow)
+                    else -> e.message ?: getString(R.string.scanner_err_generic)
                 }
             } finally {
                 setBusy(false)

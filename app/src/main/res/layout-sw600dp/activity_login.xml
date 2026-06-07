@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_gradient"
+    android:fitsSystemWindows="true"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -97,7 +98,9 @@
             android:src="@drawable/char_idle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/loginBrandHeader" />
+            app:layout_constraintTop_toBottomOf="@id/loginBrandHeader"
+            app:layout_constraintBottom_toTopOf="@id/tvLoginHeadline"
+            app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
             android:id="@+id/tvLoginHeadline"
@@ -113,7 +116,8 @@
             android:textSize="@dimen/text_login_headline"
             app:layout_constraintEnd_toStartOf="@id/contentEndGuide"
             app:layout_constraintStart_toStartOf="@id/contentStartGuide"
-            app:layout_constraintTop_toBottomOf="@id/ivLoginHero" />
+            app:layout_constraintTop_toBottomOf="@id/ivLoginHero"
+            app:layout_constraintBottom_toTopOf="@id/tvLoginSubheadline" />
 
         <TextView
             android:id="@+id/tvLoginSubheadline"
@@ -129,7 +133,8 @@
             android:textSize="@dimen/text_login_subheadline"
             app:layout_constraintEnd_toStartOf="@id/contentEndGuide"
             app:layout_constraintStart_toStartOf="@id/contentStartGuide"
-            app:layout_constraintTop_toBottomOf="@id/tvLoginHeadline" />
+            app:layout_constraintTop_toBottomOf="@id/tvLoginHeadline"
+            app:layout_constraintBottom_toTopOf="@id/loginFormCard" />
 
         <LinearLayout
             android:id="@+id/loginFormCard"
@@ -144,7 +149,8 @@
             android:elevation="3dp"
             app:layout_constraintEnd_toStartOf="@id/contentEndGuide"
             app:layout_constraintStart_toStartOf="@id/contentStartGuide"
-            app:layout_constraintTop_toBottomOf="@id/tvLoginSubheadline">
+            app:layout_constraintTop_toBottomOf="@id/tvLoginSubheadline"
+            app:layout_constraintBottom_toTopOf="@id/tvLoginFooter">
 
             <TextView
                 android:id="@+id/tvLoginError"
@@ -195,15 +201,25 @@
                 android:layout_marginTop="@dimen/space_xs"
                 android:visibility="gone" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/input_height"
                 android:layout_marginTop="@dimen/space_xl"
-                android:background="@drawable/bg_login_button"
                 android:text="@string/login_btn_text"
                 android:textColor="#FFFFFF"
-                android:textSize="@dimen/text_login_button" />
+                android:textSize="@dimen/text_login_button"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="0.06"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:backgroundTint="@color/btn_primary_bg"
+                app:cornerRadius="27dp"
+                app:icon="@drawable/ic_key"
+                app:iconGravity="textStart"
+                app:iconPadding="10dp"
+                app:iconSize="20dp"
+                app:iconTint="#FFFFFF" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -221,7 +237,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="  hoặc  "
+                    android:paddingStart="@dimen/space_m"
+                    android:paddingEnd="@dimen/space_m"
+                    android:text="@string/login_or"
                     android:textColor="@color/color_login_footer"
                     android:textSize="@dimen/text_login_footer" />
 
@@ -256,12 +274,12 @@
             android:maxLines="1"
             android:paddingStart="@dimen/tablet_login_footer_side_padding"
             android:paddingEnd="@dimen/tablet_login_footer_side_padding"
-            android:text="© 2025 Lab CTS · Học viện Bưu chính Viễn thông PTIT · Mọi quyền được bảo lưu."
+            android:text="@string/footer_copyright"
             android:textColor="@color/color_login_footer"
             android:textSize="@dimen/text_login_footer"
             app:layout_constraintEnd_toStartOf="@id/contentEndGuide"
             app:layout_constraintStart_toStartOf="@id/contentStartGuide"
-            app:layout_constraintTop_toBottomOf="@id/loginFormCard" />
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

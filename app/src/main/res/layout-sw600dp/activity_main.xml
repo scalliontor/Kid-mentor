@@ -149,33 +149,46 @@
         app:layout_constraintStart_toEndOf="@id/micTouchContainer" />
 
     <!-- Removed brandBarBottomLine for cleaner glassy look -->
-    <TextView
-        android:id="@+id/tvGreeting"
+    <!-- Greeting frame: thẻ kính bo góc (đủ 2 dòng, sẵn cho khung chat sau này) -->
+    <LinearLayout
+        android:id="@+id/greetingCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/tablet_main_greeting_top_margin"
-        android:text="Xin chào!"
-        android:textColor="@color/greeting_kid"
-        android:textSize="@dimen/text_greeting"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/brandBarBg" />
-
-    <TextView
-        android:id="@+id/tvSubGreeting"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/tablet_main_sub_greeting_top_margin"
-        android:layout_marginStart="@dimen/tablet_main_sub_greeting_side_margin"
-        android:layout_marginEnd="@dimen/tablet_main_sub_greeting_side_margin"
+        android:orientation="vertical"
         android:gravity="center"
-        android:text="Hôm nay, tớ có thể giúp gì cho cậu?"
-        android:textColor="@color/accent_kid_dark"
-        android:textSize="@dimen/text_sub_greeting"
-        android:textStyle="bold"
+        android:background="@drawable/bg_greeting_card"
+        android:clipToOutline="true"
+        android:elevation="6dp"
+        android:minWidth="360dp"
+        android:paddingStart="@dimen/space_xxl"
+        android:paddingEnd="@dimen/space_xxl"
+        android:paddingTop="@dimen/space_l"
+        android:paddingBottom="@dimen/space_l"
+        android:layout_marginTop="@dimen/tablet_main_greeting_top_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvGreeting" />
+        app:layout_constraintTop_toBottomOf="@id/brandBarBg">
+
+        <TextView
+            android:id="@+id/tvGreeting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/greeting_hello"
+            android:textColor="@color/greeting_kid"
+            android:textSize="@dimen/text_greeting" />
+
+        <TextView
+            android:id="@+id/tvSubGreeting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/tablet_main_sub_greeting_top_margin"
+            android:gravity="center"
+            android:text="@string/kid_sub_greeting"
+            android:textColor="@color/accent_kid_dark"
+            android:textSize="@dimen/text_sub_greeting"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <com.ctslab.ptalk_signature.WaveformView
         android:id="@+id/waveformView"
@@ -192,7 +205,7 @@
         app:layout_constraintBottom_toTopOf="@id/tvStatus"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvSubGreeting" />
+        app:layout_constraintTop_toBottomOf="@id/greetingCard" />
 
     <ImageView
         android:id="@+id/ivCharacter"
@@ -200,7 +213,7 @@
         android:layout_height="0dp"
         android:adjustViewBounds="true"
         android:clickable="false"
-        android:contentDescription="AI character"
+        android:contentDescription="@string/cd_character"
         android:enabled="false"
         android:focusable="false"
         android:importantForAccessibility="no"
@@ -222,7 +235,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/space_s"
-        android:text="Giữ nút để nói chuyện"
+        android:text="@string/status_idle"
         android:textColor="@color/status_kid"
         android:textSize="@dimen/text_status"
         app:layout_constraintBottom_toTopOf="@id/micTouchContainer"
@@ -261,7 +274,7 @@
             android:layout_gravity="center"
             android:background="@drawable/bg_hold_button_tablet"
             android:clickable="true"
-            android:contentDescription="Ghi âm"
+            android:contentDescription="@string/cd_record"
             android:focusable="true"
             android:hapticFeedbackEnabled="true"
             android:importantForAccessibility="yes"
