@@ -9,6 +9,8 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class HomeProfileActivity : AppCompatActivity() {
@@ -101,18 +103,35 @@ class HomeProfileActivity : AppCompatActivity() {
     // ── Logged-in user ───────────────────────────────────────────────────
     private fun loadUserProfile() {
         val username = TokenManager.getUsername() ?: "User"
-        val userType = TokenManager.getUserType() ?: "child"
-
         findViewById<TextView>(R.id.tvProfileUsername).text = username
 
-        val tierLabel = when (userType) {
+        // Render the tier from the locally-stored login value first so the screen is
+        // never blank, then overwrite it with the DB source of truth from /api/v1/profile.
+        renderTier(TokenManager.getUserType() ?: "basic", false)
+
+        // The subscription tier is users.subscription_tier on the PARENT account, NOT the
+        // stored login user_type / JWT. Resolve it from the profile API; on failure keep
+        // the locally-stored value already rendered above.
+        lifecycleScope.launch {
+            val profile = ProfileApiService.getProfile()
+            if (profile != null) {
+                val tier = profile.subscriptionTier?.ifBlank { null } ?: "basic"
+                renderTier(tier, profile.isSuperuser)
+            }
+        }
+    }
+
+    /** Paint the tier label + plan badges for the given tier (isSuperuser → "admin"). */
+    private fun renderTier(tier: String, isSuperuser: Boolean) {
+        val activeTier = if (isSuperuser) "admin" else tier
+        val tierLabel = when (activeTier) {
             "admin" -> getString(R.string.profile_tier_admin)
             "ultra" -> getString(R.string.profile_tier_ultra)
             "pro" -> getString(R.string.profile_tier_pro)
             else -> getString(R.string.profile_tier_basic)
         }
         findViewById<TextView>(R.id.tvProfileTier).text = tierLabel
-        updatePlanBadges(userType, userType == "admin")
+        updatePlanBadges(activeTier, isSuperuser)
     }
 
     private fun loadQuota() {
@@ -158,6 +177,15 @@ class HomeProfileActivity : AppCompatActivity() {
 
         val activeTier = if (isSuperuser) "admin" else tier
 
+        // Reset to the default "basic" state first so this is idempotent — it can be
+        // called twice (stored fallback, then the DB tier) and must fully override.
+        badgeBasic.visibility = View.VISIBLE
+        btnPro.visibility = View.VISIBLE
+        btnPro.text = getString(R.string.profile_btn_upgrade)
+        btnPro.isEnabled = true
+        btnUltra.text = getString(R.string.profile_btn_upgrade)
+        btnUltra.isEnabled = true
+
         when (activeTier) {
             "admin", "ultra" -> {
                 badgeBasic.visibility = View.GONE
@@ -171,7 +199,7 @@ class HomeProfileActivity : AppCompatActivity() {
                 btnPro.isEnabled = false
             }
             else -> {
-                // basic — default state, all buttons active
+                // basic — default state already applied above.
             }
         }
     }

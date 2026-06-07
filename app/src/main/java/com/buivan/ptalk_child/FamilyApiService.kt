@@ -23,7 +23,11 @@ data class ParentProfile(
     @SerializedName("email") val email: String? = null,
     @SerializedName("username") val username: String? = null,
     @SerializedName("displayName") val displayName: String? = null,
-    @SerializedName("dateOfBirth") val dateOfBirth: String? = null
+    @SerializedName("dateOfBirth") val dateOfBirth: String? = null,
+    // Subscription tier is the DB source of truth (users.subscription_tier on the PARENT
+    // account) — NOT the stored login user_type / JWT. "basic"|"pro"|"ultra".
+    @SerializedName("subscriptionTier") val subscriptionTier: String? = null,
+    @SerializedName("isSuperuser") val isSuperuser: Boolean = false
 )
 
 data class ParentProfileEnvelope(
